@@ -19,6 +19,7 @@
   "author": "OtotheA <oscar@otothea.com>",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "1.17.2",
     "express": "4.15.3",
     "nodemon": "1.11.0"
   },
@@ -35,6 +36,7 @@
     "eslint-plugin-react": "7.1.0",
     "fuse-box": "2.1.0",
     "fuse-box-eslint-plugin": "0.0.3",
+    "lodash": "4.17.4",
     "moment": "2.18.1",
     "node-sass": "4.5.3",
     "react": "15.6.1",

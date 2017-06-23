@@ -1,31 +1,16 @@
 const {Router} = require('express')
-const request = require('../lib/request')
+const images = require('./images')
+const containers = require('./containers')
+const volumes = require('./volumes')
 
-module.exports = router = new Router()
+const router = module.exports = new Router()
 
-router.get('/images', async (req, res) => {
-  try {
-    res.send(await request('get', 'images/json'))
-  }
-  catch(e) {
-    res.status(500).send(e)
-  }
-})
+router.get('/images', images.list)
+router.delete('/images/:id', images.destroy)
 
-router.get('/containers', async (req, res) => {
-  try {
-    res.send(await request('get', 'containers/json'))
-  }
-  catch(e) {
-    res.status(500).send(e)
-  }
-})
+router.get('/containers', containers.list)
+router.delete('/containers/:id', containers.destroy)
 
-router.get('/volumes', async (req, res) => {
-  try {
-    res.send((await request('get', 'volumes')).Volumes)
-  }
-  catch(e) {
-    res.status(500).send(e)
-  }
-})
+router.get('/volumes', volumes.list)
+router.post('/volumes', volumes.create)
+router.delete('/volumes/:id', volumes.destroy)

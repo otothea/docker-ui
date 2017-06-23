@@ -1,9 +1,9 @@
 import React from 'react'
 import {Router as ReactRouter, Route, browserHistory, IndexRedirect} from 'react-router'
-import App from './components'
-import Images from './components/images/images'
-import Containers from './components/containers/containers'
-import Volumes from './components/volumes/volumes'
+import App from './components/App'
+import Images from './components/Images/Images'
+import Containers from './components/Containers/Containers'
+import Volumes from './components/Volumes/Volumes'
 
 export default class Router extends React.Component {
   render() {

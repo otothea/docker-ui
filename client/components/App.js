@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router'
 
-import './index.scss'
+import './App.scss'
 
 export default class App extends React.Component {
   props: {
