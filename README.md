@@ -9,9 +9,23 @@ This project is also meant to serve as a working example of how to build a web a
 - ReactJS
 - FuseBox
 
-### Usage
+## Usage
 
-#### Production
+### Production (Docker)
+
+Pull the image
+
+```bash
+docker pull otothea/docker-ui
+```
+
+Run it
+
+```bash
+docker run -d -p 9898:9898 otothea/docker-ui
+```
+
+### Production (Node)
 
 Clone the repository
 
@@ -43,7 +57,7 @@ Start the server
 npm start
 ```
 
-#### Development
+### Development
 
 Clone the repository
 
@@ -81,10 +95,10 @@ Start the server
 npm start
 ```
 
-#### Testing
+### Testing
 
 There are currently no tests.
 
-#### Contributing
+### Contributing
 
 Pull requests are welcome.
