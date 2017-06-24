@@ -22,7 +22,7 @@ docker pull otothea/docker-ui
 Run it
 
 ```bash
-docker run -d -p 9898:9898 otothea/docker-ui
+docker run -d -p 9898:9898 --name docker-ui otothea/docker-ui
 ```
 
 ### Production (Node)
@@ -54,7 +54,7 @@ cp config.example.js config.js
 Start the server
 
 ```bash
-npm start
+npm run prod
 ```
 
 ### Development
@@ -95,10 +95,10 @@ Start the server
 npm start
 ```
 
-### Testing
+## Testing
 
 There are currently no tests.
 
-### Contributing
+## Contributing
 
 Pull requests are welcome.

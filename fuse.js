@@ -34,7 +34,7 @@ module.exports = production => {
 
   if (!production) {
     fuse.dev({
-      port: config.debugger || 9999,
+      port: process.env.DOCKER_UI_DEBUGGER || config.debugger || 9999,
       httpServer: false,
     })
 

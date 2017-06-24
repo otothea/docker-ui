@@ -22,9 +22,8 @@ COPY .eslintrc         .eslintrc
 COPY config.example.js config.js
 COPY fuse.js           fuse.js
 COPY fuse.prod.js      fuse.prod.js
+COPY index.js          index.js
 
 RUN npm run build
 
-CMD NODE_ENV=production npm start
-
-EXPOSE 9898
+CMD npm run prod
