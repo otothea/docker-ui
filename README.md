@@ -22,7 +22,7 @@ docker pull otothea/docker-ui
 Run it
 
 ```bash
-docker run -d -p 9898:9898 --name docker-ui otothea/docker-ui
+docker run -d -p 9898:9898 -v /var/run/docker.sock:/var/run/docker.sock --name docker-ui otothea/docker-ui
 ```
 
 ### Production (Node)
@@ -83,7 +83,7 @@ Copy the config (and adjust as needed in a text editor)
 cp config.example.js config.js
 ```
 
-Start the client (optional)
+Start the client
 
 ```bash
 npm run watch

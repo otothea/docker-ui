@@ -9,9 +9,10 @@ const app    = express()
 const server = http.createServer(app)
 const port   = process.env.DOCKER_UI_PORT || config.port || 9898
 const host   = process.env.DOCKER_UI_HOST || config.host || 'localhost'
+const assets = process.env.NODE_ENV === 'production' ? 'dist' : 'build'
 
 // Add static files
-app.use(express.static(path.join(__dirname, 'build')))
+app.use(express.static(path.join(__dirname, assets)))
 
 // Add body parse middleware
 app.use(bodyParser.json())
@@ -22,7 +23,7 @@ app.use('/api/v1', api)
 
 // Route to the index file
 app.use('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build/index.html'))
+  res.sendFile(path.join(__dirname, `${assets}/index.html`))
 })
 
 // Start the server

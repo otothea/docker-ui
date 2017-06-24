@@ -13,7 +13,7 @@ module.exports = production => {
     homeDir: 'client',
     sourceMaps: !production,
     hash: production,
-    output: 'build/$name.js',
+    output: `${production ? 'dist' : 'build'}/$name.js`,
     plugins: [
       ['.json', JSONPlugin()],
       ['.scss', SassPlugin(), CSSPlugin()],
