@@ -2,11 +2,12 @@
 
 Docker UI is a web app for viewing and managing Docker images, containers, volumes, etc in a web browser.
 
-This project is also meant to serve as a working example of how to build a web app using the following tech stack:
+This project is also meant to serve as a working example of how to build a full-stack web app using:
 
 - NodeJS
 - ExpressJS
 - ReactJS
+- MobX
 - FuseBox
 
 ## Usage

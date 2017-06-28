@@ -1,16 +1,19 @@
+import {inject, observer} from 'mobx-react'
 import React from 'react'
-import axios from 'axios'
-import moment from 'moment'
-import {sortBy} from 'lodash'
+import AppStore from 'stores/AppStore'
 
+@inject('store')
+@observer
 export default class Containers extends React.Component {
+  props: {
+    store: AppStore;
+  }
+
   constructor(props) {
     super(props)
 
-    this.state = {
-      containers: [],
-      inspect: null,
-    }
+    this.appStore = props.store
+    this.containersStore = this.appStore.containers
   }
 
   componentDidMount() {
@@ -19,43 +22,23 @@ export default class Containers extends React.Component {
 
   destroyContainer = id => {
     if (confirm(`Are you sure you want to delete container ${id}`)) {
-      axios.delete(`/api/v1/containers/${id}`).then(() => {
-        this.loadContainers()
-      })
+      this.containersStore.destroyContainer(id)
     }
   }
 
   inspectContainer = (e, id) => {
     e.preventDefault()
 
-    axios.get(`/api/v1/containers/${id}`).then(res => {
-      this.setState({
-        inspect: res.data,
-      })
-    })
+    this.containersStore.inspectContainer(id)
   }
 
   loadContainers = () => {
-    axios.get('/api/v1/containers').then(res => {
-      this.setState({
-        containers: sortBy(res.data, container => -container.Created).map(container => ({
-          id: container.Id.substr(0, 12),
-          image: container.Image,
-          command: container.Command.length > 20 ? `${container.Command.substr(0, 17)}...` : container.Command,
-          created: moment.unix(container.Created).fromNow(),
-          status: container.Status,
-          ports: container.Ports.map(p => `${(p.IP || '') && `${p.IP || ''}:${p.PublicPort || ''}->`}${p.PrivatePort}/${p.Type}`).join(', '),
-          names: container.Names.map(name => name.slice(1)).join(', '),
-        })),
-      })
-    })
+    this.containersStore.loadContainers()
   }
 
   pruneContainers = () => {
     if (confirm('Are you sure you want to delete stopped containers?')) {
-      axios.post('/api/v1/containers/prune').then(() => {
-        this.loadContainers()
-      })
+      this.containersStore.pruneContainers()
     }
   }
 
@@ -63,18 +46,17 @@ export default class Containers extends React.Component {
     const name = prompt('What would you like the new name to be?', container.names)
 
     if (name) {
-      axios.put(`/api/v1/containers/${container.id}/rename`, {name: name}).then(() => {
-        this.loadContainers()
-      })
+      this.containersStore.renameContainer(container.id, name)
     }
   }
 
   render() {
     return (
       <div className="Containers">
-        <h1>CONTAINERS</h1>
         <div className="master-detail">
           <div className="master">
+            <h1>CONTAINERS</h1>
+            {this.containersStore.error && <div className='error'>{this.containersStore.error}</div>}
             <table>
               <thead>
               <tr>
@@ -89,7 +71,7 @@ export default class Containers extends React.Component {
               </tr>
               </thead>
               <tbody>
-              {this.state.containers.map((container, i) => (
+              {this.containersStore.containers.map((container, i) => (
                 <tr key={i}>
                   <td title={container.id}><a href="#" onClick={e => this.inspectContainer(e, container.id)}>{container.id}</a></td>
                   <td title={container.image}>{container.image}</td>
@@ -108,8 +90,8 @@ export default class Containers extends React.Component {
             </table>
             <button onClick={() => this.pruneContainers()}>Delete all stopped containers</button>
           </div>
-          {this.state.inspect && <div className="detail">
-            <pre>{JSON.stringify(this.state.inspect, undefined, 2)}</pre>
+          {this.containersStore.inspect && <div className="detail">
+            <pre>{JSON.stringify(this.containersStore.inspect, undefined, 2)}</pre>
           </div>}
         </div>
       </div>

@@ -1,21 +1,29 @@
+import {Provider} from 'mobx-react'
 import React from 'react'
 import {Router as ReactRouter, Route, browserHistory, IndexRedirect} from 'react-router'
+import AppStore from 'stores/AppStore'
 import App from './components/App'
 import Images from './components/Images/Images'
 import Containers from './components/Containers/Containers'
 import Volumes from './components/Volumes/Volumes'
 
 export default class Router extends React.Component {
+  props: {
+    store: AppStore;
+  }
+
   render() {
     return (
-      <ReactRouter history={browserHistory}>
-        <Route path="/" component={App}>
-          <IndexRedirect to="images" />
-          <Route path="images" component={Images} />
-          <Route path="containers" component={Containers} />
-          <Route path="volumes" component={Volumes} />
-        </Route>
-      </ReactRouter>
+      <Provider store={this.props.store}>
+        <ReactRouter history={browserHistory}>
+          <Route path="/" component={App}>
+            <IndexRedirect to="images" />
+            <Route path="images" component={Images} />
+            <Route path="containers" component={Containers} />
+            <Route path="volumes" component={Volumes} />
+          </Route>
+        </ReactRouter>
+      </Provider>
     )
   }
 }

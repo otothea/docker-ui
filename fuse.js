@@ -27,6 +27,9 @@ module.exports = production => {
         uglify: true,
       }),
     ],
+    alias: {
+      stores: '~/stores',
+    },
   })
 
   const vendor = fuse.bundle('vendor').instructions('~ index.js')

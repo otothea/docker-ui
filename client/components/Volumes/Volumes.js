@@ -1,18 +1,25 @@
+import {inject, observer} from 'mobx-react'
 import React from 'react'
-import axios from 'axios'
-import {sortBy} from 'lodash'
+import AppStore from 'stores/AppStore'
 
+@inject('store')
+@observer
 export default class Volumes extends React.Component {
+  props: {
+    store: AppStore;
+  }
+
   constructor(props) {
     super(props)
 
     this.state = {
-      volumes: [],
       volume: {
         name: '',
       },
-      inspect: null,
     }
+
+    this.appStore = props.store
+    this.volumesStore = this.appStore.volumes
   }
 
   componentDidMount() {
@@ -22,38 +29,23 @@ export default class Volumes extends React.Component {
   createVolume = e => {
     e.preventDefault()
 
-    axios.post('/api/v1/volumes', this.state.volume).then(() => {
-      this.loadVolumes()
-    })
+    this.volumesStore.createVolume(this.state.volume)
   }
 
   destroyVolume = id => {
     if (confirm(`Are you sure you want to delete volume ${id}?`)) {
-      axios.delete(`/api/v1/volumes/${id}`).then(() => {
-        this.loadVolumes()
-      })
+      this.volumesStore.destroyVolume(id)
     }
   }
 
   inspectVolume = (e, id) => {
     e.preventDefault()
 
-    axios.get(`/api/v1/volumes/${id}`).then(res => {
-      this.setState({
-        inspect: res.data,
-      })
-    })
+    this.volumesStore.inspectVolume(id)
   }
 
   loadVolumes = () => {
-    axios.get('/api/v1/volumes').then(res => {
-      this.setState({
-        volumes: sortBy(res.data, volume => volume.Name.toLowerCase()).map(volume => ({
-          driver: volume.Driver,
-          name: volume.Name,
-        })),
-      })
-    })
+    this.volumesStore.loadVolumes()
   }
 
   onChange = e => {
@@ -68,22 +60,21 @@ export default class Volumes extends React.Component {
 
   pruneVolumes = () => {
     if (confirm('Are you sure you want to delete unused volumes?')) {
-      axios.post('/api/v1/volumes/prune').then(() => {
-        this.loadVolumes()
-      })
+      this.volumesStore.pruneVolumes()
     }
   }
 
   render() {
     return (
       <div className="Volumes">
-        <h1>VOLUMES</h1>
-        <form onSubmit={this.createVolume}>
-          <input name="name" value={this.state.volume.name} onChange={this.onChange} />
-          <input type="submit" value="Create" />
-        </form>
         <div className="master-detail">
           <div className="master">
+            <h1>VOLUMES</h1>
+            {this.volumesStore.error && <div className='error'>{this.volumesStore.error}</div>}
+            <form onSubmit={this.createVolume}>
+              <input name="name" value={this.state.volume.name} onChange={this.onChange} />
+              <input type="submit" value="Create" />
+            </form>
             <table>
               <thead>
               <tr>
@@ -93,7 +84,7 @@ export default class Volumes extends React.Component {
               </tr>
               </thead>
               <tbody>
-              {this.state.volumes.map((volume, i) => (
+              {this.volumesStore.volumes.map((volume, i) => (
                 <tr key={i}>
                   <td title={volume.driver}>{volume.driver}</td>
                   <td title={volume.name}><a href="#" onClick={e => this.inspectVolume(e, volume.name)}>{volume.name}</a></td>
@@ -106,8 +97,8 @@ export default class Volumes extends React.Component {
             </table>
             <button onClick={() => this.pruneVolumes()}>Delete all unused volumes</button>
           </div>
-          {this.state.inspect && <div className="detail">
-            <pre>{JSON.stringify(this.state.inspect, undefined, 2)}</pre>
+          {this.volumesStore.inspect && <div className="detail">
+            <pre>{JSON.stringify(this.volumesStore.inspect, undefined, 2)}</pre>
           </div>}
         </div>
       </div>
