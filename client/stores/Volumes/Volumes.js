@@ -16,6 +16,8 @@ export default class Volumes {
   }
 
   @action createVolume = volume => {
+    this.setError(null)
+
     axios.post('/api/v1/volumes', volume)
     .then(() => {
       this.loadVolumes()
@@ -26,6 +28,8 @@ export default class Volumes {
   }
 
   @action destroyVolume = id => {
+    this.setError(null)
+
     axios.delete(`/api/v1/volumes/${id}`)
     .then(() => {
       this.loadVolumes()
@@ -36,6 +40,8 @@ export default class Volumes {
   }
 
   @action inspectVolume = id => {
+    this.setError(null)
+
     axios.get(`/api/v1/volumes/${id}`)
     .then(res => {
       this.inspect = res.data
@@ -46,6 +52,8 @@ export default class Volumes {
   }
 
   @action loadVolumes = () => {
+    this.setError(null)
+
     axios.get('/api/v1/volumes')
     .then(res => {
       this.volumes = sortBy(res.data, volume => volume.Name.toLowerCase()).map(volume => ({
@@ -59,6 +67,8 @@ export default class Volumes {
   }
 
   @action pruneVolumes = () => {
+    this.setError(null)
+
     axios.post('/api/v1/volumes/prune')
     .then(() => {
       this.loadVolumes()

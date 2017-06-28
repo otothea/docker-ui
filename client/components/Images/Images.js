@@ -43,12 +43,14 @@ export default class Images extends React.Component {
   }
 
   render() {
+    const {error, images, inspect} = this.imagesStore
+
     return (
       <div className="Images">
         <div className="master-detail">
           <div className="master">
             <h1>IMAGES</h1>
-            {this.imagesStore.error && <div className='error'>{this.imagesStore.error}</div>}
+            {error && <div className='error'>{error}</div>}
             <table>
               <thead>
               <tr>
@@ -61,7 +63,7 @@ export default class Images extends React.Component {
               </tr>
               </thead>
               <tbody>
-              {this.imagesStore.images.map((image, i) => (
+              {images.map((image, i) => (
                 <tr key={i}>
                   <td title={image.repository}>{image.repository}</td>
                   <td title={image.tag}>{image.tag}</td>
@@ -77,8 +79,8 @@ export default class Images extends React.Component {
             </table>
             <button onClick={() => this.pruneImages()}>Delete all unused images</button>
           </div>
-          {this.imagesStore.inspect && <div className="detail">
-            <pre>{JSON.stringify(this.imagesStore.inspect, undefined, 2)}</pre>
+          {inspect && <div className="detail">
+            <pre>{JSON.stringify(inspect, undefined, 2)}</pre>
           </div>}
         </div>
       </div>

@@ -17,6 +17,8 @@ export default class Containers {
   }
 
   @action destroyContainer = id => {
+    this.setError(null)
+
     axios.delete(`/api/v1/containers/${id}`)
     .then(() => {
       this.loadContainers()
@@ -27,6 +29,8 @@ export default class Containers {
   }
 
   @action inspectContainer = id => {
+    this.setError(null)
+
     axios.get(`/api/v1/containers/${id}`)
     .then(res => {
       this.inspect = res.data
@@ -37,6 +41,8 @@ export default class Containers {
   }
 
   @action loadContainers = () => {
+    this.setError(null)
+
     axios.get('/api/v1/containers')
     .then(res => {
       this.containers = sortBy(res.data, container => -container.Created).map(container => ({
@@ -47,6 +53,7 @@ export default class Containers {
         status: container.Status,
         ports: container.Ports.map(p => `${(p.IP || '') && `${p.IP || ''}:${p.PublicPort || ''}->`}${p.PrivatePort}/${p.Type}`).join(', '),
         names: container.Names.map(name => name.slice(1)).join(', '),
+        state: container.State,
       }))
     })
     .catch(err => {
@@ -55,6 +62,8 @@ export default class Containers {
   }
 
   @action pruneContainers = () => {
+    this.setError(null)
+
     axios.post('/api/v1/containers/prune')
     .then(() => {
       this.loadContainers()
@@ -65,7 +74,45 @@ export default class Containers {
   }
 
   @action renameContainer = (id, name) => {
+    this.setError(null)
+
     axios.put(`/api/v1/containers/${id}/rename`, {name: name})
+    .then(() => {
+      this.loadContainers()
+    })
+    .catch(err => {
+      this.setError(err.response.data.message)
+    })
+  }
+
+  @action restartContainer = id => {
+    this.setError(null)
+
+    axios.put(`/api/v1/containers/${id}/restart`, {name: name})
+    .then(() => {
+      this.loadContainers()
+    })
+    .catch(err => {
+      this.setError(err.response.data.message)
+    })
+  }
+
+  @action startContainer = id => {
+    this.setError(null)
+
+    axios.put(`/api/v1/containers/${id}/start`, {name: name})
+    .then(() => {
+      this.loadContainers()
+    })
+    .catch(err => {
+      this.setError(err.response.data.message)
+    })
+  }
+
+  @action stopContainer = id => {
+    this.setError(null)
+
+    axios.put(`/api/v1/containers/${id}/stop`, {name: name})
     .then(() => {
       this.loadContainers()
     })

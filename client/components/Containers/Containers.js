@@ -50,13 +50,33 @@ export default class Containers extends React.Component {
     }
   }
 
+  restartContainer = id => {
+    if (confirm(`Are you sure you want to restart container ${id}?`)) {
+      this.containersStore.restartContainer(id)
+    }
+  }
+
+  startContainer = id => {
+    if (confirm(`Are you sure you want to start container ${id}?`)) {
+      this.containersStore.startContainer(id)
+    }
+  }
+
+  stopContainer = id => {
+    if (confirm(`Are you sure you want to stop container ${id}?`)) {
+      this.containersStore.stopContainer(id)
+    }
+  }
+
   render() {
+    const {containers, error, inspect} = this.containersStore
+
     return (
       <div className="Containers">
         <div className="master-detail">
           <div className="master">
             <h1>CONTAINERS</h1>
-            {this.containersStore.error && <div className='error'>{this.containersStore.error}</div>}
+            {error && <div className='error'>{error}</div>}
             <table>
               <thead>
               <tr>
@@ -71,7 +91,7 @@ export default class Containers extends React.Component {
               </tr>
               </thead>
               <tbody>
-              {this.containersStore.containers.map((container, i) => (
+              {containers.map((container, i) => (
                 <tr key={i}>
                   <td title={container.id}><a href="#" onClick={e => this.inspectContainer(e, container.id)}>{container.id}</a></td>
                   <td title={container.image}>{container.image}</td>
@@ -81,7 +101,10 @@ export default class Containers extends React.Component {
                   <td title={container.ports}>{container.ports}</td>
                   <td title={container.names}>{container.names}</td>
                   <td>
-                    <button onClick={() => this.destroyContainer(container.id)}>Delete</button>
+                    {container.state !== 'running' && <button onClick={() => this.startContainer(container.id)}>Start</button>}
+                    {container.state === 'running' && <button onClick={() => this.restartContainer(container.id)}>Restart</button>}
+                    {container.state === 'running' && <button onClick={() => this.stopContainer(container.id)}>Stop</button>}
+                    {container.state !== 'running' && <button onClick={() => this.destroyContainer(container.id)}>Delete</button>}
                     <button onClick={() => this.renameContainer(container)}>Rename</button>
                   </td>
                 </tr>
@@ -90,8 +113,8 @@ export default class Containers extends React.Component {
             </table>
             <button onClick={() => this.pruneContainers()}>Delete all stopped containers</button>
           </div>
-          {this.containersStore.inspect && <div className="detail">
-            <pre>{JSON.stringify(this.containersStore.inspect, undefined, 2)}</pre>
+          {inspect && <div className="detail">
+            <pre>{JSON.stringify(inspect, undefined, 2)}</pre>
           </div>}
         </div>
       </div>

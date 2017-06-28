@@ -151,7 +151,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9;
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12;
 
 var _axios = require('axios');
 
@@ -233,6 +233,12 @@ var Containers = (_class = function Containers(appStore) {
 
   _initDefineProp(this, 'renameContainer', _descriptor9, this);
 
+  _initDefineProp(this, 'restartContainer', _descriptor10, this);
+
+  _initDefineProp(this, 'startContainer', _descriptor11, this);
+
+  _initDefineProp(this, 'stopContainer', _descriptor12, this);
+
   this.appStore = appStore;
 }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'error', [_mobx.observable], {
   enumerable: true,
@@ -264,6 +270,8 @@ var Containers = (_class = function Containers(appStore) {
     var _this2 = this;
 
     return function (id) {
+      _this2.setError(null);
+
       _axios2.default.delete('/api/v1/containers/' + id).then(function () {
         _this2.loadContainers();
       }).catch(function (err) {
@@ -277,6 +285,8 @@ var Containers = (_class = function Containers(appStore) {
     var _this3 = this;
 
     return function (id) {
+      _this3.setError(null);
+
       _axios2.default.get('/api/v1/containers/' + id).then(function (res) {
         _this3.inspect = res.data;
       }).catch(function (err) {
@@ -290,6 +300,8 @@ var Containers = (_class = function Containers(appStore) {
     var _this4 = this;
 
     return function () {
+      _this4.setError(null);
+
       _axios2.default.get('/api/v1/containers').then(function (res) {
         _this4.containers = (0, _lodash.sortBy)(res.data, function (container) {
           return -container.Created;
@@ -305,7 +317,8 @@ var Containers = (_class = function Containers(appStore) {
             }).join(', '),
             names: container.Names.map(function (name) {
               return name.slice(1);
-            }).join(', ')
+            }).join(', '),
+            state: container.State
           };
         });
       }).catch(function (err) {
@@ -319,6 +332,8 @@ var Containers = (_class = function Containers(appStore) {
     var _this5 = this;
 
     return function () {
+      _this5.setError(null);
+
       _axios2.default.post('/api/v1/containers/prune').then(function () {
         _this5.loadContainers();
       }).catch(function (err) {
@@ -332,10 +347,57 @@ var Containers = (_class = function Containers(appStore) {
     var _this6 = this;
 
     return function (id, name) {
+      _this6.setError(null);
+
       _axios2.default.put('/api/v1/containers/' + id + '/rename', { name: name }).then(function () {
         _this6.loadContainers();
       }).catch(function (err) {
         _this6.setError(err.response.data.message);
+      });
+    };
+  }
+}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, 'restartContainer', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this7 = this;
+
+    return function (id) {
+      _this7.setError(null);
+
+      _axios2.default.put('/api/v1/containers/' + id + '/restart', { name: name }).then(function () {
+        _this7.loadContainers();
+      }).catch(function (err) {
+        _this7.setError(err.response.data.message);
+      });
+    };
+  }
+}), _descriptor11 = _applyDecoratedDescriptor(_class.prototype, 'startContainer', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this8 = this;
+
+    return function (id) {
+      _this8.setError(null);
+
+      _axios2.default.put('/api/v1/containers/' + id + '/start', { name: name }).then(function () {
+        _this8.loadContainers();
+      }).catch(function (err) {
+        _this8.setError(err.response.data.message);
+      });
+    };
+  }
+}), _descriptor12 = _applyDecoratedDescriptor(_class.prototype, 'stopContainer', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this9 = this;
+
+    return function (id) {
+      _this9.setError(null);
+
+      _axios2.default.put('/api/v1/containers/' + id + '/stop', { name: name }).then(function () {
+        _this9.loadContainers();
+      }).catch(function (err) {
+        _this9.setError(err.response.data.message);
       });
     };
   }
@@ -470,6 +532,8 @@ var Images = (_class = function Images(appStore) {
     var _this2 = this;
 
     return function (id) {
+      _this2.setError(null);
+
       _axios2.default.delete('/api/v1/images/' + id).then(function () {
         _this2.loadImages();
       }).catch(function (err) {
@@ -483,6 +547,8 @@ var Images = (_class = function Images(appStore) {
     var _this3 = this;
 
     return function (id) {
+      _this3.setError(null);
+
       _axios2.default.get('/api/v1/images/' + id).then(function (res) {
         _this3.inspect = res.data;
       }).catch(function (err) {
@@ -496,6 +562,8 @@ var Images = (_class = function Images(appStore) {
     var _this4 = this;
 
     return function () {
+      _this4.setError(null);
+
       _axios2.default.get('/api/v1/images').then(function (res) {
         _this4.images = (0, _lodash.sortBy)(res.data, function (image) {
           return -image.Created;
@@ -519,6 +587,8 @@ var Images = (_class = function Images(appStore) {
     var _this5 = this;
 
     return function () {
+      _this5.setError(null);
+
       _axios2.default.post('/api/v1/images/prune').then(function () {
         _this5.loadImages();
       }).catch(function (err) {
@@ -647,6 +717,8 @@ var Volumes = (_class = function Volumes(appStore) {
     var _this2 = this;
 
     return function (volume) {
+      _this2.setError(null);
+
       _axios2.default.post('/api/v1/volumes', volume).then(function () {
         _this2.loadVolumes();
       }).catch(function (err) {
@@ -660,6 +732,8 @@ var Volumes = (_class = function Volumes(appStore) {
     var _this3 = this;
 
     return function (id) {
+      _this3.setError(null);
+
       _axios2.default.delete('/api/v1/volumes/' + id).then(function () {
         _this3.loadVolumes();
       }).catch(function (err) {
@@ -673,6 +747,8 @@ var Volumes = (_class = function Volumes(appStore) {
     var _this4 = this;
 
     return function (id) {
+      _this4.setError(null);
+
       _axios2.default.get('/api/v1/volumes/' + id).then(function (res) {
         _this4.inspect = res.data;
       }).catch(function (err) {
@@ -686,6 +762,8 @@ var Volumes = (_class = function Volumes(appStore) {
     var _this5 = this;
 
     return function () {
+      _this5.setError(null);
+
       _axios2.default.get('/api/v1/volumes').then(function (res) {
         _this5.volumes = (0, _lodash.sortBy)(res.data, function (volume) {
           return volume.Name.toLowerCase();
@@ -706,6 +784,8 @@ var Volumes = (_class = function Volumes(appStore) {
     var _this6 = this;
 
     return function () {
+      _this6.setError(null);
+
       _axios2.default.post('/api/v1/volumes/prune').then(function () {
         _this6.loadVolumes();
       }).catch(function (err) {
@@ -880,6 +960,12 @@ var Images = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRea
     value: function render() {
       var _this2 = this;
 
+      var _imagesStore = this.imagesStore,
+          error = _imagesStore.error,
+          images = _imagesStore.images,
+          inspect = _imagesStore.inspect;
+
+
       return _react2.default.createElement(
         "div",
         { className: "Images" },
@@ -894,10 +980,10 @@ var Images = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRea
               null,
               "IMAGES"
             ),
-            this.imagesStore.error && _react2.default.createElement(
+            error && _react2.default.createElement(
               "div",
               { className: "error" },
-              this.imagesStore.error
+              error
             ),
             _react2.default.createElement(
               "table",
@@ -943,7 +1029,7 @@ var Images = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRea
               _react2.default.createElement(
                 "tbody",
                 null,
-                this.imagesStore.images.map(function (image, i) {
+                images.map(function (image, i) {
                   return _react2.default.createElement(
                     "tr",
                     { key: i },
@@ -1001,13 +1087,13 @@ var Images = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRea
               "Delete all unused images"
             )
           ),
-          this.imagesStore.inspect && _react2.default.createElement(
+          inspect && _react2.default.createElement(
             "div",
             { className: "detail" },
             _react2.default.createElement(
               "pre",
               null,
-              JSON.stringify(this.imagesStore.inspect, undefined, 2)
+              JSON.stringify(inspect, undefined, 2)
             )
           )
         )
@@ -1088,6 +1174,24 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
       }
     };
 
+    _this.restartContainer = function (id) {
+      if (confirm("Are you sure you want to restart container " + id + "?")) {
+        _this.containersStore.restartContainer(id);
+      }
+    };
+
+    _this.startContainer = function (id) {
+      if (confirm("Are you sure you want to start container " + id + "?")) {
+        _this.containersStore.startContainer(id);
+      }
+    };
+
+    _this.stopContainer = function (id) {
+      if (confirm("Are you sure you want to stop container " + id + "?")) {
+        _this.containersStore.stopContainer(id);
+      }
+    };
+
     _this.appStore = props.store;
     _this.containersStore = _this.appStore.containers;
     return _this;
@@ -1103,6 +1207,12 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
     value: function render() {
       var _this2 = this;
 
+      var _containersStore = this.containersStore,
+          containers = _containersStore.containers,
+          error = _containersStore.error,
+          inspect = _containersStore.inspect;
+
+
       return _react2.default.createElement(
         "div",
         { className: "Containers" },
@@ -1117,10 +1227,10 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
               null,
               "CONTAINERS"
             ),
-            this.containersStore.error && _react2.default.createElement(
+            error && _react2.default.createElement(
               "div",
               { className: "error" },
-              this.containersStore.error
+              error
             ),
             _react2.default.createElement(
               "table",
@@ -1176,7 +1286,7 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
               _react2.default.createElement(
                 "tbody",
                 null,
-                this.containersStore.containers.map(function (container, i) {
+                containers.map(function (container, i) {
                   return _react2.default.createElement(
                     "tr",
                     { key: i },
@@ -1224,7 +1334,28 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                     _react2.default.createElement(
                       "td",
                       null,
-                      _react2.default.createElement(
+                      container.state !== 'running' && _react2.default.createElement(
+                        "button",
+                        { onClick: function onClick() {
+                            return _this2.startContainer(container.id);
+                          } },
+                        "Start"
+                      ),
+                      container.state === 'running' && _react2.default.createElement(
+                        "button",
+                        { onClick: function onClick() {
+                            return _this2.restartContainer(container.id);
+                          } },
+                        "Restart"
+                      ),
+                      container.state === 'running' && _react2.default.createElement(
+                        "button",
+                        { onClick: function onClick() {
+                            return _this2.stopContainer(container.id);
+                          } },
+                        "Stop"
+                      ),
+                      container.state !== 'running' && _react2.default.createElement(
                         "button",
                         { onClick: function onClick() {
                             return _this2.destroyContainer(container.id);
@@ -1251,13 +1382,13 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
               "Delete all stopped containers"
             )
           ),
-          this.containersStore.inspect && _react2.default.createElement(
+          inspect && _react2.default.createElement(
             "div",
             { className: "detail" },
             _react2.default.createElement(
               "pre",
               null,
-              JSON.stringify(this.containersStore.inspect, undefined, 2)
+              JSON.stringify(inspect, undefined, 2)
             )
           )
         )
@@ -1367,6 +1498,12 @@ var Volumes = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRe
     value: function render() {
       var _this2 = this;
 
+      var _volumesStore = this.volumesStore,
+          error = _volumesStore.error,
+          inspect = _volumesStore.inspect,
+          volumes = _volumesStore.volumes;
+
+
       return _react2.default.createElement(
         "div",
         { className: "Volumes" },
@@ -1381,10 +1518,10 @@ var Volumes = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRe
               null,
               "VOLUMES"
             ),
-            this.volumesStore.error && _react2.default.createElement(
+            error && _react2.default.createElement(
               "div",
               { className: "error" },
-              this.volumesStore.error
+              error
             ),
             _react2.default.createElement(
               "form",
@@ -1421,7 +1558,7 @@ var Volumes = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRe
               _react2.default.createElement(
                 "tbody",
                 null,
-                this.volumesStore.volumes.map(function (volume, i) {
+                volumes.map(function (volume, i) {
                   return _react2.default.createElement(
                     "tr",
                     { key: i },
@@ -1464,13 +1601,13 @@ var Volumes = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRe
               "Delete all unused volumes"
             )
           ),
-          this.volumesStore.inspect && _react2.default.createElement(
+          inspect && _react2.default.createElement(
             "div",
             { className: "detail" },
             _react2.default.createElement(
               "pre",
               null,
-              JSON.stringify(this.volumesStore.inspect, undefined, 2)
+              JSON.stringify(inspect, undefined, 2)
             )
           )
         )

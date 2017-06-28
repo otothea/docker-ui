@@ -23,6 +23,8 @@ export default class Images {
   }
 
   @action destroyImage = id => {
+    this.setError(null)
+
     axios.delete(`/api/v1/images/${id}`)
     .then(() => {
       this.loadImages()
@@ -33,6 +35,8 @@ export default class Images {
   }
 
   @action inspectImage = id => {
+    this.setError(null)
+
     axios.get(`/api/v1/images/${id}`)
     .then(res => {
       this.inspect = res.data
@@ -43,6 +47,8 @@ export default class Images {
   }
 
   @action loadImages = () => {
+    this.setError(null)
+
     axios.get('/api/v1/images')
     .then(res => {
       this.images = sortBy(res.data, image => -image.Created).map(image => ({
@@ -59,6 +65,8 @@ export default class Images {
   }
 
   @action pruneImages = () => {
+    this.setError(null)
+
     axios.post('/api/v1/images/prune')
     .then(() => {
       this.loadImages()

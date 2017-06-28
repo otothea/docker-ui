@@ -65,12 +65,14 @@ export default class Volumes extends React.Component {
   }
 
   render() {
+    const {error, inspect, volumes} = this.volumesStore
+
     return (
       <div className="Volumes">
         <div className="master-detail">
           <div className="master">
             <h1>VOLUMES</h1>
-            {this.volumesStore.error && <div className='error'>{this.volumesStore.error}</div>}
+            {error && <div className='error'>{error}</div>}
             <form onSubmit={this.createVolume}>
               <input name="name" value={this.state.volume.name} onChange={this.onChange} />
               <input type="submit" value="Create" />
@@ -84,7 +86,7 @@ export default class Volumes extends React.Component {
               </tr>
               </thead>
               <tbody>
-              {this.volumesStore.volumes.map((volume, i) => (
+              {volumes.map((volume, i) => (
                 <tr key={i}>
                   <td title={volume.driver}>{volume.driver}</td>
                   <td title={volume.name}><a href="#" onClick={e => this.inspectVolume(e, volume.name)}>{volume.name}</a></td>
@@ -97,8 +99,8 @@ export default class Volumes extends React.Component {
             </table>
             <button onClick={() => this.pruneVolumes()}>Delete all unused volumes</button>
           </div>
-          {this.volumesStore.inspect && <div className="detail">
-            <pre>{JSON.stringify(this.volumesStore.inspect, undefined, 2)}</pre>
+          {inspect && <div className="detail">
+            <pre>{JSON.stringify(inspect, undefined, 2)}</pre>
           </div>}
         </div>
       </div>

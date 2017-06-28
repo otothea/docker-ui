@@ -1,4 +1,4 @@
-const request = require('../lib/request')
+const request = require('lib/request')
 
 module.exports = {
   list,
@@ -6,6 +6,9 @@ module.exports = {
   rename,
   destroy,
   prune,
+  restart,
+  start,
+  stop,
 }
 
 async function list(req, res) {
@@ -47,6 +50,33 @@ async function destroy(req, res) {
 async function prune(req, res) {
   try {
     res.send(await request('post', 'containers/prune'))
+  }
+  catch(e) {
+    res.status(500).send(e)
+  }
+}
+
+async function restart(req, res) {
+  try {
+    res.send(await request('post', `containers/${req.params.id}/restart`))
+  }
+  catch(e) {
+    res.status(500).send(e)
+  }
+}
+
+async function start(req, res) {
+  try {
+    res.send(await request('post', `containers/${req.params.id}/start`))
+  }
+  catch(e) {
+    res.status(500).send(e)
+  }
+}
+
+async function stop(req, res) {
+  try {
+    res.send(await request('post', `containers/${req.params.id}/stop`))
   }
   catch(e) {
     res.status(500).send(e)

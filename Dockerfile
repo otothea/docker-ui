@@ -12,6 +12,9 @@ WORKDIR /srv/www
 COPY package.json package.json
 RUN npm install
 
+COPY scripts scripts
+RUN npm run postinstall
+
 # APP
 
 COPY api               api
