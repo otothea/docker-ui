@@ -35,6 +35,16 @@ export default class Volumes extends React.Component {
     }
   }
 
+  inspectVolume = (e, id) => {
+    e.preventDefault()
+
+    axios.get(`/api/v1/volumes/${id}`).then(res => {
+      this.setState({
+        inspect: res.data,
+      })
+    })
+  }
+
   loadVolumes = () => {
     axios.get('/api/v1/volumes').then(res => {
       this.setState({
@@ -42,16 +52,6 @@ export default class Volumes extends React.Component {
           driver: volume.Driver,
           name: volume.Name,
         })),
-      })
-    })
-  }
-
-  inspectVolume = (e, id) => {
-    e.preventDefault()
-
-    axios.get(`/api/v1/volumes/${id}`).then(res => {
-      this.setState({
-        inspect: res.data,
       })
     })
   }

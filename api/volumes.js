@@ -26,9 +26,7 @@ async function create(req, res) {
       Labels: req.body.labels,
     }
 
-    const response = await request('post', 'volumes/create', body)
-
-    res.send(response)
+    res.send(await request('post', 'volumes/create', body))
   }
   catch(e) {
     res.status(500).send(e)
@@ -37,9 +35,7 @@ async function create(req, res) {
 
 async function read(req, res) {
   try {
-    const response = await request('get', `volumes/${req.params.id}`)
-
-    res.send(response)
+    res.send(await request('get', `volumes/${req.params.id}`))
   }
   catch(e) {
     res.status(500).send(e)
@@ -48,9 +44,7 @@ async function read(req, res) {
 
 async function destroy(req, res) {
   try {
-    const response = await request('delete', `volumes/${req.params.id}`)
-
-    res.send(response)
+    res.send(await request('delete', `volumes/${req.params.id}`))
   }
   catch(e) {
     res.status(500).send(e)
@@ -59,9 +53,7 @@ async function destroy(req, res) {
 
 async function prune(req, res) {
   try {
-    const response = await request('post', 'volumes/prune')
-
-    res.send(response)
+    res.send(await request('post', 'volumes/prune'))
   }
   catch(e) {
     res.status(500).send(e)

@@ -27,9 +27,7 @@ async function read(req, res) {
 
 async function destroy(req, res) {
   try {
-    const response = await request('delete', `images/${req.params.id}`)
-
-    res.send(response)
+    res.send(await request('delete', `images/${req.params.id}`))
   }
   catch(e) {
     res.status(500).send(e)
@@ -38,9 +36,7 @@ async function destroy(req, res) {
 
 async function prune(req, res) {
   try {
-    const response = await request('post', 'images/prune')
-
-    res.send(response)
+    res.send(await request('post', 'images/prune'))
   }
   catch(e) {
     res.status(500).send(e)

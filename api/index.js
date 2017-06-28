@@ -12,6 +12,7 @@ router.post('/images/prune', images.prune)
 
 router.get('/containers', containers.list)
 router.get('/containers/:id', containers.read)
+router.put('/containers/:id/rename', containers.rename)
 router.delete('/containers/:id', containers.destroy)
 router.post('/containers/prune', containers.prune)
 

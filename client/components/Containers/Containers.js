@@ -59,6 +59,16 @@ export default class Containers extends React.Component {
     }
   }
 
+  renameContainer = container => {
+    const name = prompt('What would you like the new name to be?', container.names)
+
+    if (name) {
+      axios.put(`/api/v1/containers/${container.id}/rename`, {name: name}).then(() => {
+        this.loadContainers()
+      })
+    }
+  }
+
   render() {
     return (
       <div className="Containers">
@@ -90,6 +100,7 @@ export default class Containers extends React.Component {
                   <td title={container.names}>{container.names}</td>
                   <td>
                     <button onClick={() => this.destroyContainer(container.id)}>Delete</button>
+                    <button onClick={() => this.renameContainer(container)}>Rename</button>
                   </td>
                 </tr>
               ))}
