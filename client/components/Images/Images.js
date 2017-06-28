@@ -15,6 +15,7 @@ export default class Images extends React.Component {
 
     this.state = {
       images: [],
+      inspect: null,
     }
   }
 
@@ -30,11 +31,21 @@ export default class Images extends React.Component {
     }
   }
 
+  inspectImage = (e, id) => {
+    e.preventDefault()
+
+    axios.get(`/api/v1/images/${id}`).then(res => {
+      this.setState({
+        inspect: res.data,
+      })
+    })
+  }
+
   loadImages = () => {
     axios.get('/api/v1/images').then(res => {
       this.setState({
         images: sortBy(res.data, image => -image.Created).map(image => ({
-          repository: image.RepoTags ? image.RepoTags[0].split(':')[0] : image.RepoDigests[0].split('@')[0],
+          repository: image.RepoTags ? image.RepoTags[0].split(':')[0] : image.RepoDigests ? image.RepoDigests[0].split('@')[0] : '<none>',
           tag: image.RepoTags ? image.RepoTags[0].split(':')[1] : '<none>',
           image: image.Id.split(':')[1].substr(0, 12),
           created: moment.unix(image.Created).fromNow(),
@@ -44,36 +55,52 @@ export default class Images extends React.Component {
     })
   }
 
+  pruneImages = () => {
+    if (confirm('Are you sure you want to delete unused images?')) {
+      axios.post('/api/v1/images/prune').then(() => {
+        this.loadImages()
+      })
+    }
+  }
+
   render() {
     return (
       <div className="Images">
         <h1>IMAGES</h1>
-        <table>
-          <thead>
-          <tr>
-            <th>Repository</th>
-            <th>Tag</th>
-            <th>Image ID</th>
-            <th>Created</th>
-            <th>Size</th>
-            <th>Actions</th>
-          </tr>
-          </thead>
-          <tbody>
-          {this.state.images.map((image, i) => (
-            <tr key={i}>
-              <td title={image.repository}>{image.repository}</td>
-              <td title={image.tag}>{image.tag}</td>
-              <td title={image.image}>{image.image}</td>
-              <td title={image.created}>{image.created}</td>
-              <td title={image.size}>{image.size}</td>
-              <td>
-                <button onClick={() => this.destroyImage(image.image)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-          </tbody>
-        </table>
+        <div className="master-detail">
+          <div className="master">
+            <table>
+              <thead>
+              <tr>
+                <th>Repository</th>
+                <th>Tag</th>
+                <th>Image ID</th>
+                <th>Created</th>
+                <th>Size</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              {this.state.images.map((image, i) => (
+                <tr key={i}>
+                  <td title={image.repository}>{image.repository}</td>
+                  <td title={image.tag}>{image.tag}</td>
+                  <td title={image.image}><a href="#" onClick={e => this.inspectImage(e, image.image)}>{image.image}</a></td>
+                  <td title={image.created}>{image.created}</td>
+                  <td title={image.size}>{image.size}</td>
+                  <td>
+                    <button onClick={() => this.destroyImage(image.image)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+              </tbody>
+            </table>
+            <button onClick={() => this.pruneImages()}>Delete all unused images</button>
+          </div>
+          {this.state.inspect && <div className="detail">
+            <pre>{JSON.stringify(this.state.inspect, undefined, 2)}</pre>
+          </div>}
+        </div>
       </div>
     )
   }
