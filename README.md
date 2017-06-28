@@ -98,9 +98,9 @@ npm start
 
 ## Environment Variables
 
-DOCKER_UI_HOST     - override config.host (the hostname that the API listens on)
-DOCKER_UI_PORT     - override config.port (the port the API listens on)
-DOCKER_UI_DEBUGGER - override config.debugger (the port the debugger runs on)
+- DOCKER_UI_HOST     - override config.host (the hostname that the API listens on)
+- DOCKER_UI_PORT     - override config.port (the port the API listens on)
+- DOCKER_UI_DEBUGGER - override config.debugger (the port the debugger runs on)
 
 ## Testing
 
