@@ -9,7 +9,8 @@
     "build": "node fuse.prod.js",
     "postinstall": "node scripts/postinstall.js",
     "prod": "NODE_ENV=production node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "precommit": "rm -r dist & npm run build & git add dist"
   },
   "keywords": [
     "docker",
