@@ -4,7 +4,7 @@ import AppStore from 'stores/AppStore'
 
 @inject('store')
 @observer
-export default class Volumes extends React.Component {
+export default class Networks extends React.Component {
   props: {
     store: AppStore;
   }
@@ -13,62 +13,62 @@ export default class Volumes extends React.Component {
     super(props)
 
     this.state = {
-      volume: {
+      network: {
         name: '',
       },
     }
 
     this.appStore = props.store
-    this.volumesStore = this.appStore.volumes
+    this.networksStore = this.appStore.networks
   }
 
   componentDidMount() {
-    this.loadVolumes()
+    this.loadNetworks()
   }
 
-  createVolume = e => {
+  createNetwork = e => {
     e.preventDefault()
 
-    this.volumesStore.createVolume(this.state.volume)
+    this.networksStore.createNetwork(this.state.network)
   }
 
-  destroyVolume = id => {
-    if (confirm(`Are you sure you want to delete volume ${id}?`)) {
-      this.volumesStore.destroyVolume(id)
+  destroyNetwork = id => {
+    if (confirm(`Are you sure you want to delete network ${id}?`)) {
+      this.networksStore.destroyNetwork(id)
     }
   }
 
-  inspectVolume = (e, id) => {
+  inspectNetwork = (e, id) => {
     e.preventDefault()
 
-    this.volumesStore.inspectVolume(id)
+    this.networksStore.inspectNetwork(id)
   }
 
-  loadVolumes = () => {
-    this.volumesStore.loadVolumes()
+  loadNetworks = () => {
+    this.networksStore.loadNetworks()
   }
 
   onChange = e => {
     const name = e.currentTarget.name
     const value = e.currentTarget.value
     this.setState({
-      volume: Object.assign({}, this.state.volume, {
+      network: Object.assign({}, this.state.network, {
         [name]: value,
       }),
     })
   }
 
   render() {
-    const {error, inspect, volumes} = this.volumesStore
+    const {error, inspect, networks} = this.networksStore
 
     return (
-      <div className="Volumes">
+      <div className="Networks">
         <div className="master-detail">
           <div className="master">
             {error && <div className="alert alert-danger" role="alert">{error}</div>}
-            <form className="form-inline" onSubmit={this.createVolume}>
+            <form className="form-inline" onSubmit={this.createNetwork}>
               <div className="form-group">
-                <input className="form-control" type="text" name="name" value={this.state.volume.name} onChange={this.onChange} />
+                <input className="form-control" type="text" name="name" value={this.state.network.name} onChange={this.onChange} />
               </div>
               <button type="submit" className="btn btn-default">Create</button>
             </form>
@@ -76,23 +76,27 @@ export default class Volumes extends React.Component {
               <table className="table">
                 <thead>
                 <tr>
-                  <th>Driver</th>
+                  <th>Network ID</th>
                   <th>Name</th>
+                  <th>Driver</th>
+                  <th>Scope</th>
                   <th />
                 </tr>
                 </thead>
                 <tbody>
-                {volumes.map((volume, i) => (
+                {networks.map((network, i) => (
                   <tr key={i}>
-                    <td title={volume.driver}>{volume.driver}</td>
-                    <td title={volume.name}><a href="#" onClick={e => this.inspectVolume(e, volume.name)}>{volume.name}</a></td>
+                    <td title={network.id}>{network.id}</td>
+                    <td title={network.name}><a href="#" onClick={e => this.inspectNetwork(e, network.id)}>{network.name}</a></td>
+                    <td title={network.driver}>{network.driver}</td>
+                    <td title={network.scope}>{network.scope}</td>
                     <td>
                       <div className="dropdown pull-right">
                         <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                           <span className="glyphicon glyphicon-cog" />
                         </button>
                         <ul className="dropdown-menu dropdown-menu-right">
-                          <li><a href="#" onClick={() => this.destroyVolume(volume.name)}>Delete</a></li>
+                          <li><a href="#" onClick={() => this.destroyNetwork(network.id)}>Delete</a></li>
                         </ul>
                       </div>
                     </td>

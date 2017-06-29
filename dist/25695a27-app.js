@@ -63,6 +63,10 @@ var _Volumes = require("./components/Volumes/Volumes");
 
 var _Volumes2 = _interopRequireDefault(_Volumes);
 
+var _Networks = require("./components/Networks/Networks");
+
+var _Networks2 = _interopRequireDefault(_Networks);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -95,7 +99,8 @@ var Router = function (_React$Component) {
             _react2.default.createElement(_reactRouter.IndexRedirect, { to: "images" }),
             _react2.default.createElement(_reactRouter.Route, { path: "images", component: _Images2.default }),
             _react2.default.createElement(_reactRouter.Route, { path: "containers", component: _Containers2.default }),
-            _react2.default.createElement(_reactRouter.Route, { path: "volumes", component: _Volumes2.default })
+            _react2.default.createElement(_reactRouter.Route, { path: "volumes", component: _Volumes2.default }),
+            _react2.default.createElement(_reactRouter.Route, { path: "networks", component: _Networks2.default })
           )
         )
       );
@@ -128,6 +133,10 @@ var _Volumes = require('./Volumes/Volumes');
 
 var _Volumes2 = _interopRequireDefault(_Volumes);
 
+var _Networks = require('./Networks/Networks');
+
+var _Networks2 = _interopRequireDefault(_Networks);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -138,6 +147,7 @@ var AppStore = function AppStore() {
   this.containers = new _Containers2.default(this);
   this.images = new _Images2.default(this);
   this.volumes = new _Volumes2.default(this);
+  this.networks = new _Networks2.default(this);
 };
 
 exports.default = AppStore;
@@ -783,6 +793,197 @@ var Volumes = (_class = function Volumes(appStore) {
 })), _class);
 exports.default = Volumes;
 });
+___scope___.file("stores/Networks/Networks.js", function(exports, require, module, __filename, __dirname){
+
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9;
+
+var _axios = require('axios');
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _lodash = require('lodash');
+
+var _mobx = require('mobx');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _initDefineProp(target, property, descriptor, context) {
+  if (!descriptor) return;
+  Object.defineProperty(target, property, {
+    enumerable: descriptor.enumerable,
+    configurable: descriptor.configurable,
+    writable: descriptor.writable,
+    value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+  });
+}
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+  var desc = {};
+  Object['ke' + 'ys'](descriptor).forEach(function (key) {
+    desc[key] = descriptor[key];
+  });
+  desc.enumerable = !!desc.enumerable;
+  desc.configurable = !!desc.configurable;
+
+  if ('value' in desc || desc.initializer) {
+    desc.writable = true;
+  }
+
+  desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+    return decorator(target, property, desc) || desc;
+  }, desc);
+
+  if (context && desc.initializer !== void 0) {
+    desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+    desc.initializer = undefined;
+  }
+
+  if (desc.initializer === void 0) {
+    Object['define' + 'Property'](target, property, desc);
+    desc = null;
+  }
+
+  return desc;
+}
+
+function _initializerWarningHelper(descriptor, context) {
+  throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+}
+
+var Networks = (_class = function Networks(appStore) {
+  _classCallCheck(this, Networks);
+
+  _initDefineProp(this, 'error', _descriptor, this);
+
+  _initDefineProp(this, 'networks', _descriptor2, this);
+
+  _initDefineProp(this, 'inspect', _descriptor3, this);
+
+  _initDefineProp(this, 'setError', _descriptor4, this);
+
+  _initDefineProp(this, 'createNetwork', _descriptor5, this);
+
+  _initDefineProp(this, 'destroyNetwork', _descriptor6, this);
+
+  _initDefineProp(this, 'inspectNetwork', _descriptor7, this);
+
+  _initDefineProp(this, 'loadNetworks', _descriptor8, this);
+
+  _initDefineProp(this, 'pruneNetworks', _descriptor9, this);
+
+  this.appStore = appStore;
+}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'error', [_mobx.observable], {
+  enumerable: true,
+  initializer: function initializer() {
+    return null;
+  }
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'networks', [_mobx.observable], {
+  enumerable: true,
+  initializer: function initializer() {
+    return [];
+  }
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, 'inspect', [_mobx.observable], {
+  enumerable: true,
+  initializer: function initializer() {
+    return null;
+  }
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, 'setError', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this = this;
+
+    return function () {
+      var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      _this.error = (((err || {}).response || {}).data || {}).message || null;
+    };
+  }
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'createNetwork', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this2 = this;
+
+    return function (network) {
+      _this2.setError();
+
+      _axios2.default.post('/api/v1/networks', network).then(function () {
+        _this2.loadNetworks();
+      }).catch(_this2.setError);
+    };
+  }
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'destroyNetwork', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this3 = this;
+
+    return function (id) {
+      _this3.setError();
+
+      _axios2.default.delete('/api/v1/networks/' + id).then(function () {
+        _this3.loadNetworks();
+      }).catch(_this3.setError);
+    };
+  }
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, 'inspectNetwork', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this4 = this;
+
+    return function (id) {
+      _this4.setError();
+
+      _axios2.default.get('/api/v1/networks/' + id).then(function (res) {
+        _this4.inspect = res.data;
+      }).catch(_this4.setError);
+    };
+  }
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, 'loadNetworks', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this5 = this;
+
+    return function () {
+      _this5.setError();
+
+      _axios2.default.get('/api/v1/networks').then(function (res) {
+        _this5.networks = (0, _lodash.sortBy)(res.data, function (network) {
+          return -network.Created;
+        }).map(function (network) {
+          return {
+            id: network.Id.substr(0, 12),
+            name: network.Name,
+            driver: network.Driver,
+            scope: network.Scope
+          };
+        });
+      }).catch(_this5.setError);
+    };
+  }
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, 'pruneNetworks', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this6 = this;
+
+    return function () {
+      _this6.setError();
+
+      _axios2.default.post('/api/v1/networks/prune').then(function () {
+        _this6.loadNetworks();
+      }).catch(_this6.setError);
+    };
+  }
+})), _class);
+exports.default = Networks;
+});
 ___scope___.file("components/App.js", function(exports, require, module, __filename, __dirname){
 
 "use strict";
@@ -848,10 +1049,17 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
       }
     };
 
+    _this.pruneNetworks = function () {
+      if (confirm('Are you sure you want to delete unused networks?')) {
+        _this.networksStore.pruneNetworks();
+      }
+    };
+
     _this.appStore = props.store;
     _this.containersStore = _this.appStore.containers;
     _this.imagesStore = _this.appStore.images;
     _this.volumesStore = _this.appStore.volumes;
+    _this.networksStore = _this.appStore.networks;
     return _this;
   }
 
@@ -889,6 +1097,15 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
                 return _this2.pruneVolumes();
               } },
             "Delete all unused volumes"
+          );
+          break;
+        case 'networks':
+          button = _react2.default.createElement(
+            "button",
+            { type: "button", className: "btn btn-danger", onClick: function onClick() {
+                return _this2.pruneNetworks();
+              } },
+            "Delete all unused networks"
           );
           break;
       }
@@ -938,6 +1155,11 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
                   Li,
                   { to: "/volumes" },
                   "Volumes"
+                ),
+                _react2.default.createElement(
+                  Li,
+                  { to: "/networks" },
+                  "Networks"
                 )
               ),
               _react2.default.createElement(
@@ -1627,9 +1849,17 @@ var Volumes = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRe
             ),
             _react2.default.createElement(
               "form",
-              { onSubmit: this.createVolume },
-              _react2.default.createElement("input", { name: "name", value: this.state.volume.name, onChange: this.onChange }),
-              _react2.default.createElement("input", { type: "submit", value: "Create" })
+              { className: "form-inline", onSubmit: this.createVolume },
+              _react2.default.createElement(
+                "div",
+                { className: "form-group" },
+                _react2.default.createElement("input", { className: "form-control", type: "text", name: "name", value: this.state.volume.name, onChange: this.onChange })
+              ),
+              _react2.default.createElement(
+                "button",
+                { type: "submit", className: "btn btn-default" },
+                "Create"
+              )
             ),
             _react2.default.createElement(
               "div",
@@ -1730,6 +1960,252 @@ var Volumes = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRe
   return Volumes;
 }(_react2.default.Component)) || _class) || _class);
 exports.default = Volumes;
+});
+___scope___.file("components/Networks/Networks.js", function(exports, require, module, __filename, __dirname){
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _class;
+
+var _mobxReact = require("mobx-react");
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _AppStore = require("~/stores/AppStore");
+
+var _AppStore2 = _interopRequireDefault(_AppStore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Networks = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxReact.observer)(_class = function (_React$Component) {
+  _inherits(Networks, _React$Component);
+
+  function Networks(props) {
+    _classCallCheck(this, Networks);
+
+    var _this = _possibleConstructorReturn(this, (Networks.__proto__ || Object.getPrototypeOf(Networks)).call(this, props));
+
+    _this.createNetwork = function (e) {
+      e.preventDefault();
+
+      _this.networksStore.createNetwork(_this.state.network);
+    };
+
+    _this.destroyNetwork = function (id) {
+      if (confirm("Are you sure you want to delete network " + id + "?")) {
+        _this.networksStore.destroyNetwork(id);
+      }
+    };
+
+    _this.inspectNetwork = function (e, id) {
+      e.preventDefault();
+
+      _this.networksStore.inspectNetwork(id);
+    };
+
+    _this.loadNetworks = function () {
+      _this.networksStore.loadNetworks();
+    };
+
+    _this.onChange = function (e) {
+      var name = e.currentTarget.name;
+      var value = e.currentTarget.value;
+      _this.setState({
+        network: Object.assign({}, _this.state.network, _defineProperty({}, name, value))
+      });
+    };
+
+    _this.state = {
+      network: {
+        name: ''
+      }
+    };
+
+    _this.appStore = props.store;
+    _this.networksStore = _this.appStore.networks;
+    return _this;
+  }
+
+  _createClass(Networks, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.loadNetworks();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var _networksStore = this.networksStore,
+          error = _networksStore.error,
+          inspect = _networksStore.inspect,
+          networks = _networksStore.networks;
+
+
+      return _react2.default.createElement(
+        "div",
+        { className: "Networks" },
+        _react2.default.createElement(
+          "div",
+          { className: "master-detail" },
+          _react2.default.createElement(
+            "div",
+            { className: "master" },
+            error && _react2.default.createElement(
+              "div",
+              { className: "alert alert-danger", role: "alert" },
+              error
+            ),
+            _react2.default.createElement(
+              "form",
+              { className: "form-inline", onSubmit: this.createNetwork },
+              _react2.default.createElement(
+                "div",
+                { className: "form-group" },
+                _react2.default.createElement("input", { className: "form-control", type: "text", name: "name", value: this.state.network.name, onChange: this.onChange })
+              ),
+              _react2.default.createElement(
+                "button",
+                { type: "submit", className: "btn btn-default" },
+                "Create"
+              )
+            ),
+            _react2.default.createElement(
+              "div",
+              { className: "table-responsive" },
+              _react2.default.createElement(
+                "table",
+                { className: "table" },
+                _react2.default.createElement(
+                  "thead",
+                  null,
+                  _react2.default.createElement(
+                    "tr",
+                    null,
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Network ID"
+                    ),
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Name"
+                    ),
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Driver"
+                    ),
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Scope"
+                    ),
+                    _react2.default.createElement("th", null)
+                  )
+                ),
+                _react2.default.createElement(
+                  "tbody",
+                  null,
+                  networks.map(function (network, i) {
+                    return _react2.default.createElement(
+                      "tr",
+                      { key: i },
+                      _react2.default.createElement(
+                        "td",
+                        { title: network.id },
+                        network.id
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        { title: network.name },
+                        _react2.default.createElement(
+                          "a",
+                          { href: "#", onClick: function onClick(e) {
+                              return _this2.inspectNetwork(e, network.id);
+                            } },
+                          network.name
+                        )
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        { title: network.driver },
+                        network.driver
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        { title: network.scope },
+                        network.scope
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        null,
+                        _react2.default.createElement(
+                          "div",
+                          { className: "dropdown pull-right" },
+                          _react2.default.createElement(
+                            "button",
+                            { className: "btn btn-default dropdown-toggle", type: "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "true" },
+                            _react2.default.createElement("span", { className: "glyphicon glyphicon-cog" })
+                          ),
+                          _react2.default.createElement(
+                            "ul",
+                            { className: "dropdown-menu dropdown-menu-right" },
+                            _react2.default.createElement(
+                              "li",
+                              null,
+                              _react2.default.createElement(
+                                "a",
+                                { href: "#", onClick: function onClick() {
+                                    return _this2.destroyNetwork(network.id);
+                                  } },
+                                "Delete"
+                              )
+                            )
+                          )
+                        )
+                      )
+                    );
+                  })
+                )
+              )
+            )
+          ),
+          inspect && _react2.default.createElement(
+            "div",
+            { className: "detail" },
+            _react2.default.createElement(
+              "pre",
+              null,
+              JSON.stringify(inspect, undefined, 2)
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return Networks;
+}(_react2.default.Component)) || _class) || _class);
+exports.default = Networks;
 });
 });
 

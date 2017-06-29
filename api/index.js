@@ -2,6 +2,7 @@ const {Router} = require('express')
 const images = require('./images')
 const containers = require('./containers')
 const volumes = require('./volumes')
+const networks = require('./networks')
 
 const router = module.exports = new Router()
 
@@ -25,3 +26,9 @@ router.post('/volumes', volumes.create)
 router.get('/volumes/:id', volumes.read)
 router.delete('/volumes/:id', volumes.destroy)
 router.post('/volumes/prune', volumes.prune)
+
+router.get('/networks', networks.list)
+router.post('/networks', networks.create)
+router.get('/networks/:id', networks.read)
+router.delete('/networks/:id', networks.destroy)
+router.post('/networks/prune', networks.prune)

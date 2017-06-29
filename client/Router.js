@@ -6,6 +6,7 @@ import App from './components/App'
 import Images from './components/Images/Images'
 import Containers from './components/Containers/Containers'
 import Volumes from './components/Volumes/Volumes'
+import Networks from './components/Networks/Networks'
 
 export default class Router extends React.Component {
   props: {
@@ -21,6 +22,7 @@ export default class Router extends React.Component {
             <Route path="images" component={Images} />
             <Route path="containers" component={Containers} />
             <Route path="volumes" component={Volumes} />
+            <Route path="networks" component={Networks} />
           </Route>
         </ReactRouter>
       </Provider>

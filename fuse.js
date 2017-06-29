@@ -8,11 +8,13 @@ const ESLintPlugin = require('fuse-box-eslint-plugin')
 const config = require('./config')
 
 module.exports = production => {
+  const output = production ? 'dist' : 'build'
+
   const fuse = new FuseBox({
     homeDir: 'client',
     sourceMaps: !production,
     hash: production,
-    output: `${production ? 'dist' : 'build'}/$name.js`,
+    output: `${output}/$name.js`,
     plugins: [
       ['.json', JSONPlugin()],
       ['.scss', SassPlugin(), CSSPlugin()],

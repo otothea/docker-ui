@@ -22,6 +22,7 @@ export default class App extends React.Component {
     this.containersStore = this.appStore.containers
     this.imagesStore = this.appStore.images
     this.volumesStore = this.appStore.volumes
+    this.networksStore = this.appStore.networks
   }
 
   pruneContainers = () => {
@@ -42,6 +43,12 @@ export default class App extends React.Component {
     }
   }
 
+  pruneNetworks = () => {
+    if (confirm('Are you sure you want to delete unused networks?')) {
+      this.networksStore.pruneNetworks()
+    }
+  }
+
   render() {
     const route = this.props.routes[this.props.routes.length - 1].path
 
@@ -55,6 +62,9 @@ export default class App extends React.Component {
       break
     case 'volumes':
       button = <button type="button" className="btn btn-danger" onClick={() => this.pruneVolumes()}>Delete all unused volumes</button>
+      break
+    case 'networks':
+      button = <button type="button" className="btn btn-danger" onClick={() => this.pruneNetworks()}>Delete all unused networks</button>
       break
     }
 
@@ -76,6 +86,7 @@ export default class App extends React.Component {
                 <Li to="/images">Images</Li>
                 <Li to="/containers">Containers</Li>
                 <Li to="/volumes">Volumes</Li>
+                <Li to="/networks">Networks</Li>
               </ul>
               <form className="navbar-form navbar-right">
                 {button}
