@@ -1,3 +1,8 @@
+[![GitHub version](https://badge.fury.io/gh/otothea%2Fdocker-ui.svg)](https://badge.fury.io/gh/otothea%2Fdocker-ui)
+[![GitHub downloads](https://img.shields.io/github/downloads/otothea/docker-ui/total.svg)]()
+[![Dependencies](https://david-dm.org/otothea/docker-ui.svg)](https://david-dm.org/otothea/docker-ui)
+[![Dev dependencies](https://david-dm.org/otothea/docker-ui/dev-status.svg)](https://david-dm.org/otothea/docker-ui?type=dev)
+
 # Docker UI
 
 Docker UI is a web app for viewing and managing Docker images, containers, volumes, etc in a web browser.
