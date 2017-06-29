@@ -11,48 +11,42 @@ export default class Volumes {
     this.appStore = appStore
   }
 
-  @action setError = message => {
-    this.error = message
+  @action setError = (err = null) => {
+    this.error = (((err || {}).response || {}).data || {}).message || null
   }
 
   @action createVolume = volume => {
-    this.setError(null)
+    this.setError()
 
     axios.post('/api/v1/volumes', volume)
     .then(() => {
       this.loadVolumes()
     })
-    .catch(err => {
-      this.setError(err.response.data.message)
-    })
+    .catch(this.setError)
   }
 
   @action destroyVolume = id => {
-    this.setError(null)
+    this.setError()
 
     axios.delete(`/api/v1/volumes/${id}`)
     .then(() => {
       this.loadVolumes()
     })
-    .catch(err => {
-      this.setError(err.response.data.message)
-    })
+    .catch(this.setError)
   }
 
   @action inspectVolume = id => {
-    this.setError(null)
+    this.setError()
 
     axios.get(`/api/v1/volumes/${id}`)
     .then(res => {
       this.inspect = res.data
     })
-    .catch(err => {
-      this.setError(err.response.data.message)
-    })
+    .catch(this.setError)
   }
 
   @action loadVolumes = () => {
-    this.setError(null)
+    this.setError()
 
     axios.get('/api/v1/volumes')
     .then(res => {
@@ -61,20 +55,16 @@ export default class Volumes {
         name: volume.Name,
       }))
     })
-    .catch(err => {
-      this.setError(err.response.data.message)
-    })
+    .catch(this.setError)
   }
 
   @action pruneVolumes = () => {
-    this.setError(null)
+    this.setError()
 
     axios.post('/api/v1/volumes/prune')
     .then(() => {
       this.loadVolumes()
     })
-    .catch(err => {
-      this.setError(err.response.data.message)
-    })
+    .catch(this.setError)
   }
 }

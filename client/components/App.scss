@@ -1,47 +1,4 @@
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
 .App {
-  h1 {
-    margin: 0;
-    padding: 5px;
-  }
-
-  ul {
-    margin: 0;
-    padding: 5px;
-    list-style: none;
-
-    li {
-      display: inline-block;
-      margin-right: 5px;
-
-      &:last-child {
-        margin-right: 0;
-      }
-    }
-  }
-
-  table {
-    width: 100%;
-
-    th,
-    td {
-      text-align: left;
-      padding: 5px;
-    }
-
-    td {
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-      max-width: 400px;
-    }
-  }
-
   .master-detail {
     display: flex;
     flex-direction: row;
@@ -56,9 +13,5 @@ body {
       max-width: 50%;
       overflow: auto;
     }
-  }
-
-  .error {
-    color: red;
   }
 }

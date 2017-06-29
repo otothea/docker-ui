@@ -18,36 +18,32 @@ export default class Images {
     this.appStore = appStore
   }
 
-  @action setError = message => {
-    this.error = message
+  @action setError = (err = null) => {
+    this.error = (((err || {}).response || {}).data || {}).message || null
   }
 
   @action destroyImage = id => {
-    this.setError(null)
+    this.setError()
 
     axios.delete(`/api/v1/images/${id}`)
     .then(() => {
       this.loadImages()
     })
-    .catch(err => {
-      this.setError(err.response.data.message)
-    })
+    .catch(this.setError)
   }
 
   @action inspectImage = id => {
-    this.setError(null)
+    this.setError()
 
     axios.get(`/api/v1/images/${id}`)
     .then(res => {
       this.inspect = res.data
     })
-    .catch(err => {
-      this.setError(err.response.data.message)
-    })
+    .catch(this.setError)
   }
 
   @action loadImages = () => {
-    this.setError(null)
+    this.setError()
 
     axios.get('/api/v1/images')
     .then(res => {
@@ -59,20 +55,16 @@ export default class Images {
         size: sizeOf(image.Size),
       }))
     })
-    .catch(err => {
-      this.setError(err.response.data.message)
-    })
+    .catch(this.setError)
   }
 
   @action pruneImages = () => {
-    this.setError(null)
+    this.setError()
 
     axios.post('/api/v1/images/prune')
     .then(() => {
       this.loadImages()
     })
-    .catch(err => {
-      this.setError(err.response.data.message)
-    })
+    .catch(this.setError)
   }
 }

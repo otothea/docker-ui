@@ -151,7 +151,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12;
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13;
 
 var _axios = require('axios');
 
@@ -239,6 +239,8 @@ var Containers = (_class = function Containers(appStore) {
 
   _initDefineProp(this, 'stopContainer', _descriptor12, this);
 
+  _initDefineProp(this, 'killContainer', _descriptor13, this);
+
   this.appStore = appStore;
 }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'error', [_mobx.observable], {
   enumerable: true,
@@ -260,8 +262,10 @@ var Containers = (_class = function Containers(appStore) {
   initializer: function initializer() {
     var _this = this;
 
-    return function (message) {
-      _this.error = message;
+    return function () {
+      var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      _this.error = (((err || {}).response || {}).data || {}).message || null;
     };
   }
 }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'destroyContainer', [_mobx.action], {
@@ -270,13 +274,11 @@ var Containers = (_class = function Containers(appStore) {
     var _this2 = this;
 
     return function (id) {
-      _this2.setError(null);
+      _this2.setError();
 
       _axios2.default.delete('/api/v1/containers/' + id).then(function () {
         _this2.loadContainers();
-      }).catch(function (err) {
-        _this2.setError(err.response.data.message);
-      });
+      }).catch(_this2.setError);
     };
   }
 }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'inspectContainer', [_mobx.action], {
@@ -285,13 +287,11 @@ var Containers = (_class = function Containers(appStore) {
     var _this3 = this;
 
     return function (id) {
-      _this3.setError(null);
+      _this3.setError();
 
       _axios2.default.get('/api/v1/containers/' + id).then(function (res) {
         _this3.inspect = res.data;
-      }).catch(function (err) {
-        _this3.setError(err.response.data.message);
-      });
+      }).catch(_this3.setError);
     };
   }
 }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, 'loadContainers', [_mobx.action], {
@@ -300,7 +300,7 @@ var Containers = (_class = function Containers(appStore) {
     var _this4 = this;
 
     return function () {
-      _this4.setError(null);
+      _this4.setError();
 
       _axios2.default.get('/api/v1/containers').then(function (res) {
         _this4.containers = (0, _lodash.sortBy)(res.data, function (container) {
@@ -321,9 +321,7 @@ var Containers = (_class = function Containers(appStore) {
             state: container.State
           };
         });
-      }).catch(function (err) {
-        _this4.setError(err.response.data.message);
-      });
+      }).catch(_this4.setError);
     };
   }
 }), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, 'pruneContainers', [_mobx.action], {
@@ -332,13 +330,11 @@ var Containers = (_class = function Containers(appStore) {
     var _this5 = this;
 
     return function () {
-      _this5.setError(null);
+      _this5.setError();
 
       _axios2.default.post('/api/v1/containers/prune').then(function () {
         _this5.loadContainers();
-      }).catch(function (err) {
-        _this5.setError(err.response.data.message);
-      });
+      }).catch(_this5.setError);
     };
   }
 }), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, 'renameContainer', [_mobx.action], {
@@ -347,13 +343,11 @@ var Containers = (_class = function Containers(appStore) {
     var _this6 = this;
 
     return function (id, name) {
-      _this6.setError(null);
+      _this6.setError();
 
       _axios2.default.put('/api/v1/containers/' + id + '/rename', { name: name }).then(function () {
         _this6.loadContainers();
-      }).catch(function (err) {
-        _this6.setError(err.response.data.message);
-      });
+      }).catch(_this6.setError);
     };
   }
 }), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, 'restartContainer', [_mobx.action], {
@@ -362,13 +356,11 @@ var Containers = (_class = function Containers(appStore) {
     var _this7 = this;
 
     return function (id) {
-      _this7.setError(null);
+      _this7.setError();
 
       _axios2.default.put('/api/v1/containers/' + id + '/restart', { name: name }).then(function () {
         _this7.loadContainers();
-      }).catch(function (err) {
-        _this7.setError(err.response.data.message);
-      });
+      }).catch(_this7.setError);
     };
   }
 }), _descriptor11 = _applyDecoratedDescriptor(_class.prototype, 'startContainer', [_mobx.action], {
@@ -377,13 +369,11 @@ var Containers = (_class = function Containers(appStore) {
     var _this8 = this;
 
     return function (id) {
-      _this8.setError(null);
+      _this8.setError();
 
       _axios2.default.put('/api/v1/containers/' + id + '/start', { name: name }).then(function () {
         _this8.loadContainers();
-      }).catch(function (err) {
-        _this8.setError(err.response.data.message);
-      });
+      }).catch(_this8.setError);
     };
   }
 }), _descriptor12 = _applyDecoratedDescriptor(_class.prototype, 'stopContainer', [_mobx.action], {
@@ -392,13 +382,24 @@ var Containers = (_class = function Containers(appStore) {
     var _this9 = this;
 
     return function (id) {
-      _this9.setError(null);
+      _this9.setError();
 
       _axios2.default.put('/api/v1/containers/' + id + '/stop', { name: name }).then(function () {
         _this9.loadContainers();
-      }).catch(function (err) {
-        _this9.setError(err.response.data.message);
-      });
+      }).catch(_this9.setError);
+    };
+  }
+}), _descriptor13 = _applyDecoratedDescriptor(_class.prototype, 'killContainer', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this10 = this;
+
+    return function (id) {
+      _this10.setError();
+
+      _axios2.default.put('/api/v1/containers/' + id + '/kill', { name: name }).then(function () {
+        _this10.loadContainers();
+      }).catch(_this10.setError);
     };
   }
 })), _class);
@@ -522,8 +523,10 @@ var Images = (_class = function Images(appStore) {
   initializer: function initializer() {
     var _this = this;
 
-    return function (message) {
-      _this.error = message;
+    return function () {
+      var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      _this.error = (((err || {}).response || {}).data || {}).message || null;
     };
   }
 }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'destroyImage', [_mobx.action], {
@@ -532,13 +535,11 @@ var Images = (_class = function Images(appStore) {
     var _this2 = this;
 
     return function (id) {
-      _this2.setError(null);
+      _this2.setError();
 
       _axios2.default.delete('/api/v1/images/' + id).then(function () {
         _this2.loadImages();
-      }).catch(function (err) {
-        _this2.setError(err.response.data.message);
-      });
+      }).catch(_this2.setError);
     };
   }
 }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'inspectImage', [_mobx.action], {
@@ -547,13 +548,11 @@ var Images = (_class = function Images(appStore) {
     var _this3 = this;
 
     return function (id) {
-      _this3.setError(null);
+      _this3.setError();
 
       _axios2.default.get('/api/v1/images/' + id).then(function (res) {
         _this3.inspect = res.data;
-      }).catch(function (err) {
-        _this3.setError(err.response.data.message);
-      });
+      }).catch(_this3.setError);
     };
   }
 }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, 'loadImages', [_mobx.action], {
@@ -562,7 +561,7 @@ var Images = (_class = function Images(appStore) {
     var _this4 = this;
 
     return function () {
-      _this4.setError(null);
+      _this4.setError();
 
       _axios2.default.get('/api/v1/images').then(function (res) {
         _this4.images = (0, _lodash.sortBy)(res.data, function (image) {
@@ -576,9 +575,7 @@ var Images = (_class = function Images(appStore) {
             size: sizeOf(image.Size)
           };
         });
-      }).catch(function (err) {
-        _this4.setError(err.response.data.message);
-      });
+      }).catch(_this4.setError);
     };
   }
 }), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, 'pruneImages', [_mobx.action], {
@@ -587,13 +584,11 @@ var Images = (_class = function Images(appStore) {
     var _this5 = this;
 
     return function () {
-      _this5.setError(null);
+      _this5.setError();
 
       _axios2.default.post('/api/v1/images/prune').then(function () {
         _this5.loadImages();
-      }).catch(function (err) {
-        _this5.setError(err.response.data.message);
-      });
+      }).catch(_this5.setError);
     };
   }
 })), _class);
@@ -707,8 +702,10 @@ var Volumes = (_class = function Volumes(appStore) {
   initializer: function initializer() {
     var _this = this;
 
-    return function (message) {
-      _this.error = message;
+    return function () {
+      var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      _this.error = (((err || {}).response || {}).data || {}).message || null;
     };
   }
 }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'createVolume', [_mobx.action], {
@@ -717,13 +714,11 @@ var Volumes = (_class = function Volumes(appStore) {
     var _this2 = this;
 
     return function (volume) {
-      _this2.setError(null);
+      _this2.setError();
 
       _axios2.default.post('/api/v1/volumes', volume).then(function () {
         _this2.loadVolumes();
-      }).catch(function (err) {
-        _this2.setError(err.response.data.message);
-      });
+      }).catch(_this2.setError);
     };
   }
 }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'destroyVolume', [_mobx.action], {
@@ -732,13 +727,11 @@ var Volumes = (_class = function Volumes(appStore) {
     var _this3 = this;
 
     return function (id) {
-      _this3.setError(null);
+      _this3.setError();
 
       _axios2.default.delete('/api/v1/volumes/' + id).then(function () {
         _this3.loadVolumes();
-      }).catch(function (err) {
-        _this3.setError(err.response.data.message);
-      });
+      }).catch(_this3.setError);
     };
   }
 }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, 'inspectVolume', [_mobx.action], {
@@ -747,13 +740,11 @@ var Volumes = (_class = function Volumes(appStore) {
     var _this4 = this;
 
     return function (id) {
-      _this4.setError(null);
+      _this4.setError();
 
       _axios2.default.get('/api/v1/volumes/' + id).then(function (res) {
         _this4.inspect = res.data;
-      }).catch(function (err) {
-        _this4.setError(err.response.data.message);
-      });
+      }).catch(_this4.setError);
     };
   }
 }), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, 'loadVolumes', [_mobx.action], {
@@ -762,7 +753,7 @@ var Volumes = (_class = function Volumes(appStore) {
     var _this5 = this;
 
     return function () {
-      _this5.setError(null);
+      _this5.setError();
 
       _axios2.default.get('/api/v1/volumes').then(function (res) {
         _this5.volumes = (0, _lodash.sortBy)(res.data, function (volume) {
@@ -773,9 +764,7 @@ var Volumes = (_class = function Volumes(appStore) {
             name: volume.Name
           };
         });
-      }).catch(function (err) {
-        _this5.setError(err.response.data.message);
-      });
+      }).catch(_this5.setError);
     };
   }
 }), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, 'pruneVolumes', [_mobx.action], {
@@ -784,13 +773,11 @@ var Volumes = (_class = function Volumes(appStore) {
     var _this6 = this;
 
     return function () {
-      _this6.setError(null);
+      _this6.setError();
 
       _axios2.default.post('/api/v1/volumes/prune').then(function () {
         _this6.loadVolumes();
-      }).catch(function (err) {
-        _this6.setError(err.response.data.message);
-      });
+      }).catch(_this6.setError);
     };
   }
 })), _class);
@@ -798,7 +785,7 @@ exports.default = Volumes;
 });
 ___scope___.file("components/App.js", function(exports, require, module, __filename, __dirname){
 
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -807,13 +794,23 @@ exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require('react');
+var _dec, _class;
+
+var _mobxReact = require("mobx-react");
+
+var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRouter = require('react-router');
+var _reactRouterActiveComponent = require("react-router-active-component");
 
-require('./App.scss');
+var _reactRouterActiveComponent2 = _interopRequireDefault(_reactRouterActiveComponent);
+
+var _AppStore = require("~/stores/AppStore");
+
+var _AppStore2 = _interopRequireDefault(_AppStore);
+
+require("./App.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -823,49 +820,131 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var App = function (_React$Component) {
+var Li = (0, _reactRouterActiveComponent2.default)('li');
+
+var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_React$Component) {
   _inherits(App, _React$Component);
 
-  function App() {
+  function App(props) {
     _classCallCheck(this, App);
 
-    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+
+    _this.pruneContainers = function () {
+      if (confirm('Are you sure you want to delete stopped containers?')) {
+        _this.containersStore.pruneContainers();
+      }
+    };
+
+    _this.pruneImages = function () {
+      if (confirm('Are you sure you want to delete unused images?')) {
+        _this.imagesStore.pruneImages();
+      }
+    };
+
+    _this.pruneVolumes = function () {
+      if (confirm('Are you sure you want to delete unused volumes?')) {
+        _this.volumesStore.pruneVolumes();
+      }
+    };
+
+    _this.appStore = props.store;
+    _this.containersStore = _this.appStore.containers;
+    _this.imagesStore = _this.appStore.images;
+    _this.volumesStore = _this.appStore.volumes;
+    return _this;
   }
 
   _createClass(App, [{
-    key: 'render',
+    key: "render",
     value: function render() {
+      var _this2 = this;
+
+      var route = this.props.routes[this.props.routes.length - 1].path;
+
+      var button = void 0;
+      switch (route) {
+        case 'images':
+          button = _react2.default.createElement(
+            "button",
+            { type: "button", className: "btn btn-danger", onClick: function onClick() {
+                return _this2.pruneImages();
+              } },
+            "Delete all unused images"
+          );
+          break;
+        case 'containers':
+          button = _react2.default.createElement(
+            "button",
+            { type: "button", className: "btn btn-danger", onClick: function onClick() {
+                return _this2.pruneContainers();
+              } },
+            "Delete all stopped containers"
+          );
+          break;
+        case 'volumes':
+          button = _react2.default.createElement(
+            "button",
+            { type: "button", className: "btn btn-danger", onClick: function onClick() {
+                return _this2.pruneVolumes();
+              } },
+            "Delete all unused volumes"
+          );
+          break;
+      }
+
       return _react2.default.createElement(
-        'div',
-        { className: 'App' },
+        "div",
+        { className: "App" },
         _react2.default.createElement(
-          'ul',
-          null,
+          "nav",
+          { className: "navbar navbar-default" },
           _react2.default.createElement(
-            'li',
-            null,
+            "div",
+            { className: "container-fluid" },
             _react2.default.createElement(
-              _reactRouter.Link,
-              { to: '/images' },
-              'IMAGES'
-            )
-          ),
-          _react2.default.createElement(
-            'li',
-            null,
+              "div",
+              { className: "navbar-header" },
+              _react2.default.createElement(
+                "button",
+                { type: "button", className: "navbar-toggle collapsed", "data-toggle": "collapse", "data-target": "#bs-example-navbar-collapse-1", "aria-expanded": "false" },
+                _react2.default.createElement("span", { className: "icon-bar" }),
+                _react2.default.createElement("span", { className: "icon-bar" }),
+                _react2.default.createElement("span", { className: "icon-bar" })
+              ),
+              _react2.default.createElement(
+                "span",
+                { className: "navbar-brand" },
+                "Docker UI"
+              )
+            ),
             _react2.default.createElement(
-              _reactRouter.Link,
-              { to: '/containers' },
-              'CONTAINERS'
-            )
-          ),
-          _react2.default.createElement(
-            'li',
-            null,
-            _react2.default.createElement(
-              _reactRouter.Link,
-              { to: '/volumes' },
-              'VOLUMES'
+              "div",
+              { className: "collapse navbar-collapse", id: "bs-example-navbar-collapse-1" },
+              _react2.default.createElement(
+                "ul",
+                { className: "nav navbar-nav" },
+                _react2.default.createElement(
+                  Li,
+                  { to: "/images" },
+                  "Images"
+                ),
+                _react2.default.createElement(
+                  Li,
+                  { to: "/containers" },
+                  "Containers"
+                ),
+                _react2.default.createElement(
+                  Li,
+                  { to: "/volumes" },
+                  "Volumes"
+                )
+              ),
+              _react2.default.createElement(
+                "form",
+                { className: "navbar-form navbar-right" },
+                button
+              )
             )
           )
         ),
@@ -875,14 +954,13 @@ var App = function (_React$Component) {
   }]);
 
   return App;
-}(_react2.default.Component);
-
+}(_react2.default.Component)) || _class);
 exports.default = App;
 });
 ___scope___.file("components/App.scss", function(exports, require, module, __filename, __dirname){
 
 
-require("fuse-box-css")("components/App.scss", "html,\nbody {\n  margin: 0;\n  padding: 0; }\n\n.App h1 {\n  margin: 0;\n  padding: 5px; }\n\n.App ul {\n  margin: 0;\n  padding: 5px;\n  list-style: none; }\n  .App ul li {\n    display: inline-block;\n    margin-right: 5px; }\n    .App ul li:last-child {\n      margin-right: 0; }\n\n.App table {\n  width: 100%; }\n  .App table th,\n  .App table td {\n    text-align: left;\n    padding: 5px; }\n  .App table td {\n    text-overflow: ellipsis;\n    overflow: hidden;\n    white-space: nowrap;\n    max-width: 400px; }\n\n.App .master-detail {\n  display: flex;\n  flex-direction: row; }\n  .App .master-detail .master {\n    flex: 1;\n    overflow: auto; }\n  .App .master-detail .detail {\n    flex: 1;\n    max-width: 50%;\n    overflow: auto; }\n\n.App .error {\n  color: red; }\n\n/*# sourceMappingURL=App.scss.map */")
+require("fuse-box-css")("components/App.scss", ".App .master-detail {\n  display: flex;\n  flex-direction: row; }\n  .App .master-detail .master {\n    flex: 1;\n    overflow: auto; }\n  .App .master-detail .detail {\n    flex: 1;\n    max-width: 50%;\n    overflow: auto; }\n\n/*# sourceMappingURL=App.scss.map */")
 });
 ___scope___.file("components/Images/Images.js", function(exports, require, module, __filename, __dirname){
 
@@ -939,12 +1017,6 @@ var Images = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRea
       _this.imagesStore.loadImages();
     };
 
-    _this.pruneImages = function () {
-      if (confirm('Are you sure you want to delete unused images?')) {
-        _this.imagesStore.pruneImages();
-      }
-    };
-
     _this.appStore = props.store;
     _this.imagesStore = _this.appStore.images;
     return _this;
@@ -975,116 +1047,121 @@ var Images = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRea
           _react2.default.createElement(
             "div",
             { className: "master" },
-            _react2.default.createElement(
-              "h1",
-              null,
-              "IMAGES"
-            ),
             error && _react2.default.createElement(
               "div",
-              { className: "error" },
+              { className: "alert alert-danger", role: "alert" },
               error
             ),
             _react2.default.createElement(
-              "table",
-              null,
+              "div",
+              { className: "table-responsive" },
               _react2.default.createElement(
-                "thead",
-                null,
+                "table",
+                { className: "table" },
                 _react2.default.createElement(
-                  "tr",
+                  "thead",
                   null,
                   _react2.default.createElement(
-                    "th",
-                    null,
-                    "Repository"
-                  ),
-                  _react2.default.createElement(
-                    "th",
-                    null,
-                    "Tag"
-                  ),
-                  _react2.default.createElement(
-                    "th",
-                    null,
-                    "Image ID"
-                  ),
-                  _react2.default.createElement(
-                    "th",
-                    null,
-                    "Created"
-                  ),
-                  _react2.default.createElement(
-                    "th",
-                    null,
-                    "Size"
-                  ),
-                  _react2.default.createElement(
-                    "th",
-                    null,
-                    "Actions"
-                  )
-                )
-              ),
-              _react2.default.createElement(
-                "tbody",
-                null,
-                images.map(function (image, i) {
-                  return _react2.default.createElement(
                     "tr",
-                    { key: i },
+                    null,
                     _react2.default.createElement(
-                      "td",
-                      { title: image.repository },
-                      image.repository
-                    ),
-                    _react2.default.createElement(
-                      "td",
-                      { title: image.tag },
-                      image.tag
-                    ),
-                    _react2.default.createElement(
-                      "td",
-                      { title: image.image },
-                      _react2.default.createElement(
-                        "a",
-                        { href: "#", onClick: function onClick(e) {
-                            return _this2.inspectImage(e, image.image);
-                          } },
-                        image.image
-                      )
-                    ),
-                    _react2.default.createElement(
-                      "td",
-                      { title: image.created },
-                      image.created
-                    ),
-                    _react2.default.createElement(
-                      "td",
-                      { title: image.size },
-                      image.size
-                    ),
-                    _react2.default.createElement(
-                      "td",
+                      "th",
                       null,
+                      "Repository"
+                    ),
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Tag"
+                    ),
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Image ID"
+                    ),
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Created"
+                    ),
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Size"
+                    ),
+                    _react2.default.createElement("th", null)
+                  )
+                ),
+                _react2.default.createElement(
+                  "tbody",
+                  null,
+                  images.map(function (image, i) {
+                    return _react2.default.createElement(
+                      "tr",
+                      { key: i },
                       _react2.default.createElement(
-                        "button",
-                        { onClick: function onClick() {
-                            return _this2.destroyImage(image.image);
-                          } },
-                        "Delete"
+                        "td",
+                        { title: image.repository },
+                        image.repository
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        { title: image.tag },
+                        image.tag
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        { title: image.image },
+                        _react2.default.createElement(
+                          "a",
+                          { href: "#", onClick: function onClick(e) {
+                              return _this2.inspectImage(e, image.image);
+                            } },
+                          image.image
+                        )
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        { title: image.created },
+                        image.created
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        { title: image.size },
+                        image.size
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        null,
+                        _react2.default.createElement(
+                          "div",
+                          { className: "dropdown pull-right" },
+                          _react2.default.createElement(
+                            "button",
+                            { className: "btn btn-default dropdown-toggle", type: "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "true" },
+                            _react2.default.createElement("span", { className: "glyphicon glyphicon-cog" })
+                          ),
+                          _react2.default.createElement(
+                            "ul",
+                            { className: "dropdown-menu dropdown-menu-right" },
+                            _react2.default.createElement(
+                              "li",
+                              null,
+                              _react2.default.createElement(
+                                "a",
+                                { href: "#", onClick: function onClick() {
+                                    return _this2.destroyImage(image.image);
+                                  } },
+                                "Delete"
+                              )
+                            )
+                          )
+                        )
                       )
-                    )
-                  );
-                })
+                    );
+                  })
+                )
               )
-            ),
-            _react2.default.createElement(
-              "button",
-              { onClick: function onClick() {
-                  return _this2.pruneImages();
-                } },
-              "Delete all unused images"
             )
           ),
           inspect && _react2.default.createElement(
@@ -1093,7 +1170,11 @@ var Images = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRea
             _react2.default.createElement(
               "pre",
               null,
-              JSON.stringify(inspect, undefined, 2)
+              _react2.default.createElement(
+                "code",
+                null,
+                JSON.stringify(inspect, undefined, 2)
+              )
             )
           )
         )
@@ -1160,12 +1241,6 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
       _this.containersStore.loadContainers();
     };
 
-    _this.pruneContainers = function () {
-      if (confirm('Are you sure you want to delete stopped containers?')) {
-        _this.containersStore.pruneContainers();
-      }
-    };
-
     _this.renameContainer = function (container) {
       var name = prompt('What would you like the new name to be?', container.names);
 
@@ -1189,6 +1264,12 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
     _this.stopContainer = function (id) {
       if (confirm("Are you sure you want to stop container " + id + "?")) {
         _this.containersStore.stopContainer(id);
+      }
+    };
+
+    _this.killContainer = function (id) {
+      if (confirm("Are you sure you want to kill container " + id + "?")) {
+        _this.containersStore.killContainer(id);
       }
     };
 
@@ -1222,164 +1303,196 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
           _react2.default.createElement(
             "div",
             { className: "master" },
-            _react2.default.createElement(
-              "h1",
-              null,
-              "CONTAINERS"
-            ),
             error && _react2.default.createElement(
               "div",
-              { className: "error" },
+              { className: "alert alert-danger", role: "alert" },
               error
             ),
             _react2.default.createElement(
-              "table",
-              null,
+              "div",
+              { className: "table-responsive" },
               _react2.default.createElement(
-                "thead",
-                null,
+                "table",
+                { className: "table" },
                 _react2.default.createElement(
-                  "tr",
+                  "thead",
                   null,
                   _react2.default.createElement(
-                    "th",
-                    null,
-                    "Container ID"
-                  ),
-                  _react2.default.createElement(
-                    "th",
-                    null,
-                    "Image"
-                  ),
-                  _react2.default.createElement(
-                    "th",
-                    null,
-                    "Command"
-                  ),
-                  _react2.default.createElement(
-                    "th",
-                    null,
-                    "Created"
-                  ),
-                  _react2.default.createElement(
-                    "th",
-                    null,
-                    "Status"
-                  ),
-                  _react2.default.createElement(
-                    "th",
-                    null,
-                    "Ports"
-                  ),
-                  _react2.default.createElement(
-                    "th",
-                    null,
-                    "Names"
-                  ),
-                  _react2.default.createElement(
-                    "th",
-                    null,
-                    "Actions"
-                  )
-                )
-              ),
-              _react2.default.createElement(
-                "tbody",
-                null,
-                containers.map(function (container, i) {
-                  return _react2.default.createElement(
                     "tr",
-                    { key: i },
+                    null,
                     _react2.default.createElement(
-                      "td",
-                      { title: container.id },
-                      _react2.default.createElement(
-                        "a",
-                        { href: "#", onClick: function onClick(e) {
-                            return _this2.inspectContainer(e, container.id);
-                          } },
-                        container.id
-                      )
-                    ),
-                    _react2.default.createElement(
-                      "td",
-                      { title: container.image },
-                      container.image
-                    ),
-                    _react2.default.createElement(
-                      "td",
-                      { title: container.command },
-                      container.command
-                    ),
-                    _react2.default.createElement(
-                      "td",
-                      { title: container.created },
-                      container.created
-                    ),
-                    _react2.default.createElement(
-                      "td",
-                      { title: container.status },
-                      container.status
-                    ),
-                    _react2.default.createElement(
-                      "td",
-                      { title: container.ports },
-                      container.ports
-                    ),
-                    _react2.default.createElement(
-                      "td",
-                      { title: container.names },
-                      container.names
-                    ),
-                    _react2.default.createElement(
-                      "td",
+                      "th",
                       null,
-                      container.state !== 'running' && _react2.default.createElement(
-                        "button",
-                        { onClick: function onClick() {
-                            return _this2.startContainer(container.id);
-                          } },
-                        "Start"
-                      ),
-                      container.state === 'running' && _react2.default.createElement(
-                        "button",
-                        { onClick: function onClick() {
-                            return _this2.restartContainer(container.id);
-                          } },
-                        "Restart"
-                      ),
-                      container.state === 'running' && _react2.default.createElement(
-                        "button",
-                        { onClick: function onClick() {
-                            return _this2.stopContainer(container.id);
-                          } },
-                        "Stop"
-                      ),
-                      container.state !== 'running' && _react2.default.createElement(
-                        "button",
-                        { onClick: function onClick() {
-                            return _this2.destroyContainer(container.id);
-                          } },
-                        "Delete"
+                      "Container ID"
+                    ),
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Image"
+                    ),
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Command"
+                    ),
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Created"
+                    ),
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Status"
+                    ),
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Ports"
+                    ),
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Names"
+                    ),
+                    _react2.default.createElement("th", null)
+                  )
+                ),
+                _react2.default.createElement(
+                  "tbody",
+                  null,
+                  containers.map(function (container, i) {
+                    return _react2.default.createElement(
+                      "tr",
+                      { key: i },
+                      _react2.default.createElement(
+                        "td",
+                        { title: container.id },
+                        _react2.default.createElement(
+                          "a",
+                          { href: "#", onClick: function onClick(e) {
+                              return _this2.inspectContainer(e, container.id);
+                            } },
+                          container.id
+                        )
                       ),
                       _react2.default.createElement(
-                        "button",
-                        { onClick: function onClick() {
-                            return _this2.renameContainer(container);
-                          } },
-                        "Rename"
+                        "td",
+                        { title: container.image },
+                        container.image
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        { title: container.command },
+                        container.command
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        { title: container.created },
+                        container.created
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        { title: container.status },
+                        container.status
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        { title: container.ports },
+                        container.ports
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        { title: container.names },
+                        container.names
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        null,
+                        _react2.default.createElement(
+                          "div",
+                          { className: "dropdown pull-right" },
+                          _react2.default.createElement(
+                            "button",
+                            { className: "btn btn-default dropdown-toggle", type: "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "true" },
+                            _react2.default.createElement("span", { className: "glyphicon glyphicon-cog" })
+                          ),
+                          _react2.default.createElement(
+                            "ul",
+                            { className: "dropdown-menu dropdown-menu-right" },
+                            container.state !== 'running' && _react2.default.createElement(
+                              "li",
+                              null,
+                              _react2.default.createElement(
+                                "a",
+                                { href: "#", onClick: function onClick() {
+                                    return _this2.startContainer(container.id);
+                                  } },
+                                "Start"
+                              )
+                            ),
+                            container.state === 'running' && _react2.default.createElement(
+                              "li",
+                              null,
+                              _react2.default.createElement(
+                                "a",
+                                { href: "#", onClick: function onClick() {
+                                    return _this2.restartContainer(container.id);
+                                  } },
+                                "Restart"
+                              )
+                            ),
+                            container.state === 'running' && _react2.default.createElement(
+                              "li",
+                              null,
+                              _react2.default.createElement(
+                                "a",
+                                { href: "#", onClick: function onClick() {
+                                    return _this2.stopContainer(container.id);
+                                  } },
+                                "Stop"
+                              )
+                            ),
+                            container.state === 'running' && _react2.default.createElement(
+                              "li",
+                              null,
+                              _react2.default.createElement(
+                                "a",
+                                { href: "#", onClick: function onClick() {
+                                    return _this2.killContainer(container.id);
+                                  } },
+                                "Kill"
+                              )
+                            ),
+                            container.state !== 'running' && _react2.default.createElement(
+                              "li",
+                              null,
+                              _react2.default.createElement(
+                                "a",
+                                { href: "#", onClick: function onClick() {
+                                    return _this2.destroyContainer(container.id);
+                                  } },
+                                "Delete"
+                              )
+                            ),
+                            _react2.default.createElement(
+                              "li",
+                              null,
+                              _react2.default.createElement(
+                                "a",
+                                { href: "#", onClick: function onClick() {
+                                    return _this2.renameContainer(container);
+                                  } },
+                                "Rename"
+                              )
+                            )
+                          )
+                        )
                       )
-                    )
-                  );
-                })
+                    );
+                  })
+                )
               )
-            ),
-            _react2.default.createElement(
-              "button",
-              { onClick: function onClick() {
-                  return _this2.pruneContainers();
-                } },
-              "Delete all stopped containers"
             )
           ),
           inspect && _react2.default.createElement(
@@ -1471,12 +1584,6 @@ var Volumes = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRe
       });
     };
 
-    _this.pruneVolumes = function () {
-      if (confirm('Are you sure you want to delete unused volumes?')) {
-        _this.volumesStore.pruneVolumes();
-      }
-    };
-
     _this.state = {
       volume: {
         name: ''
@@ -1513,14 +1620,9 @@ var Volumes = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRe
           _react2.default.createElement(
             "div",
             { className: "master" },
-            _react2.default.createElement(
-              "h1",
-              null,
-              "VOLUMES"
-            ),
             error && _react2.default.createElement(
               "div",
-              { className: "error" },
+              { className: "alert alert-danger", role: "alert" },
               error
             ),
             _react2.default.createElement(
@@ -1530,75 +1632,85 @@ var Volumes = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRe
               _react2.default.createElement("input", { type: "submit", value: "Create" })
             ),
             _react2.default.createElement(
-              "table",
-              null,
+              "div",
+              { className: "table-responsive" },
               _react2.default.createElement(
-                "thead",
-                null,
+                "table",
+                { className: "table" },
                 _react2.default.createElement(
-                  "tr",
+                  "thead",
                   null,
                   _react2.default.createElement(
-                    "th",
-                    null,
-                    "Driver"
-                  ),
-                  _react2.default.createElement(
-                    "th",
-                    null,
-                    "Name"
-                  ),
-                  _react2.default.createElement(
-                    "th",
-                    null,
-                    "Actions"
-                  )
-                )
-              ),
-              _react2.default.createElement(
-                "tbody",
-                null,
-                volumes.map(function (volume, i) {
-                  return _react2.default.createElement(
                     "tr",
-                    { key: i },
+                    null,
                     _react2.default.createElement(
-                      "td",
-                      { title: volume.driver },
-                      volume.driver
-                    ),
-                    _react2.default.createElement(
-                      "td",
-                      { title: volume.name },
-                      _react2.default.createElement(
-                        "a",
-                        { href: "#", onClick: function onClick(e) {
-                            return _this2.inspectVolume(e, volume.name);
-                          } },
-                        volume.name
-                      )
-                    ),
-                    _react2.default.createElement(
-                      "td",
+                      "th",
                       null,
+                      "Driver"
+                    ),
+                    _react2.default.createElement(
+                      "th",
+                      null,
+                      "Name"
+                    ),
+                    _react2.default.createElement("th", null)
+                  )
+                ),
+                _react2.default.createElement(
+                  "tbody",
+                  null,
+                  volumes.map(function (volume, i) {
+                    return _react2.default.createElement(
+                      "tr",
+                      { key: i },
                       _react2.default.createElement(
-                        "button",
-                        { onClick: function onClick() {
-                            return _this2.destroyVolume(volume.name);
-                          } },
-                        "Delete"
+                        "td",
+                        { title: volume.driver },
+                        volume.driver
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        { title: volume.name },
+                        _react2.default.createElement(
+                          "a",
+                          { href: "#", onClick: function onClick(e) {
+                              return _this2.inspectVolume(e, volume.name);
+                            } },
+                          volume.name
+                        )
+                      ),
+                      _react2.default.createElement(
+                        "td",
+                        null,
+                        _react2.default.createElement(
+                          "div",
+                          { className: "dropdown pull-right" },
+                          _react2.default.createElement(
+                            "button",
+                            { className: "btn btn-default dropdown-toggle", type: "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "true" },
+                            _react2.default.createElement("span", { className: "glyphicon glyphicon-cog" })
+                          ),
+                          _react2.default.createElement(
+                            "ul",
+                            { className: "dropdown-menu dropdown-menu-right" },
+                            _react2.default.createElement(
+                              "li",
+                              null,
+                              _react2.default.createElement(
+                                "a",
+                                { href: "#", onClick: function onClick() {
+                                    return _this2.destroyVolume(volume.name);
+                                  } },
+                                "Delete"
+                              )
+                            )
+                          )
+                        )
                       )
-                    )
-                  );
-                })
+                    );
+                  })
+                )
               )
-            ),
-            _react2.default.createElement(
-              "button",
-              { onClick: function onClick() {
-                  return _this2.pruneVolumes();
-                } },
-              "Delete all unused volumes"
             )
           ),
           inspect && _react2.default.createElement(

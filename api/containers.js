@@ -9,6 +9,7 @@ module.exports = {
   restart,
   start,
   stop,
+  kill,
 }
 
 async function list(req, res) {
@@ -77,6 +78,15 @@ async function start(req, res) {
 async function stop(req, res) {
   try {
     res.send(await request('post', `containers/${req.params.id}/stop`))
+  }
+  catch(e) {
+    res.status(500).send(e)
+  }
+}
+
+async function kill(req, res) {
+  try {
+    res.send(await request('post', `containers/${req.params.id}/kill`))
   }
   catch(e) {
     res.status(500).send(e)

@@ -36,12 +36,6 @@ export default class Containers extends React.Component {
     this.containersStore.loadContainers()
   }
 
-  pruneContainers = () => {
-    if (confirm('Are you sure you want to delete stopped containers?')) {
-      this.containersStore.pruneContainers()
-    }
-  }
-
   renameContainer = container => {
     const name = prompt('What would you like the new name to be?', container.names)
 
@@ -68,6 +62,12 @@ export default class Containers extends React.Component {
     }
   }
 
+  killContainer = id => {
+    if (confirm(`Are you sure you want to kill container ${id}?`)) {
+      this.containersStore.killContainer(id)
+    }
+  }
+
   render() {
     const {containers, error, inspect} = this.containersStore
 
@@ -75,43 +75,51 @@ export default class Containers extends React.Component {
       <div className="Containers">
         <div className="master-detail">
           <div className="master">
-            <h1>CONTAINERS</h1>
-            {error && <div className='error'>{error}</div>}
-            <table>
-              <thead>
-              <tr>
-                <th>Container ID</th>
-                <th>Image</th>
-                <th>Command</th>
-                <th>Created</th>
-                <th>Status</th>
-                <th>Ports</th>
-                <th>Names</th>
-                <th>Actions</th>
-              </tr>
-              </thead>
-              <tbody>
-              {containers.map((container, i) => (
-                <tr key={i}>
-                  <td title={container.id}><a href="#" onClick={e => this.inspectContainer(e, container.id)}>{container.id}</a></td>
-                  <td title={container.image}>{container.image}</td>
-                  <td title={container.command}>{container.command}</td>
-                  <td title={container.created}>{container.created}</td>
-                  <td title={container.status}>{container.status}</td>
-                  <td title={container.ports}>{container.ports}</td>
-                  <td title={container.names}>{container.names}</td>
-                  <td>
-                    {container.state !== 'running' && <button onClick={() => this.startContainer(container.id)}>Start</button>}
-                    {container.state === 'running' && <button onClick={() => this.restartContainer(container.id)}>Restart</button>}
-                    {container.state === 'running' && <button onClick={() => this.stopContainer(container.id)}>Stop</button>}
-                    {container.state !== 'running' && <button onClick={() => this.destroyContainer(container.id)}>Delete</button>}
-                    <button onClick={() => this.renameContainer(container)}>Rename</button>
-                  </td>
+            {error && <div className="alert alert-danger" role="alert">{error}</div>}
+            <div className="table-responsive">
+              <table className="table">
+                <thead>
+                <tr>
+                  <th>Container ID</th>
+                  <th>Image</th>
+                  <th>Command</th>
+                  <th>Created</th>
+                  <th>Status</th>
+                  <th>Ports</th>
+                  <th>Names</th>
+                  <th />
                 </tr>
-              ))}
-              </tbody>
-            </table>
-            <button onClick={() => this.pruneContainers()}>Delete all stopped containers</button>
+                </thead>
+                <tbody>
+                {containers.map((container, i) => (
+                  <tr key={i}>
+                    <td title={container.id}><a href="#" onClick={e => this.inspectContainer(e, container.id)}>{container.id}</a></td>
+                    <td title={container.image}>{container.image}</td>
+                    <td title={container.command}>{container.command}</td>
+                    <td title={container.created}>{container.created}</td>
+                    <td title={container.status}>{container.status}</td>
+                    <td title={container.ports}>{container.ports}</td>
+                    <td title={container.names}>{container.names}</td>
+                    <td>
+                      <div className="dropdown pull-right">
+                        <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                          <span className="glyphicon glyphicon-cog" />
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-right">
+                          {container.state !== 'running' && <li><a href="#" onClick={() => this.startContainer(container.id)}>Start</a></li>}
+                          {container.state === 'running' && <li><a href="#" onClick={() => this.restartContainer(container.id)}>Restart</a></li>}
+                          {container.state === 'running' && <li><a href="#" onClick={() => this.stopContainer(container.id)}>Stop</a></li>}
+                          {container.state === 'running' && <li><a href="#" onClick={() => this.killContainer(container.id)}>Kill</a></li>}
+                          {container.state !== 'running' && <li><a href="#" onClick={() => this.destroyContainer(container.id)}>Delete</a></li>}
+                          <li><a href="#" onClick={() => this.renameContainer(container)}>Rename</a></li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                </tbody>
+              </table>
+            </div>
           </div>
           {inspect && <div className="detail">
             <pre>{JSON.stringify(inspect, undefined, 2)}</pre>

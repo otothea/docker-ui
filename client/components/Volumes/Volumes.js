@@ -58,12 +58,6 @@ export default class Volumes extends React.Component {
     })
   }
 
-  pruneVolumes = () => {
-    if (confirm('Are you sure you want to delete unused volumes?')) {
-      this.volumesStore.pruneVolumes()
-    }
-  }
-
   render() {
     const {error, inspect, volumes} = this.volumesStore
 
@@ -71,33 +65,40 @@ export default class Volumes extends React.Component {
       <div className="Volumes">
         <div className="master-detail">
           <div className="master">
-            <h1>VOLUMES</h1>
-            {error && <div className='error'>{error}</div>}
+            {error && <div className="alert alert-danger" role="alert">{error}</div>}
             <form onSubmit={this.createVolume}>
               <input name="name" value={this.state.volume.name} onChange={this.onChange} />
               <input type="submit" value="Create" />
             </form>
-            <table>
-              <thead>
-              <tr>
-                <th>Driver</th>
-                <th>Name</th>
-                <th>Actions</th>
-              </tr>
-              </thead>
-              <tbody>
-              {volumes.map((volume, i) => (
-                <tr key={i}>
-                  <td title={volume.driver}>{volume.driver}</td>
-                  <td title={volume.name}><a href="#" onClick={e => this.inspectVolume(e, volume.name)}>{volume.name}</a></td>
-                  <td>
-                    <button onClick={() => this.destroyVolume(volume.name)}>Delete</button>
-                  </td>
+            <div className="table-responsive">
+              <table className="table">
+                <thead>
+                <tr>
+                  <th>Driver</th>
+                  <th>Name</th>
+                  <th />
                 </tr>
-              ))}
-              </tbody>
-            </table>
-            <button onClick={() => this.pruneVolumes()}>Delete all unused volumes</button>
+                </thead>
+                <tbody>
+                {volumes.map((volume, i) => (
+                  <tr key={i}>
+                    <td title={volume.driver}>{volume.driver}</td>
+                    <td title={volume.name}><a href="#" onClick={e => this.inspectVolume(e, volume.name)}>{volume.name}</a></td>
+                    <td>
+                      <div className="dropdown pull-right">
+                        <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                          <span className="glyphicon glyphicon-cog" />
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-right">
+                          <li><a href="#" onClick={() => this.destroyVolume(volume.name)}>Delete</a></li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                </tbody>
+              </table>
+            </div>
           </div>
           {inspect && <div className="detail">
             <pre>{JSON.stringify(inspect, undefined, 2)}</pre>

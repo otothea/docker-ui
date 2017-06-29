@@ -2,7 +2,6 @@ const {BabelPlugin} = require('fuse-box')
 const {CSSPlugin} = require('fuse-box')
 const {FuseBox} = require('fuse-box')
 const {JSONPlugin} = require('fuse-box')
-// const {QuantumPlugin} = require('fuse-box')
 const {SassPlugin} = require('fuse-box')
 const {WebIndexPlugin} = require('fuse-box')
 const ESLintPlugin = require('fuse-box-eslint-plugin')
@@ -22,10 +21,6 @@ module.exports = production => {
         title: 'Docker UI',
         template: 'client/index.html'
       }),
-      // production && QuantumPlugin({
-      //   removeExportsInterop: false,
-      //   uglify: true,
-      // }),
     ],
     alias: {
       stores: '~/stores',

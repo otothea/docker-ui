@@ -16,6 +16,7 @@ router.put('/containers/:id/rename', containers.rename)
 router.put('/containers/:id/restart', containers.restart)
 router.put('/containers/:id/start', containers.start)
 router.put('/containers/:id/stop', containers.stop)
+router.put('/containers/:id/kill', containers.kill)
 router.delete('/containers/:id', containers.destroy)
 router.post('/containers/prune', containers.prune)
 
