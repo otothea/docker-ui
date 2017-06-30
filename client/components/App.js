@@ -1,11 +1,9 @@
 import {inject} from 'mobx-react'
 import React from 'react'
-import activeComponent from 'react-router-active-component'
+import {Link} from 'react-router'
 import AppStore from 'stores/AppStore'
 
 import './App.scss'
-
-const Li = activeComponent('li')
 
 @inject('store')
 export default class App extends React.Component {
@@ -59,19 +57,28 @@ export default class App extends React.Component {
   render() {
     const route = this.props.routes[this.props.routes.length - 1].path
 
-    let button = null
+    let button = null,
+      images = '',
+      containers = '',
+      volumes = '',
+      networks = ''
+
     switch(route) {
     case 'images':
       button = <button type="button" className="btn btn-danger btn-sm" onClick={this.pruneImages}>Delete all unused images</button>
+      images = 'active'
       break
     case 'containers':
       button = <button type="button" className="btn btn-danger btn-sm" onClick={this.pruneContainers}>Delete all stopped containers</button>
+      containers = 'active'
       break
     case 'volumes':
       button = <button type="button" className="btn btn-danger btn-sm" onClick={this.pruneVolumes}>Delete all unused volumes</button>
+      volumes = 'active'
       break
     case 'networks':
       button = <button type="button" className="btn btn-danger btn-sm" onClick={this.pruneNetworks}>Delete all unused networks</button>
+      networks = 'active'
       break
     }
 
@@ -89,10 +96,10 @@ export default class App extends React.Component {
             </div>
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul className="nav navbar-nav">
-                <Li to="/images">Images</Li>
-                <Li to="/containers">Containers</Li>
-                <Li to="/volumes">Volumes</Li>
-                <Li to="/networks">Networks</Li>
+                <li className={images}><Link to="/images">Images</Link></li>
+                <li className={containers}><Link to="/containers">Containers</Link></li>
+                <li className={volumes}><Link to="/volumes">Volumes</Link></li>
+                <li className={networks}><Link to="/networks">Networks</Link></li>
               </ul>
               <form className="navbar-form navbar-left">
                 {button}

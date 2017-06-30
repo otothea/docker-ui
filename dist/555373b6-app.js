@@ -2134,9 +2134,7 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRouterActiveComponent = require("react-router-active-component");
-
-var _reactRouterActiveComponent2 = _interopRequireDefault(_reactRouterActiveComponent);
+var _reactRouter = require("react-router");
 
 var _AppStore = require("~/stores/AppStore");
 
@@ -2151,8 +2149,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Li = (0, _reactRouterActiveComponent2.default)('li');
 
 var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_React$Component) {
   _inherits(App, _React$Component);
@@ -2206,7 +2202,12 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
     value: function render() {
       var route = this.props.routes[this.props.routes.length - 1].path;
 
-      var button = null;
+      var button = null,
+          images = '',
+          containers = '',
+          volumes = '',
+          networks = '';
+
       switch (route) {
         case 'images':
           button = _react2.default.createElement(
@@ -2214,6 +2215,7 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
             { type: "button", className: "btn btn-danger btn-sm", onClick: this.pruneImages },
             "Delete all unused images"
           );
+          images = 'active';
           break;
         case 'containers':
           button = _react2.default.createElement(
@@ -2221,6 +2223,7 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
             { type: "button", className: "btn btn-danger btn-sm", onClick: this.pruneContainers },
             "Delete all stopped containers"
           );
+          containers = 'active';
           break;
         case 'volumes':
           button = _react2.default.createElement(
@@ -2228,6 +2231,7 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
             { type: "button", className: "btn btn-danger btn-sm", onClick: this.pruneVolumes },
             "Delete all unused volumes"
           );
+          volumes = 'active';
           break;
         case 'networks':
           button = _react2.default.createElement(
@@ -2235,6 +2239,7 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
             { type: "button", className: "btn btn-danger btn-sm", onClick: this.pruneNetworks },
             "Delete all unused networks"
           );
+          networks = 'active';
           break;
       }
 
@@ -2270,24 +2275,40 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
                 "ul",
                 { className: "nav navbar-nav" },
                 _react2.default.createElement(
-                  Li,
-                  { to: "/images" },
-                  "Images"
+                  "li",
+                  { className: images },
+                  _react2.default.createElement(
+                    _reactRouter.Link,
+                    { to: "/images" },
+                    "Images"
+                  )
                 ),
                 _react2.default.createElement(
-                  Li,
-                  { to: "/containers" },
-                  "Containers"
+                  "li",
+                  { className: containers },
+                  _react2.default.createElement(
+                    _reactRouter.Link,
+                    { to: "/containers" },
+                    "Containers"
+                  )
                 ),
                 _react2.default.createElement(
-                  Li,
-                  { to: "/volumes" },
-                  "Volumes"
+                  "li",
+                  { className: volumes },
+                  _react2.default.createElement(
+                    _reactRouter.Link,
+                    { to: "/volumes" },
+                    "Volumes"
+                  )
                 ),
                 _react2.default.createElement(
-                  Li,
-                  { to: "/networks" },
-                  "Networks"
+                  "li",
+                  { className: networks },
+                  _react2.default.createElement(
+                    _reactRouter.Link,
+                    { to: "/networks" },
+                    "Networks"
+                  )
                 )
               ),
               _react2.default.createElement(
