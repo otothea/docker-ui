@@ -13,25 +13,29 @@ export default class Login {
     this.error = (((err || {}).response || {}).data || {}).message || err
   }
 
-  @action login = credentials => {
+  @action login = async credentials => {
     this.setError()
 
-    axios.post('auth', credentials)
-    .then(() => {
+    try {
+      await axios.post('auth', credentials)
       const redirect = browserHistory.getCurrentLocation().query.redirect
       browserHistory.push(redirect || '/')
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action logout = () => {
+  @action logout = async () => {
     this.setError()
 
-    axios.delete('auth')
-    .then(() => {
+    try {
+      await axios.delete('auth')
       browserHistory.push('/login')
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 }
 

@@ -22,31 +22,39 @@ export default class Images {
     this.error = (((err || {}).response || {}).data || {}).message || err
   }
 
-  @action destroyImage = id => {
+  @action closeInspector = () => {
+    this.inspect = null
+  }
+
+  @action destroyImage = async id => {
     this.setError()
 
-    axios.delete(`images/${id}`)
-    .then(() => {
+    try {
+      await axios.delete(`images/${id}`)
       this.loadImages()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action inspectImage = id => {
+  @action inspectImage = async id => {
     this.setError()
 
-    axios.get(`images/${id}`)
-    .then(res => {
+    try {
+      const res = await axios.get(`images/${id}`)
       this.inspect = res.data
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action loadImages = () => {
+  @action loadImages = async () => {
     this.setError()
 
-    axios.get('images')
-    .then(res => {
+    try {
+      const res = await axios.get('images')
       this.images = sortBy(res.data, image => -image.Created).map(image => ({
         repository: image.RepoTags ? image.RepoTags[0].split(':')[0] : image.RepoDigests ? image.RepoDigests[0].split('@')[0] : '<none>',
         tag: image.RepoTags ? image.RepoTags[0].split(':')[1] : '<none>',
@@ -55,17 +63,21 @@ export default class Images {
         created: moment.unix(image.Created).fromNow(),
         size: sizeOf(image.Size),
       }))
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action pruneImages = () => {
+  @action pruneImages = async () => {
     this.setError()
 
-    axios.post('images/prune')
-    .then(() => {
+    try {
+      axios.post('images/prune')
       this.loadImages()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 }

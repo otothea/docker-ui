@@ -22,6 +22,8 @@ var _AppStore2 = _interopRequireDefault(_AppStore);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+require('babel-polyfill');
+
 _reactDom2.default.render(_react2.default.createElement(_Router2.default, { store: new _AppStore2.default() }), document.getElementById('app'));
 });
 ___scope___.file("Router.js", function(exports, require, module, __filename, __dirname){
@@ -183,6 +185,8 @@ var _reactRouter = require("react-router");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
   Object.defineProperty(target, property, {
@@ -261,27 +265,79 @@ var Login = (_class = function Login(appStore) {
   initializer: function initializer() {
     var _this2 = this;
 
-    return function (credentials) {
-      _this2.setError();
+    return function () {
+      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(credentials) {
+        var redirect;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this2.setError();
 
-      _axios2.default.post('auth', credentials).then(function () {
-        var redirect = _reactRouter.browserHistory.getCurrentLocation().query.redirect;
-        _reactRouter.browserHistory.push(redirect || '/');
-      }).catch(_this2.setError);
-    };
+                _context.prev = 1;
+                _context.next = 4;
+                return _axios2.default.post('auth', credentials);
+
+              case 4:
+                redirect = _reactRouter.browserHistory.getCurrentLocation().query.redirect;
+
+                _reactRouter.browserHistory.push(redirect || '/');
+                _context.next = 11;
+                break;
+
+              case 8:
+                _context.prev = 8;
+                _context.t0 = _context["catch"](1);
+
+                _this2.setError(_context.t0);
+
+              case 11:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, _this2, [[1, 8]]);
+      }));
+
+      return function (_x2) {
+        return _ref.apply(this, arguments);
+      };
+    }();
   }
 }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "logout", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this3 = this;
 
-    return function () {
-      _this3.setError();
+    return _asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _this3.setError();
 
-      _axios2.default.delete('auth').then(function () {
-        _reactRouter.browserHistory.push('/login');
-      }).catch(_this3.setError);
-    };
+              _context2.prev = 1;
+              _context2.next = 4;
+              return _axios2.default.delete('auth');
+
+            case 4:
+              _reactRouter.browserHistory.push('/login');
+              _context2.next = 10;
+              break;
+
+            case 7:
+              _context2.prev = 7;
+              _context2.t0 = _context2["catch"](1);
+
+              _this3.setError(_context2.t0);
+
+            case 10:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, _this3, [[1, 7]]);
+    }));
   }
 })), _class);
 exports.default = Login;
@@ -312,7 +368,7 @@ http.interceptors.response.use(function (res) {
 }, function (err) {
   var location = _reactRouter.browserHistory.getCurrentLocation();
   if (err.response && err.response.status === 403) {
-    return _reactRouter.browserHistory.push('/login?redirect=' + location.pathname + location.search + location.hash);
+    return _reactRouter.browserHistory.push('/login?redirect=' + encodeURIComponent(location.pathname + location.search + location.hash));
   }
 
   return Promise.reject(err);
@@ -329,7 +385,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13, _descriptor14, _descriptor15;
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13, _descriptor14, _descriptor15, _descriptor16;
 
 var _axios = require("~/lib/axios");
 
@@ -344,6 +400,8 @@ var _moment = require("moment");
 var _moment2 = _interopRequireDefault(_moment);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
@@ -405,27 +463,29 @@ var Containers = (_class = function Containers(appStore) {
 
   _initDefineProp(this, "setError", _descriptor4, this);
 
-  _initDefineProp(this, "destroyContainer", _descriptor5, this);
+  _initDefineProp(this, "closeInspector", _descriptor5, this);
 
-  _initDefineProp(this, "inspectContainer", _descriptor6, this);
+  _initDefineProp(this, "destroyContainer", _descriptor6, this);
 
-  _initDefineProp(this, "loadContainers", _descriptor7, this);
+  _initDefineProp(this, "inspectContainer", _descriptor7, this);
 
-  _initDefineProp(this, "pruneContainers", _descriptor8, this);
+  _initDefineProp(this, "loadContainers", _descriptor8, this);
 
-  _initDefineProp(this, "renameContainer", _descriptor9, this);
+  _initDefineProp(this, "pruneContainers", _descriptor9, this);
 
-  _initDefineProp(this, "restartContainer", _descriptor10, this);
+  _initDefineProp(this, "renameContainer", _descriptor10, this);
 
-  _initDefineProp(this, "startContainer", _descriptor11, this);
+  _initDefineProp(this, "restartContainer", _descriptor11, this);
 
-  _initDefineProp(this, "stopContainer", _descriptor12, this);
+  _initDefineProp(this, "startContainer", _descriptor12, this);
 
-  _initDefineProp(this, "killContainer", _descriptor13, this);
+  _initDefineProp(this, "stopContainer", _descriptor13, this);
 
-  _initDefineProp(this, "pauseContainer", _descriptor14, this);
+  _initDefineProp(this, "killContainer", _descriptor14, this);
 
-  _initDefineProp(this, "unpauseContainer", _descriptor15, this);
+  _initDefineProp(this, "pauseContainer", _descriptor15, this);
+
+  _initDefineProp(this, "unpauseContainer", _descriptor16, this);
 
   this.appStore = appStore;
 }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "error", [_mobx.observable], {
@@ -454,176 +514,487 @@ var Containers = (_class = function Containers(appStore) {
       _this.error = (((err || {}).response || {}).data || {}).message || err;
     };
   }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "destroyContainer", [_mobx.action], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "closeInspector", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this2 = this;
 
-    return function (id) {
-      _this2.setError();
-
-      _axios2.default.delete("containers/" + id).then(function () {
-        _this2.loadContainers();
-      }).catch(_this2.setError);
+    return function () {
+      _this2.inspect = null;
     };
   }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "inspectContainer", [_mobx.action], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "destroyContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this3 = this;
 
-    return function (id) {
-      _this3.setError();
+    return function () {
+      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(id) {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this3.setError();
 
-      _axios2.default.get("containers/" + id).then(function (res) {
-        _this3.inspect = res.data;
-      }).catch(_this3.setError);
-    };
+                _context.prev = 1;
+                _context.next = 4;
+                return _axios2.default.delete("containers/" + id);
+
+              case 4:
+                _this3.loadContainers();
+                _context.next = 10;
+                break;
+
+              case 7:
+                _context.prev = 7;
+                _context.t0 = _context["catch"](1);
+
+                _this3.setError(_context.t0);
+
+              case 10:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, _this3, [[1, 7]]);
+      }));
+
+      return function (_x2) {
+        return _ref.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "loadContainers", [_mobx.action], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "inspectContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this4 = this;
 
     return function () {
-      _this4.setError();
+      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(id) {
+        var res;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _this4.setError();
 
-      _axios2.default.get('containers').then(function (res) {
-        _this4.containers = (0, _lodash.sortBy)(res.data, function (container) {
-          return -container.Created;
-        }).map(function (container) {
-          var ports = (0, _lodash.sortBy)(container.Ports, function (p) {
-            return p.PrivatePort + "/" + p.Type;
-          }).map(function (p) {
-            return "" + ((p.IP || '') && (p.IP || '') + ":" + (p.PublicPort || '') + "->") + p.PrivatePort + "/" + p.Type;
-          }).join(', ');
-          var names = (0, _lodash.sortBy)(container.Names, function (n) {
-            return n.toLowerCase();
-          }).map(function (n) {
-            return n.slice(1);
-          }).join(', ');
+                _context2.prev = 1;
+                _context2.next = 4;
+                return _axios2.default.get("containers/" + id);
 
-          return {
-            id: container.Id.substr(0, 12),
-            id_full: container.Id,
-            image: container.Image,
-            command: ellipsify(container.Command),
-            command_full: container.Command,
-            created: _moment2.default.unix(container.Created).fromNow(),
-            status: container.Status,
-            ports: ellipsify(ports),
-            ports_full: ports,
-            names: ellipsify(names),
-            names_full: names,
-            state: container.State
-          };
-        });
-      }).catch(_this4.setError);
-    };
+              case 4:
+                res = _context2.sent;
+
+                _this4.inspect = res.data;
+                _context2.next = 11;
+                break;
+
+              case 8:
+                _context2.prev = 8;
+                _context2.t0 = _context2["catch"](1);
+
+                _this4.setError(_context2.t0);
+
+              case 11:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, _this4, [[1, 8]]);
+      }));
+
+      return function (_x3) {
+        return _ref2.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "pruneContainers", [_mobx.action], {
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "loadContainers", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this5 = this;
 
-    return function () {
-      _this5.setError();
+    return _asyncToGenerator(regeneratorRuntime.mark(function _callee3() {
+      var res;
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _this5.setError();
 
-      _axios2.default.post('containers/prune').then(function () {
-        _this5.loadContainers();
-      }).catch(_this5.setError);
-    };
+              _context3.prev = 1;
+              _context3.next = 4;
+              return _axios2.default.get('containers');
+
+            case 4:
+              res = _context3.sent;
+
+              _this5.containers = (0, _lodash.sortBy)(res.data, function (container) {
+                return -container.Created;
+              }).map(function (container) {
+                var ports = (0, _lodash.sortBy)(container.Ports, function (p) {
+                  return p.PrivatePort + "/" + p.Type;
+                }).map(function (p) {
+                  return "" + ((p.IP || '') && (p.IP || '') + ":" + (p.PublicPort || '') + "->") + p.PrivatePort + "/" + p.Type;
+                }).join(', ');
+                var names = (0, _lodash.sortBy)(container.Names, function (n) {
+                  return n.toLowerCase();
+                }).map(function (n) {
+                  return n.slice(1);
+                }).join(', ');
+
+                return {
+                  id: container.Id.substr(0, 12),
+                  id_full: container.Id,
+                  image: container.Image,
+                  command: ellipsify(container.Command),
+                  command_full: container.Command,
+                  created: _moment2.default.unix(container.Created).fromNow(),
+                  status: container.Status,
+                  ports: ellipsify(ports),
+                  ports_full: ports,
+                  names: ellipsify(names),
+                  names_full: names,
+                  state: container.State
+                };
+              });
+              _context3.next = 11;
+              break;
+
+            case 8:
+              _context3.prev = 8;
+              _context3.t0 = _context3["catch"](1);
+
+              _this5.setError(_context3.t0);
+
+            case 11:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, _this5, [[1, 8]]);
+    }));
   }
-}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "renameContainer", [_mobx.action], {
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "pruneContainers", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this6 = this;
 
-    return function (id, name) {
-      _this6.setError();
+    return _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _this6.setError();
 
-      _axios2.default.put("containers/" + id + "/rename", { name: name }).then(function () {
-        _this6.loadContainers();
-      }).catch(_this6.setError);
-    };
+              _context4.prev = 1;
+              _context4.next = 4;
+              return _axios2.default.post('containers/prune');
+
+            case 4:
+              _this6.loadContainers();
+              _context4.next = 10;
+              break;
+
+            case 7:
+              _context4.prev = 7;
+              _context4.t0 = _context4["catch"](1);
+
+              _this6.setError(_context4.t0);
+
+            case 10:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, _this6, [[1, 7]]);
+    }));
   }
-}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, "restartContainer", [_mobx.action], {
+}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, "renameContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this7 = this;
 
-    return function (id) {
-      _this7.setError();
+    return function () {
+      var _ref5 = _asyncToGenerator(regeneratorRuntime.mark(function _callee5(id, name) {
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _this7.setError();
 
-      _axios2.default.put("containers/" + id + "/restart").then(function () {
-        _this7.loadContainers();
-      }).catch(_this7.setError);
-    };
+                _context5.prev = 1;
+                _context5.next = 4;
+                return _axios2.default.put("containers/" + id + "/rename", { name: name });
+
+              case 4:
+                _this7.loadContainers();
+                _context5.next = 10;
+                break;
+
+              case 7:
+                _context5.prev = 7;
+                _context5.t0 = _context5["catch"](1);
+
+                _this7.setError(_context5.t0);
+
+              case 10:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, _this7, [[1, 7]]);
+      }));
+
+      return function (_x4, _x5) {
+        return _ref5.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor11 = _applyDecoratedDescriptor(_class.prototype, "startContainer", [_mobx.action], {
+}), _descriptor11 = _applyDecoratedDescriptor(_class.prototype, "restartContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this8 = this;
 
-    return function (id) {
-      _this8.setError();
+    return function () {
+      var _ref6 = _asyncToGenerator(regeneratorRuntime.mark(function _callee6(id) {
+        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                _this8.setError();
 
-      _axios2.default.put("containers/" + id + "/start").then(function () {
-        _this8.loadContainers();
-      }).catch(_this8.setError);
-    };
+                _context6.prev = 1;
+                _context6.next = 4;
+                return _axios2.default.put("containers/" + id + "/restart");
+
+              case 4:
+                _this8.loadContainers();
+                _context6.next = 10;
+                break;
+
+              case 7:
+                _context6.prev = 7;
+                _context6.t0 = _context6["catch"](1);
+
+                _this8.setError(_context6.t0);
+
+              case 10:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, _this8, [[1, 7]]);
+      }));
+
+      return function (_x6) {
+        return _ref6.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor12 = _applyDecoratedDescriptor(_class.prototype, "stopContainer", [_mobx.action], {
+}), _descriptor12 = _applyDecoratedDescriptor(_class.prototype, "startContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this9 = this;
 
-    return function (id) {
-      _this9.setError();
+    return function () {
+      var _ref7 = _asyncToGenerator(regeneratorRuntime.mark(function _callee7(id) {
+        return regeneratorRuntime.wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                _this9.setError();
 
-      _axios2.default.put("containers/" + id + "/stop").then(function () {
-        _this9.loadContainers();
-      }).catch(_this9.setError);
-    };
+                _context7.prev = 1;
+                _context7.next = 4;
+                return _axios2.default.put("containers/" + id + "/start");
+
+              case 4:
+                _this9.loadContainers();
+                _context7.next = 10;
+                break;
+
+              case 7:
+                _context7.prev = 7;
+                _context7.t0 = _context7["catch"](1);
+
+                _this9.setError(_context7.t0);
+
+              case 10:
+              case "end":
+                return _context7.stop();
+            }
+          }
+        }, _callee7, _this9, [[1, 7]]);
+      }));
+
+      return function (_x7) {
+        return _ref7.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor13 = _applyDecoratedDescriptor(_class.prototype, "killContainer", [_mobx.action], {
+}), _descriptor13 = _applyDecoratedDescriptor(_class.prototype, "stopContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this10 = this;
 
-    return function (id) {
-      _this10.setError();
+    return function () {
+      var _ref8 = _asyncToGenerator(regeneratorRuntime.mark(function _callee8(id) {
+        return regeneratorRuntime.wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                _this10.setError();
 
-      _axios2.default.put("containers/" + id + "/kill").then(function () {
-        _this10.loadContainers();
-      }).catch(_this10.setError);
-    };
+                _context8.prev = 1;
+                _context8.next = 4;
+                return _axios2.default.put("containers/" + id + "/stop");
+
+              case 4:
+                _this10.loadContainers();
+                _context8.next = 10;
+                break;
+
+              case 7:
+                _context8.prev = 7;
+                _context8.t0 = _context8["catch"](1);
+
+                _this10.setError(_context8.t0);
+
+              case 10:
+              case "end":
+                return _context8.stop();
+            }
+          }
+        }, _callee8, _this10, [[1, 7]]);
+      }));
+
+      return function (_x8) {
+        return _ref8.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor14 = _applyDecoratedDescriptor(_class.prototype, "pauseContainer", [_mobx.action], {
+}), _descriptor14 = _applyDecoratedDescriptor(_class.prototype, "killContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this11 = this;
 
-    return function (id) {
-      _this11.setError();
+    return function () {
+      var _ref9 = _asyncToGenerator(regeneratorRuntime.mark(function _callee9(id) {
+        return regeneratorRuntime.wrap(function _callee9$(_context9) {
+          while (1) {
+            switch (_context9.prev = _context9.next) {
+              case 0:
+                _this11.setError();
 
-      _axios2.default.put("containers/" + id + "/pause").then(function () {
-        _this11.loadContainers();
-      }).catch(_this11.setError);
-    };
+                _context9.prev = 1;
+                _context9.next = 4;
+                return _axios2.default.put("containers/" + id + "/kill");
+
+              case 4:
+                _this11.loadContainers();
+                _context9.next = 10;
+                break;
+
+              case 7:
+                _context9.prev = 7;
+                _context9.t0 = _context9["catch"](1);
+
+                _this11.setError(_context9.t0);
+
+              case 10:
+              case "end":
+                return _context9.stop();
+            }
+          }
+        }, _callee9, _this11, [[1, 7]]);
+      }));
+
+      return function (_x9) {
+        return _ref9.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor15 = _applyDecoratedDescriptor(_class.prototype, "unpauseContainer", [_mobx.action], {
+}), _descriptor15 = _applyDecoratedDescriptor(_class.prototype, "pauseContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this12 = this;
 
-    return function (id) {
-      _this12.setError();
+    return function () {
+      var _ref10 = _asyncToGenerator(regeneratorRuntime.mark(function _callee10(id) {
+        return regeneratorRuntime.wrap(function _callee10$(_context10) {
+          while (1) {
+            switch (_context10.prev = _context10.next) {
+              case 0:
+                _this12.setError();
 
-      _axios2.default.put("containers/" + id + "/unpause").then(function () {
-        _this12.loadContainers();
-      }).catch(_this12.setError);
-    };
+                _context10.prev = 1;
+                _context10.next = 4;
+                return _axios2.default.put("containers/" + id + "/pause");
+
+              case 4:
+                _this12.loadContainers();
+                _context10.next = 10;
+                break;
+
+              case 7:
+                _context10.prev = 7;
+                _context10.t0 = _context10["catch"](1);
+
+                _this12.setError(_context10.t0);
+
+              case 10:
+              case "end":
+                return _context10.stop();
+            }
+          }
+        }, _callee10, _this12, [[1, 7]]);
+      }));
+
+      return function (_x10) {
+        return _ref10.apply(this, arguments);
+      };
+    }();
+  }
+}), _descriptor16 = _applyDecoratedDescriptor(_class.prototype, "unpauseContainer", [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this13 = this;
+
+    return function () {
+      var _ref11 = _asyncToGenerator(regeneratorRuntime.mark(function _callee11(id) {
+        return regeneratorRuntime.wrap(function _callee11$(_context11) {
+          while (1) {
+            switch (_context11.prev = _context11.next) {
+              case 0:
+                _this13.setError();
+
+                _context11.prev = 1;
+                _context11.next = 4;
+                return _axios2.default.put("containers/" + id + "/unpause");
+
+              case 4:
+                _this13.loadContainers();
+                _context11.next = 10;
+                break;
+
+              case 7:
+                _context11.prev = 7;
+                _context11.t0 = _context11["catch"](1);
+
+                _this13.setError(_context11.t0);
+
+              case 10:
+              case "end":
+                return _context11.stop();
+            }
+          }
+        }, _callee11, _this13, [[1, 7]]);
+      }));
+
+      return function (_x11) {
+        return _ref11.apply(this, arguments);
+      };
+    }();
   }
 })), _class);
 exports.default = Containers;
@@ -637,7 +1008,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8;
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9;
 
 var _axios = require("~/lib/axios");
 
@@ -652,6 +1023,8 @@ var _moment = require("moment");
 var _moment2 = _interopRequireDefault(_moment);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
@@ -717,13 +1090,15 @@ var Images = (_class = function Images(appStore) {
 
   _initDefineProp(this, "setError", _descriptor4, this);
 
-  _initDefineProp(this, "destroyImage", _descriptor5, this);
+  _initDefineProp(this, "closeInspector", _descriptor5, this);
 
-  _initDefineProp(this, "inspectImage", _descriptor6, this);
+  _initDefineProp(this, "destroyImage", _descriptor6, this);
 
-  _initDefineProp(this, "loadImages", _descriptor7, this);
+  _initDefineProp(this, "inspectImage", _descriptor7, this);
 
-  _initDefineProp(this, "pruneImages", _descriptor8, this);
+  _initDefineProp(this, "loadImages", _descriptor8, this);
+
+  _initDefineProp(this, "pruneImages", _descriptor9, this);
 
   this.appStore = appStore;
 }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "error", [_mobx.observable], {
@@ -752,68 +1127,175 @@ var Images = (_class = function Images(appStore) {
       _this.error = (((err || {}).response || {}).data || {}).message || err;
     };
   }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "destroyImage", [_mobx.action], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "closeInspector", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this2 = this;
 
-    return function (id) {
-      _this2.setError();
-
-      _axios2.default.delete("images/" + id).then(function () {
-        _this2.loadImages();
-      }).catch(_this2.setError);
+    return function () {
+      _this2.inspect = null;
     };
   }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "inspectImage", [_mobx.action], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "destroyImage", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this3 = this;
 
-    return function (id) {
-      _this3.setError();
+    return function () {
+      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(id) {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this3.setError();
 
-      _axios2.default.get("images/" + id).then(function (res) {
-        _this3.inspect = res.data;
-      }).catch(_this3.setError);
-    };
+                _context.prev = 1;
+                _context.next = 4;
+                return _axios2.default.delete("images/" + id);
+
+              case 4:
+                _this3.loadImages();
+                _context.next = 10;
+                break;
+
+              case 7:
+                _context.prev = 7;
+                _context.t0 = _context["catch"](1);
+
+                _this3.setError(_context.t0);
+
+              case 10:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, _this3, [[1, 7]]);
+      }));
+
+      return function (_x2) {
+        return _ref.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "loadImages", [_mobx.action], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "inspectImage", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this4 = this;
 
     return function () {
-      _this4.setError();
+      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(id) {
+        var res;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _this4.setError();
 
-      _axios2.default.get('images').then(function (res) {
-        _this4.images = (0, _lodash.sortBy)(res.data, function (image) {
-          return -image.Created;
-        }).map(function (image) {
-          return {
-            repository: image.RepoTags ? image.RepoTags[0].split(':')[0] : image.RepoDigests ? image.RepoDigests[0].split('@')[0] : '<none>',
-            tag: image.RepoTags ? image.RepoTags[0].split(':')[1] : '<none>',
-            image: image.Id.split(':')[1].substr(0, 12),
-            image_full: image.Id.split(':')[1],
-            created: _moment2.default.unix(image.Created).fromNow(),
-            size: sizeOf(image.Size)
-          };
-        });
-      }).catch(_this4.setError);
-    };
+                _context2.prev = 1;
+                _context2.next = 4;
+                return _axios2.default.get("images/" + id);
+
+              case 4:
+                res = _context2.sent;
+
+                _this4.inspect = res.data;
+                _context2.next = 11;
+                break;
+
+              case 8:
+                _context2.prev = 8;
+                _context2.t0 = _context2["catch"](1);
+
+                _this4.setError(_context2.t0);
+
+              case 11:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, _this4, [[1, 8]]);
+      }));
+
+      return function (_x3) {
+        return _ref2.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "pruneImages", [_mobx.action], {
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "loadImages", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this5 = this;
 
-    return function () {
-      _this5.setError();
+    return _asyncToGenerator(regeneratorRuntime.mark(function _callee3() {
+      var res;
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _this5.setError();
 
-      _axios2.default.post('images/prune').then(function () {
-        _this5.loadImages();
-      }).catch(_this5.setError);
-    };
+              _context3.prev = 1;
+              _context3.next = 4;
+              return _axios2.default.get('images');
+
+            case 4:
+              res = _context3.sent;
+
+              _this5.images = (0, _lodash.sortBy)(res.data, function (image) {
+                return -image.Created;
+              }).map(function (image) {
+                return {
+                  repository: image.RepoTags ? image.RepoTags[0].split(':')[0] : image.RepoDigests ? image.RepoDigests[0].split('@')[0] : '<none>',
+                  tag: image.RepoTags ? image.RepoTags[0].split(':')[1] : '<none>',
+                  image: image.Id.split(':')[1].substr(0, 12),
+                  image_full: image.Id.split(':')[1],
+                  created: _moment2.default.unix(image.Created).fromNow(),
+                  size: sizeOf(image.Size)
+                };
+              });
+              _context3.next = 11;
+              break;
+
+            case 8:
+              _context3.prev = 8;
+              _context3.t0 = _context3["catch"](1);
+
+              _this5.setError(_context3.t0);
+
+            case 11:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, _this5, [[1, 8]]);
+    }));
+  }
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "pruneImages", [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this6 = this;
+
+    return _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _this6.setError();
+
+              try {
+                _axios2.default.post('images/prune');
+                _this6.loadImages();
+              } catch (e) {
+                _this6.setError(e);
+              }
+
+            case 2:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, _this6);
+    }));
   }
 })), _class);
 exports.default = Images;
@@ -827,7 +1309,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9;
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10;
 
 var _axios = require("~/lib/axios");
 
@@ -838,6 +1320,8 @@ var _lodash = require("lodash");
 var _mobx = require("mobx");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
@@ -895,15 +1379,17 @@ var Volumes = (_class = function Volumes(appStore) {
 
   _initDefineProp(this, "setError", _descriptor4, this);
 
-  _initDefineProp(this, "createVolume", _descriptor5, this);
+  _initDefineProp(this, "closeInspector", _descriptor5, this);
 
-  _initDefineProp(this, "destroyVolume", _descriptor6, this);
+  _initDefineProp(this, "createVolume", _descriptor6, this);
 
-  _initDefineProp(this, "inspectVolume", _descriptor7, this);
+  _initDefineProp(this, "destroyVolume", _descriptor7, this);
 
-  _initDefineProp(this, "loadVolumes", _descriptor8, this);
+  _initDefineProp(this, "inspectVolume", _descriptor8, this);
 
-  _initDefineProp(this, "pruneVolumes", _descriptor9, this);
+  _initDefineProp(this, "loadVolumes", _descriptor9, this);
+
+  _initDefineProp(this, "pruneVolumes", _descriptor10, this);
 
   this.appStore = appStore;
 }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "error", [_mobx.observable], {
@@ -932,77 +1418,220 @@ var Volumes = (_class = function Volumes(appStore) {
       _this.error = (((err || {}).response || {}).data || {}).message || err;
     };
   }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "createVolume", [_mobx.action], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "closeInspector", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this2 = this;
 
-    return function (volume) {
-      _this2.setError();
-
-      _axios2.default.post('volumes', volume).then(function () {
-        _this2.loadVolumes();
-      }).catch(_this2.setError);
+    return function () {
+      _this2.inspect = null;
     };
   }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "destroyVolume", [_mobx.action], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "createVolume", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this3 = this;
 
-    return function (id) {
-      _this3.setError();
+    return function () {
+      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(volume) {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this3.setError();
 
-      _axios2.default.delete("volumes/" + id).then(function () {
-        _this3.loadVolumes();
-      }).catch(_this3.setError);
-    };
+                _context.prev = 1;
+                _context.next = 4;
+                return _axios2.default.post('volumes', volume);
+
+              case 4:
+                _this3.loadVolumes();
+                _context.next = 10;
+                break;
+
+              case 7:
+                _context.prev = 7;
+                _context.t0 = _context["catch"](1);
+
+                _this3.setError(_context.t0);
+
+              case 10:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, _this3, [[1, 7]]);
+      }));
+
+      return function (_x2) {
+        return _ref.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "inspectVolume", [_mobx.action], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "destroyVolume", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this4 = this;
 
-    return function (id) {
-      _this4.setError();
+    return function () {
+      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(id) {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _this4.setError();
 
-      _axios2.default.get("volumes/" + id).then(function (res) {
-        _this4.inspect = res.data;
-      }).catch(_this4.setError);
-    };
+                _context2.prev = 1;
+                _context2.next = 4;
+                return _axios2.default.delete("volumes/" + id);
+
+              case 4:
+                _this4.loadVolumes();
+                _context2.next = 10;
+                break;
+
+              case 7:
+                _context2.prev = 7;
+                _context2.t0 = _context2["catch"](1);
+
+                _this4.setError(_context2.t0);
+
+              case 10:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, _this4, [[1, 7]]);
+      }));
+
+      return function (_x3) {
+        return _ref2.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "loadVolumes", [_mobx.action], {
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "inspectVolume", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this5 = this;
 
     return function () {
-      _this5.setError();
+      var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(id) {
+        var res;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _this5.setError();
 
-      _axios2.default.get('volumes').then(function (res) {
-        _this5.volumes = (0, _lodash.sortBy)(res.data, function (volume) {
-          return volume.Name.toLowerCase();
-        }).map(function (volume) {
-          return {
-            driver: volume.Driver,
-            name: volume.Name
-          };
-        });
-      }).catch(_this5.setError);
-    };
+                _context3.prev = 1;
+                _context3.next = 4;
+                return _axios2.default.get("volumes/" + id);
+
+              case 4:
+                res = _context3.sent;
+
+                _this5.inspect = res.data;
+                _context3.next = 11;
+                break;
+
+              case 8:
+                _context3.prev = 8;
+                _context3.t0 = _context3["catch"](1);
+
+                _this5.setError(_context3.t0);
+
+              case 11:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, _this5, [[1, 8]]);
+      }));
+
+      return function (_x4) {
+        return _ref3.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "pruneVolumes", [_mobx.action], {
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "loadVolumes", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this6 = this;
 
-    return function () {
-      _this6.setError();
+    return _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
+      var res;
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _this6.setError();
 
-      _axios2.default.post('volumes/prune').then(function () {
-        _this6.loadVolumes();
-      }).catch(_this6.setError);
-    };
+              _context4.prev = 1;
+              _context4.next = 4;
+              return _axios2.default.get('volumes');
+
+            case 4:
+              res = _context4.sent;
+
+              _this6.volumes = (0, _lodash.sortBy)(res.data, function (volume) {
+                return volume.Name.toLowerCase();
+              }).map(function (volume) {
+                return {
+                  driver: volume.Driver,
+                  name: volume.Name
+                };
+              });
+              _context4.next = 11;
+              break;
+
+            case 8:
+              _context4.prev = 8;
+              _context4.t0 = _context4["catch"](1);
+
+              _this6.setError(_context4.t0);
+
+            case 11:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, _this6, [[1, 8]]);
+    }));
+  }
+}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, "pruneVolumes", [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this7 = this;
+
+    return _asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _this7.setError();
+
+              _context5.prev = 1;
+              _context5.next = 4;
+              return _axios2.default.post('volumes/prune');
+
+            case 4:
+              _this7.loadVolumes();
+              _context5.next = 10;
+              break;
+
+            case 7:
+              _context5.prev = 7;
+              _context5.t0 = _context5["catch"](1);
+
+              _this7.setError(_context5.t0);
+
+            case 10:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, _this7, [[1, 7]]);
+    }));
   }
 })), _class);
 exports.default = Volumes;
@@ -1016,7 +1645,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9;
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10;
 
 var _axios = require("~/lib/axios");
 
@@ -1027,6 +1656,8 @@ var _lodash = require("lodash");
 var _mobx = require("mobx");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
@@ -1084,15 +1715,17 @@ var Networks = (_class = function Networks(appStore) {
 
   _initDefineProp(this, "setError", _descriptor4, this);
 
-  _initDefineProp(this, "createNetwork", _descriptor5, this);
+  _initDefineProp(this, "closeInspector", _descriptor5, this);
 
-  _initDefineProp(this, "destroyNetwork", _descriptor6, this);
+  _initDefineProp(this, "createNetwork", _descriptor6, this);
 
-  _initDefineProp(this, "inspectNetwork", _descriptor7, this);
+  _initDefineProp(this, "destroyNetwork", _descriptor7, this);
 
-  _initDefineProp(this, "loadNetworks", _descriptor8, this);
+  _initDefineProp(this, "inspectNetwork", _descriptor8, this);
 
-  _initDefineProp(this, "pruneNetworks", _descriptor9, this);
+  _initDefineProp(this, "loadNetworks", _descriptor9, this);
+
+  _initDefineProp(this, "pruneNetworks", _descriptor10, this);
 
   this.appStore = appStore;
 }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "error", [_mobx.observable], {
@@ -1121,80 +1754,223 @@ var Networks = (_class = function Networks(appStore) {
       _this.error = (((err || {}).response || {}).data || {}).message || err;
     };
   }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "createNetwork", [_mobx.action], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "closeInspector", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this2 = this;
 
-    return function (network) {
-      _this2.setError();
-
-      _axios2.default.post('networks', network).then(function () {
-        _this2.loadNetworks();
-      }).catch(_this2.setError);
+    return function () {
+      _this2.inspect = null;
     };
   }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "destroyNetwork", [_mobx.action], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "createNetwork", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this3 = this;
 
-    return function (id) {
-      _this3.setError();
+    return function () {
+      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(network) {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this3.setError();
 
-      _axios2.default.delete("networks/" + id).then(function () {
-        _this3.loadNetworks();
-      }).catch(_this3.setError);
-    };
+                _context.prev = 1;
+                _context.next = 4;
+                return _axios2.default.post('networks', network);
+
+              case 4:
+                _this3.loadNetworks();
+                _context.next = 10;
+                break;
+
+              case 7:
+                _context.prev = 7;
+                _context.t0 = _context["catch"](1);
+
+                _this3.setError(_context.t0);
+
+              case 10:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, _this3, [[1, 7]]);
+      }));
+
+      return function (_x2) {
+        return _ref.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "inspectNetwork", [_mobx.action], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "destroyNetwork", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this4 = this;
 
-    return function (id) {
-      _this4.setError();
+    return function () {
+      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(id) {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _this4.setError();
 
-      _axios2.default.get("networks/" + id).then(function (res) {
-        _this4.inspect = res.data;
-      }).catch(_this4.setError);
-    };
+                _context2.prev = 1;
+                _context2.next = 4;
+                return _axios2.default.delete("networks/" + id);
+
+              case 4:
+                _this4.loadNetworks();
+                _context2.next = 10;
+                break;
+
+              case 7:
+                _context2.prev = 7;
+                _context2.t0 = _context2["catch"](1);
+
+                _this4.setError(_context2.t0);
+
+              case 10:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, _this4, [[1, 7]]);
+      }));
+
+      return function (_x3) {
+        return _ref2.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "loadNetworks", [_mobx.action], {
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "inspectNetwork", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this5 = this;
 
     return function () {
-      _this5.setError();
+      var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(id) {
+        var res;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _this5.setError();
 
-      _axios2.default.get('networks').then(function (res) {
-        _this5.networks = (0, _lodash.sortBy)(res.data, function (network) {
-          return network.Name.toLowerCase();
-        }).map(function (network) {
-          return {
-            id: network.Id.substr(0, 12),
-            id_full: network.Id,
-            name: network.Name,
-            driver: network.Driver,
-            scope: network.Scope
-          };
-        });
-      }).catch(_this5.setError);
-    };
+                _context3.prev = 1;
+                _context3.next = 4;
+                return _axios2.default.get("networks/" + id);
+
+              case 4:
+                res = _context3.sent;
+
+                _this5.inspect = res.data;
+                _context3.next = 11;
+                break;
+
+              case 8:
+                _context3.prev = 8;
+                _context3.t0 = _context3["catch"](1);
+
+                _this5.setError(_context3.t0);
+
+              case 11:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, _this5, [[1, 8]]);
+      }));
+
+      return function (_x4) {
+        return _ref3.apply(this, arguments);
+      };
+    }();
   }
-}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "pruneNetworks", [_mobx.action], {
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "loadNetworks", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this6 = this;
 
-    return function () {
-      _this6.setError();
+    return _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
+      var res;
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _this6.setError();
 
-      _axios2.default.post('networks/prune').then(function () {
-        _this6.loadNetworks();
-      }).catch(_this6.setError);
-    };
+              _context4.prev = 1;
+              _context4.next = 4;
+              return _axios2.default.get('networks');
+
+            case 4:
+              res = _context4.sent;
+
+              _this6.networks = (0, _lodash.sortBy)(res.data, function (network) {
+                return network.Name.toLowerCase();
+              }).map(function (network) {
+                return {
+                  id: network.Id.substr(0, 12),
+                  id_full: network.Id,
+                  name: network.Name,
+                  driver: network.Driver,
+                  scope: network.Scope
+                };
+              });
+              _context4.next = 11;
+              break;
+
+            case 8:
+              _context4.prev = 8;
+              _context4.t0 = _context4["catch"](1);
+
+              _this6.setError(_context4.t0);
+
+            case 11:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, _this6, [[1, 8]]);
+    }));
+  }
+}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, "pruneNetworks", [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this7 = this;
+
+    return _asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _this7.setError();
+
+              _context5.prev = 1;
+              _context5.next = 4;
+              return _axios2.default.post('networks/prune');
+
+            case 4:
+              _this7.loadNetworks();
+              _context5.next = 10;
+              break;
+
+            case 7:
+              _context5.prev = 7;
+              _context5.t0 = _context5["catch"](1);
+
+              _this7.setError(_context5.t0);
+
+            case 10:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, _this7, [[1, 7]]);
+    }));
   }
 })), _class);
 exports.default = Networks;
@@ -1421,28 +2197,28 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
         case 'images':
           button = _react2.default.createElement(
             "button",
-            { className: "btn btn-danger btn-sm", onClick: this.pruneImages },
+            { type: "button", className: "btn btn-danger btn-sm", onClick: this.pruneImages },
             "Delete all unused images"
           );
           break;
         case 'containers':
           button = _react2.default.createElement(
             "button",
-            { className: "btn btn-danger btn-sm", onClick: this.pruneContainers },
+            { type: "button", className: "btn btn-danger btn-sm", onClick: this.pruneContainers },
             "Delete all stopped containers"
           );
           break;
         case 'volumes':
           button = _react2.default.createElement(
             "button",
-            { className: "btn btn-danger btn-sm", onClick: this.pruneVolumes },
+            { type: "button", className: "btn btn-danger btn-sm", onClick: this.pruneVolumes },
             "Delete all unused volumes"
           );
           break;
         case 'networks':
           button = _react2.default.createElement(
             "button",
-            { className: "btn btn-danger btn-sm", onClick: this.pruneNetworks },
+            { type: "button", className: "btn btn-danger btn-sm", onClick: this.pruneNetworks },
             "Delete all unused networks"
           );
           break;
@@ -1546,7 +2322,7 @@ exports.default = App;
 ___scope___.file("components/App.scss", function(exports, require, module, __filename, __dirname){
 
 
-require("fuse-box-css")("components/App.scss", ".App .master-detail {\n  display: flex;\n  flex-direction: row; }\n  .App .master-detail .master {\n    flex: 1;\n    overflow: auto; }\n  .App .master-detail .detail {\n    flex: 1;\n    max-width: 50%;\n    overflow: auto; }\n\n/*# sourceMappingURL=App.scss.map */")
+require("fuse-box-css")("components/App.scss", ".App .master-detail {\n  display: flex;\n  flex-direction: row; }\n  .App .master-detail .master {\n    flex: 1;\n    overflow: auto; }\n  .App .master-detail .detail {\n    flex: 1;\n    max-width: 50%;\n    overflow: auto; }\n\n.App .modal {\n  max-height: 100%;\n  overflow: auto; }\n\n/*# sourceMappingURL=App.scss.map */")
 });
 ___scope___.file("components/Images/Images.js", function(exports, require, module, __filename, __dirname){
 
@@ -1586,6 +2362,10 @@ var Images = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRea
     _classCallCheck(this, Images);
 
     var _this = _possibleConstructorReturn(this, (Images.__proto__ || Object.getPrototypeOf(Images)).call(this, props));
+
+    _this.closeInspector = function () {
+      _this.imagesStore.closeInspector();
+    };
 
     _this.destroyImage = function (id) {
       if (confirm("Are you sure you want to delete image " + id)) {
@@ -1627,139 +2407,170 @@ var Images = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRea
       return _react2.default.createElement(
         "div",
         { className: "Images" },
+        error && _react2.default.createElement(
+          "div",
+          { className: "alert alert-danger", role: "alert" },
+          error
+        ),
         _react2.default.createElement(
           "div",
-          { className: "master-detail" },
+          { className: "table-responsive" },
           _react2.default.createElement(
-            "div",
-            { className: "master" },
-            error && _react2.default.createElement(
-              "div",
-              { className: "alert alert-danger", role: "alert" },
-              error
-            ),
+            "table",
+            { className: "table" },
             _react2.default.createElement(
-              "div",
-              { className: "table-responsive" },
+              "thead",
+              null,
               _react2.default.createElement(
-                "table",
-                { className: "table" },
+                "tr",
+                null,
                 _react2.default.createElement(
-                  "thead",
+                  "th",
                   null,
-                  _react2.default.createElement(
-                    "tr",
-                    null,
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Repository"
-                    ),
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Tag"
-                    ),
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Image ID"
-                    ),
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Created"
-                    ),
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Size"
-                    ),
-                    _react2.default.createElement("th", null)
-                  )
+                  "Repository"
                 ),
                 _react2.default.createElement(
-                  "tbody",
+                  "th",
                   null,
-                  images.map(function (image, i) {
-                    return _react2.default.createElement(
-                      "tr",
-                      { key: i },
+                  "Tag"
+                ),
+                _react2.default.createElement(
+                  "th",
+                  null,
+                  "Image ID"
+                ),
+                _react2.default.createElement(
+                  "th",
+                  null,
+                  "Created"
+                ),
+                _react2.default.createElement(
+                  "th",
+                  null,
+                  "Size"
+                ),
+                _react2.default.createElement("th", null)
+              )
+            ),
+            _react2.default.createElement(
+              "tbody",
+              null,
+              images.map(function (image, i) {
+                return _react2.default.createElement(
+                  "tr",
+                  { key: i },
+                  _react2.default.createElement(
+                    "td",
+                    { title: image.repository },
+                    image.repository
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    { title: image.tag },
+                    image.tag
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    { title: image.image_full },
+                    _react2.default.createElement(
+                      "a",
+                      { href: "#", onClick: function onClick(e) {
+                          return _this2.inspectImage(e, image.image);
+                        } },
+                      image.image
+                    )
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    { title: image.created },
+                    image.created
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    { title: image.size },
+                    image.size
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    null,
+                    _react2.default.createElement(
+                      "div",
+                      { className: "dropdown pull-right" },
                       _react2.default.createElement(
-                        "td",
-                        { title: image.repository },
-                        image.repository
+                        "button",
+                        { className: "btn btn-default dropdown-toggle", type: "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "true" },
+                        _react2.default.createElement("span", { className: "glyphicon glyphicon-cog" })
                       ),
                       _react2.default.createElement(
-                        "td",
-                        { title: image.tag },
-                        image.tag
-                      ),
-                      _react2.default.createElement(
-                        "td",
-                        { title: image.image_full },
+                        "ul",
+                        { className: "dropdown-menu dropdown-menu-right" },
                         _react2.default.createElement(
-                          "a",
-                          { href: "#", onClick: function onClick(e) {
-                              return _this2.inspectImage(e, image.image);
-                            } },
-                          image.image
-                        )
-                      ),
-                      _react2.default.createElement(
-                        "td",
-                        { title: image.created },
-                        image.created
-                      ),
-                      _react2.default.createElement(
-                        "td",
-                        { title: image.size },
-                        image.size
-                      ),
-                      _react2.default.createElement(
-                        "td",
-                        null,
-                        _react2.default.createElement(
-                          "div",
-                          { className: "dropdown pull-right" },
+                          "li",
+                          null,
                           _react2.default.createElement(
-                            "button",
-                            { className: "btn btn-default dropdown-toggle", type: "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "true" },
-                            _react2.default.createElement("span", { className: "glyphicon glyphicon-cog" })
-                          ),
-                          _react2.default.createElement(
-                            "ul",
-                            { className: "dropdown-menu dropdown-menu-right" },
-                            _react2.default.createElement(
-                              "li",
-                              null,
-                              _react2.default.createElement(
-                                "a",
-                                { href: "#", onClick: function onClick() {
-                                    return _this2.destroyImage(image.image);
-                                  } },
-                                "Delete"
-                              )
-                            )
+                            "a",
+                            { href: "#", onClick: function onClick() {
+                                return _this2.destroyImage(image.image);
+                              } },
+                            "Delete"
                           )
                         )
                       )
-                    );
-                  })
-                )
-              )
+                    )
+                  )
+                );
+              })
             )
-          ),
-          inspect && _react2.default.createElement(
+          )
+        ),
+        _react2.default.createElement(
+          "div",
+          { className: "modal fade in", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel", style: { display: inspect ? 'block' : 'none' } },
+          _react2.default.createElement(
             "div",
-            { className: "detail" },
+            { className: "modal-dialog", role: "document" },
             _react2.default.createElement(
-              "pre",
-              null,
+              "div",
+              { className: "modal-content" },
               _react2.default.createElement(
-                "code",
-                null,
-                JSON.stringify(inspect, undefined, 2)
+                "div",
+                { className: "modal-header" },
+                _react2.default.createElement(
+                  "button",
+                  { type: "button", className: "close", "aria-label": "Close", onClick: this.closeInspector },
+                  _react2.default.createElement(
+                    "span",
+                    { "aria-hidden": "true" },
+                    "\xD7"
+                  )
+                ),
+                _react2.default.createElement(
+                  "h4",
+                  { className: "modal-title", id: "myModalLabel" },
+                  "Inspect Image"
+                )
+              ),
+              _react2.default.createElement(
+                "div",
+                { className: "modal-body" },
+                _react2.default.createElement(
+                  "pre",
+                  null,
+                  _react2.default.createElement(
+                    "code",
+                    null,
+                    JSON.stringify(inspect, undefined, 2)
+                  )
+                )
+              ),
+              _react2.default.createElement(
+                "div",
+                { className: "modal-footer" },
+                _react2.default.createElement(
+                  "button",
+                  { type: "button", className: "btn btn-default", onClick: this.closeInspector },
+                  "Close"
+                )
               )
             )
           )
@@ -1810,6 +2621,10 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
     _classCallCheck(this, Containers);
 
     var _this = _possibleConstructorReturn(this, (Containers.__proto__ || Object.getPrototypeOf(Containers)).call(this, props));
+
+    _this.closeInspector = function () {
+      _this.containersStore.closeInspector();
+    };
 
     _this.destroyContainer = function (id) {
       if (confirm("Are you sure you want to delete container " + id)) {
@@ -1895,233 +2710,284 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
       return _react2.default.createElement(
         "div",
         { className: "Containers" },
+        error && _react2.default.createElement(
+          "div",
+          { className: "alert alert-danger", role: "alert" },
+          error
+        ),
         _react2.default.createElement(
           "div",
-          { className: "master-detail" },
+          { className: "table-responsive" },
           _react2.default.createElement(
-            "div",
-            { className: "master" },
-            error && _react2.default.createElement(
-              "div",
-              { className: "alert alert-danger", role: "alert" },
-              error
-            ),
+            "table",
+            { className: "table" },
             _react2.default.createElement(
-              "div",
-              { className: "table-responsive" },
+              "thead",
+              null,
               _react2.default.createElement(
-                "table",
-                { className: "table" },
+                "tr",
+                null,
                 _react2.default.createElement(
-                  "thead",
+                  "th",
                   null,
-                  _react2.default.createElement(
-                    "tr",
-                    null,
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Container ID"
-                    ),
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Image"
-                    ),
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Command"
-                    ),
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Created"
-                    ),
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Status"
-                    ),
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Ports"
-                    ),
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Names"
-                    ),
-                    _react2.default.createElement("th", null)
-                  )
+                  "Container ID"
                 ),
                 _react2.default.createElement(
-                  "tbody",
+                  "th",
                   null,
-                  containers.map(function (container, i) {
-                    return _react2.default.createElement(
-                      "tr",
-                      { key: i },
+                  "Image"
+                ),
+                _react2.default.createElement(
+                  "th",
+                  null,
+                  "Command"
+                ),
+                _react2.default.createElement(
+                  "th",
+                  null,
+                  "Created"
+                ),
+                _react2.default.createElement(
+                  "th",
+                  null,
+                  "Status"
+                ),
+                _react2.default.createElement(
+                  "th",
+                  null,
+                  "Ports"
+                ),
+                _react2.default.createElement(
+                  "th",
+                  null,
+                  "Names"
+                ),
+                _react2.default.createElement("th", null)
+              )
+            ),
+            _react2.default.createElement(
+              "tbody",
+              null,
+              containers.map(function (container, i) {
+                return _react2.default.createElement(
+                  "tr",
+                  { key: i },
+                  _react2.default.createElement(
+                    "td",
+                    { title: container.id_full },
+                    _react2.default.createElement(
+                      "a",
+                      { href: "#", onClick: function onClick(e) {
+                          return _this2.inspectContainer(e, container.id);
+                        } },
+                      container.id
+                    )
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    { title: container.image },
+                    container.image
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    { title: container.command_full },
+                    container.command
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    { title: container.created },
+                    container.created
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    { title: container.status },
+                    container.state === 'exited' && _react2.default.createElement(
+                      "span",
+                      { className: "label label-danger" },
+                      "exited"
+                    ),
+                    container.state === 'running' && _react2.default.createElement(
+                      "span",
+                      { className: "label label-success" },
+                      "running"
+                    ),
+                    container.state === 'paused' && _react2.default.createElement(
+                      "span",
+                      { className: "label label-warning" },
+                      "paused"
+                    ),
+                    "\xA0",
+                    container.status
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    { title: container.ports_full },
+                    container.ports
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    { title: container.names_full },
+                    container.names
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    null,
+                    _react2.default.createElement(
+                      "div",
+                      { className: "dropdown pull-right" },
                       _react2.default.createElement(
-                        "td",
-                        { title: container.id_full },
-                        _react2.default.createElement(
-                          "a",
-                          { href: "#", onClick: function onClick(e) {
-                              return _this2.inspectContainer(e, container.id);
-                            } },
-                          container.id
-                        )
+                        "button",
+                        { className: "btn btn-default dropdown-toggle", type: "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "true" },
+                        _react2.default.createElement("span", { className: "glyphicon glyphicon-cog" })
                       ),
                       _react2.default.createElement(
-                        "td",
-                        { title: container.image },
-                        container.image
-                      ),
-                      _react2.default.createElement(
-                        "td",
-                        { title: container.command_full },
-                        container.command
-                      ),
-                      _react2.default.createElement(
-                        "td",
-                        { title: container.created },
-                        container.created
-                      ),
-                      _react2.default.createElement(
-                        "td",
-                        { title: container.status },
-                        container.status
-                      ),
-                      _react2.default.createElement(
-                        "td",
-                        { title: container.ports_full },
-                        container.ports
-                      ),
-                      _react2.default.createElement(
-                        "td",
-                        { title: container.names_full },
-                        container.names
-                      ),
-                      _react2.default.createElement(
-                        "td",
-                        null,
-                        _react2.default.createElement(
-                          "div",
-                          { className: "dropdown pull-right" },
+                        "ul",
+                        { className: "dropdown-menu dropdown-menu-right" },
+                        container.state === 'exited' && _react2.default.createElement(
+                          "li",
+                          null,
                           _react2.default.createElement(
-                            "button",
-                            { className: "btn btn-default dropdown-toggle", type: "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "true" },
-                            _react2.default.createElement("span", { className: "glyphicon glyphicon-cog" })
-                          ),
+                            "a",
+                            { href: "#", onClick: function onClick() {
+                                return _this2.startContainer(container.id);
+                              } },
+                            "Start"
+                          )
+                        ),
+                        container.state === 'exited' && _react2.default.createElement(
+                          "li",
+                          null,
                           _react2.default.createElement(
-                            "ul",
-                            { className: "dropdown-menu dropdown-menu-right" },
-                            container.state === 'exited' && _react2.default.createElement(
-                              "li",
-                              null,
-                              _react2.default.createElement(
-                                "a",
-                                { href: "#", onClick: function onClick() {
-                                    return _this2.startContainer(container.id);
-                                  } },
-                                "Start"
-                              )
-                            ),
-                            container.state === 'exited' && _react2.default.createElement(
-                              "li",
-                              null,
-                              _react2.default.createElement(
-                                "a",
-                                { href: "#", onClick: function onClick() {
-                                    return _this2.destroyContainer(container.id);
-                                  } },
-                                "Delete"
-                              )
-                            ),
-                            container.state === 'running' && _react2.default.createElement(
-                              "li",
-                              null,
-                              _react2.default.createElement(
-                                "a",
-                                { href: "#", onClick: function onClick() {
-                                    return _this2.restartContainer(container.id);
-                                  } },
-                                "Restart"
-                              )
-                            ),
-                            container.state === 'running' && _react2.default.createElement(
-                              "li",
-                              null,
-                              _react2.default.createElement(
-                                "a",
-                                { href: "#", onClick: function onClick() {
-                                    return _this2.stopContainer(container.id);
-                                  } },
-                                "Stop"
-                              )
-                            ),
-                            container.state === 'running' && _react2.default.createElement(
-                              "li",
-                              null,
-                              _react2.default.createElement(
-                                "a",
-                                { href: "#", onClick: function onClick() {
-                                    return _this2.killContainer(container.id);
-                                  } },
-                                "Kill"
-                              )
-                            ),
-                            container.state === 'running' && _react2.default.createElement(
-                              "li",
-                              null,
-                              _react2.default.createElement(
-                                "a",
-                                { href: "#", onClick: function onClick() {
-                                    return _this2.pauseContainer(container.id);
-                                  } },
-                                "Pause"
-                              )
-                            ),
-                            container.state === 'paused' && _react2.default.createElement(
-                              "li",
-                              null,
-                              _react2.default.createElement(
-                                "a",
-                                { href: "#", onClick: function onClick() {
-                                    return _this2.unpauseContainer(container.id);
-                                  } },
-                                "Unpause"
-                              )
-                            ),
-                            _react2.default.createElement(
-                              "li",
-                              null,
-                              _react2.default.createElement(
-                                "a",
-                                { href: "#", onClick: function onClick() {
-                                    return _this2.renameContainer(container);
-                                  } },
-                                "Rename"
-                              )
-                            )
+                            "a",
+                            { href: "#", onClick: function onClick() {
+                                return _this2.destroyContainer(container.id);
+                              } },
+                            "Delete"
+                          )
+                        ),
+                        container.state === 'running' && _react2.default.createElement(
+                          "li",
+                          null,
+                          _react2.default.createElement(
+                            "a",
+                            { href: "#", onClick: function onClick() {
+                                return _this2.restartContainer(container.id);
+                              } },
+                            "Restart"
+                          )
+                        ),
+                        container.state === 'running' && _react2.default.createElement(
+                          "li",
+                          null,
+                          _react2.default.createElement(
+                            "a",
+                            { href: "#", onClick: function onClick() {
+                                return _this2.stopContainer(container.id);
+                              } },
+                            "Stop"
+                          )
+                        ),
+                        container.state === 'running' && _react2.default.createElement(
+                          "li",
+                          null,
+                          _react2.default.createElement(
+                            "a",
+                            { href: "#", onClick: function onClick() {
+                                return _this2.killContainer(container.id);
+                              } },
+                            "Kill"
+                          )
+                        ),
+                        container.state === 'running' && _react2.default.createElement(
+                          "li",
+                          null,
+                          _react2.default.createElement(
+                            "a",
+                            { href: "#", onClick: function onClick() {
+                                return _this2.pauseContainer(container.id);
+                              } },
+                            "Pause"
+                          )
+                        ),
+                        container.state === 'paused' && _react2.default.createElement(
+                          "li",
+                          null,
+                          _react2.default.createElement(
+                            "a",
+                            { href: "#", onClick: function onClick() {
+                                return _this2.unpauseContainer(container.id);
+                              } },
+                            "Unpause"
+                          )
+                        ),
+                        _react2.default.createElement(
+                          "li",
+                          null,
+                          _react2.default.createElement(
+                            "a",
+                            { href: "#", onClick: function onClick() {
+                                return _this2.renameContainer(container);
+                              } },
+                            "Rename"
                           )
                         )
                       )
-                    );
-                  })
+                    )
+                  )
+                );
+              })
+            )
+          )
+        ),
+        _react2.default.createElement(
+          "div",
+          { className: "modal fade in", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel", style: { display: inspect ? 'block' : 'none' } },
+          _react2.default.createElement(
+            "div",
+            { className: "modal-dialog", role: "document" },
+            _react2.default.createElement(
+              "div",
+              { className: "modal-content" },
+              _react2.default.createElement(
+                "div",
+                { className: "modal-header" },
+                _react2.default.createElement(
+                  "button",
+                  { type: "button", className: "close", "aria-label": "Close", onClick: this.closeInspector },
+                  _react2.default.createElement(
+                    "span",
+                    { "aria-hidden": "true" },
+                    "\xD7"
+                  )
+                ),
+                _react2.default.createElement(
+                  "h4",
+                  { className: "modal-title", id: "myModalLabel" },
+                  "Inspect Container"
+                )
+              ),
+              _react2.default.createElement(
+                "div",
+                { className: "modal-body" },
+                _react2.default.createElement(
+                  "pre",
+                  null,
+                  _react2.default.createElement(
+                    "code",
+                    null,
+                    JSON.stringify(inspect, undefined, 2)
+                  )
+                )
+              ),
+              _react2.default.createElement(
+                "div",
+                { className: "modal-footer" },
+                _react2.default.createElement(
+                  "button",
+                  { type: "button", className: "btn btn-default", onClick: this.closeInspector },
+                  "Close"
                 )
               )
-            )
-          ),
-          inspect && _react2.default.createElement(
-            "div",
-            { className: "detail" },
-            _react2.default.createElement(
-              "pre",
-              null,
-              JSON.stringify(inspect, undefined, 2)
             )
           )
         )
@@ -2173,6 +3039,10 @@ var Volumes = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRe
     _classCallCheck(this, Volumes);
 
     var _this = _possibleConstructorReturn(this, (Volumes.__proto__ || Object.getPrototypeOf(Volumes)).call(this, props));
+
+    _this.closeInspector = function () {
+      _this.volumesStore.closeInspector();
+    };
 
     _this.createVolume = function (e) {
       e.preventDefault();
@@ -2234,120 +3104,155 @@ var Volumes = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRe
       return _react2.default.createElement(
         "div",
         { className: "Volumes" },
-        _react2.default.createElement(
+        error && _react2.default.createElement(
           "div",
-          { className: "master-detail" },
+          { className: "alert alert-danger", role: "alert" },
+          error
+        ),
+        _react2.default.createElement(
+          "form",
+          { className: "form-inline", onSubmit: this.createVolume },
           _react2.default.createElement(
             "div",
-            { className: "master" },
-            error && _react2.default.createElement(
-              "div",
-              { className: "alert alert-danger", role: "alert" },
-              error
-            ),
+            { className: "form-group" },
+            _react2.default.createElement("input", { className: "form-control", type: "text", name: "name", value: this.state.volume.name, onChange: this.onChange })
+          ),
+          _react2.default.createElement(
+            "button",
+            { type: "submit", className: "btn btn-default" },
+            "Create"
+          )
+        ),
+        _react2.default.createElement(
+          "div",
+          { className: "table-responsive" },
+          _react2.default.createElement(
+            "table",
+            { className: "table" },
             _react2.default.createElement(
-              "form",
-              { className: "form-inline", onSubmit: this.createVolume },
+              "thead",
+              null,
               _react2.default.createElement(
-                "div",
-                { className: "form-group" },
-                _react2.default.createElement("input", { className: "form-control", type: "text", name: "name", value: this.state.volume.name, onChange: this.onChange })
-              ),
-              _react2.default.createElement(
-                "button",
-                { type: "submit", className: "btn btn-default" },
-                "Create"
+                "tr",
+                null,
+                _react2.default.createElement(
+                  "th",
+                  null,
+                  "Driver"
+                ),
+                _react2.default.createElement(
+                  "th",
+                  null,
+                  "Name"
+                ),
+                _react2.default.createElement("th", null)
               )
             ),
             _react2.default.createElement(
-              "div",
-              { className: "table-responsive" },
-              _react2.default.createElement(
-                "table",
-                { className: "table" },
-                _react2.default.createElement(
-                  "thead",
-                  null,
+              "tbody",
+              null,
+              volumes.map(function (volume, i) {
+                return _react2.default.createElement(
+                  "tr",
+                  { key: i },
                   _react2.default.createElement(
-                    "tr",
+                    "td",
+                    { title: volume.driver },
+                    volume.driver
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    { title: volume.name },
+                    _react2.default.createElement(
+                      "a",
+                      { href: "#", onClick: function onClick(e) {
+                          return _this2.inspectVolume(e, volume.name);
+                        } },
+                      volume.name
+                    )
+                  ),
+                  _react2.default.createElement(
+                    "td",
                     null,
                     _react2.default.createElement(
-                      "th",
-                      null,
-                      "Driver"
-                    ),
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Name"
-                    ),
-                    _react2.default.createElement("th", null)
-                  )
-                ),
-                _react2.default.createElement(
-                  "tbody",
-                  null,
-                  volumes.map(function (volume, i) {
-                    return _react2.default.createElement(
-                      "tr",
-                      { key: i },
+                      "div",
+                      { className: "dropdown pull-right" },
                       _react2.default.createElement(
-                        "td",
-                        { title: volume.driver },
-                        volume.driver
+                        "button",
+                        { className: "btn btn-default dropdown-toggle", type: "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "true" },
+                        _react2.default.createElement("span", { className: "glyphicon glyphicon-cog" })
                       ),
                       _react2.default.createElement(
-                        "td",
-                        { title: volume.name },
+                        "ul",
+                        { className: "dropdown-menu dropdown-menu-right" },
                         _react2.default.createElement(
-                          "a",
-                          { href: "#", onClick: function onClick(e) {
-                              return _this2.inspectVolume(e, volume.name);
-                            } },
-                          volume.name
-                        )
-                      ),
-                      _react2.default.createElement(
-                        "td",
-                        null,
-                        _react2.default.createElement(
-                          "div",
-                          { className: "dropdown pull-right" },
+                          "li",
+                          null,
                           _react2.default.createElement(
-                            "button",
-                            { className: "btn btn-default dropdown-toggle", type: "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "true" },
-                            _react2.default.createElement("span", { className: "glyphicon glyphicon-cog" })
-                          ),
-                          _react2.default.createElement(
-                            "ul",
-                            { className: "dropdown-menu dropdown-menu-right" },
-                            _react2.default.createElement(
-                              "li",
-                              null,
-                              _react2.default.createElement(
-                                "a",
-                                { href: "#", onClick: function onClick() {
-                                    return _this2.destroyVolume(volume.name);
-                                  } },
-                                "Delete"
-                              )
-                            )
+                            "a",
+                            { href: "#", onClick: function onClick() {
+                                return _this2.destroyVolume(volume.name);
+                              } },
+                            "Delete"
                           )
                         )
                       )
-                    );
-                  })
+                    )
+                  )
+                );
+              })
+            )
+          )
+        ),
+        _react2.default.createElement(
+          "div",
+          { className: "modal fade in", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel", style: { display: inspect ? 'block' : 'none' } },
+          _react2.default.createElement(
+            "div",
+            { className: "modal-dialog", role: "document" },
+            _react2.default.createElement(
+              "div",
+              { className: "modal-content" },
+              _react2.default.createElement(
+                "div",
+                { className: "modal-header" },
+                _react2.default.createElement(
+                  "button",
+                  { type: "button", className: "close", "aria-label": "Close", onClick: this.closeInspector },
+                  _react2.default.createElement(
+                    "span",
+                    { "aria-hidden": "true" },
+                    "\xD7"
+                  )
+                ),
+                _react2.default.createElement(
+                  "h4",
+                  { className: "modal-title", id: "myModalLabel" },
+                  "Inspect Volume"
+                )
+              ),
+              _react2.default.createElement(
+                "div",
+                { className: "modal-body" },
+                _react2.default.createElement(
+                  "pre",
+                  null,
+                  _react2.default.createElement(
+                    "code",
+                    null,
+                    JSON.stringify(inspect, undefined, 2)
+                  )
+                )
+              ),
+              _react2.default.createElement(
+                "div",
+                { className: "modal-footer" },
+                _react2.default.createElement(
+                  "button",
+                  { type: "button", className: "btn btn-default", onClick: this.closeInspector },
+                  "Close"
                 )
               )
-            )
-          ),
-          inspect && _react2.default.createElement(
-            "div",
-            { className: "detail" },
-            _react2.default.createElement(
-              "pre",
-              null,
-              JSON.stringify(inspect, undefined, 2)
             )
           )
         )
@@ -2399,6 +3304,10 @@ var Networks = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxR
     _classCallCheck(this, Networks);
 
     var _this = _possibleConstructorReturn(this, (Networks.__proto__ || Object.getPrototypeOf(Networks)).call(this, props));
+
+    _this.closeInspector = function () {
+      _this.networksStore.closeInspector();
+    };
 
     _this.createNetwork = function (e) {
       e.preventDefault();
@@ -2460,140 +3369,175 @@ var Networks = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxR
       return _react2.default.createElement(
         "div",
         { className: "Networks" },
-        _react2.default.createElement(
+        error && _react2.default.createElement(
           "div",
-          { className: "master-detail" },
+          { className: "alert alert-danger", role: "alert" },
+          error
+        ),
+        _react2.default.createElement(
+          "form",
+          { className: "form-inline", onSubmit: this.createNetwork },
           _react2.default.createElement(
             "div",
-            { className: "master" },
-            error && _react2.default.createElement(
-              "div",
-              { className: "alert alert-danger", role: "alert" },
-              error
-            ),
+            { className: "form-group" },
+            _react2.default.createElement("input", { className: "form-control", type: "text", name: "name", value: this.state.network.name, onChange: this.onChange })
+          ),
+          _react2.default.createElement(
+            "button",
+            { type: "submit", className: "btn btn-default" },
+            "Create"
+          )
+        ),
+        _react2.default.createElement(
+          "div",
+          { className: "table-responsive" },
+          _react2.default.createElement(
+            "table",
+            { className: "table" },
             _react2.default.createElement(
-              "form",
-              { className: "form-inline", onSubmit: this.createNetwork },
+              "thead",
+              null,
               _react2.default.createElement(
-                "div",
-                { className: "form-group" },
-                _react2.default.createElement("input", { className: "form-control", type: "text", name: "name", value: this.state.network.name, onChange: this.onChange })
-              ),
-              _react2.default.createElement(
-                "button",
-                { type: "submit", className: "btn btn-default" },
-                "Create"
+                "tr",
+                null,
+                _react2.default.createElement(
+                  "th",
+                  null,
+                  "Network ID"
+                ),
+                _react2.default.createElement(
+                  "th",
+                  null,
+                  "Name"
+                ),
+                _react2.default.createElement(
+                  "th",
+                  null,
+                  "Driver"
+                ),
+                _react2.default.createElement(
+                  "th",
+                  null,
+                  "Scope"
+                ),
+                _react2.default.createElement("th", null)
               )
             ),
             _react2.default.createElement(
-              "div",
-              { className: "table-responsive" },
-              _react2.default.createElement(
-                "table",
-                { className: "table" },
-                _react2.default.createElement(
-                  "thead",
-                  null,
+              "tbody",
+              null,
+              networks.map(function (network, i) {
+                return _react2.default.createElement(
+                  "tr",
+                  { key: i },
                   _react2.default.createElement(
-                    "tr",
+                    "td",
+                    { title: network.id_full },
+                    network.id
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    { title: network.name },
+                    _react2.default.createElement(
+                      "a",
+                      { href: "#", onClick: function onClick(e) {
+                          return _this2.inspectNetwork(e, network.id);
+                        } },
+                      network.name
+                    )
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    { title: network.driver },
+                    network.driver
+                  ),
+                  _react2.default.createElement(
+                    "td",
+                    { title: network.scope },
+                    network.scope
+                  ),
+                  _react2.default.createElement(
+                    "td",
                     null,
                     _react2.default.createElement(
-                      "th",
-                      null,
-                      "Network ID"
-                    ),
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Name"
-                    ),
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Driver"
-                    ),
-                    _react2.default.createElement(
-                      "th",
-                      null,
-                      "Scope"
-                    ),
-                    _react2.default.createElement("th", null)
-                  )
-                ),
-                _react2.default.createElement(
-                  "tbody",
-                  null,
-                  networks.map(function (network, i) {
-                    return _react2.default.createElement(
-                      "tr",
-                      { key: i },
+                      "div",
+                      { className: "dropdown pull-right" },
                       _react2.default.createElement(
-                        "td",
-                        { title: network.id_full },
-                        network.id
+                        "button",
+                        { className: "btn btn-default dropdown-toggle", type: "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "true" },
+                        _react2.default.createElement("span", { className: "glyphicon glyphicon-cog" })
                       ),
                       _react2.default.createElement(
-                        "td",
-                        { title: network.name },
+                        "ul",
+                        { className: "dropdown-menu dropdown-menu-right" },
                         _react2.default.createElement(
-                          "a",
-                          { href: "#", onClick: function onClick(e) {
-                              return _this2.inspectNetwork(e, network.id);
-                            } },
-                          network.name
-                        )
-                      ),
-                      _react2.default.createElement(
-                        "td",
-                        { title: network.driver },
-                        network.driver
-                      ),
-                      _react2.default.createElement(
-                        "td",
-                        { title: network.scope },
-                        network.scope
-                      ),
-                      _react2.default.createElement(
-                        "td",
-                        null,
-                        _react2.default.createElement(
-                          "div",
-                          { className: "dropdown pull-right" },
+                          "li",
+                          null,
                           _react2.default.createElement(
-                            "button",
-                            { className: "btn btn-default dropdown-toggle", type: "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "true" },
-                            _react2.default.createElement("span", { className: "glyphicon glyphicon-cog" })
-                          ),
-                          _react2.default.createElement(
-                            "ul",
-                            { className: "dropdown-menu dropdown-menu-right" },
-                            _react2.default.createElement(
-                              "li",
-                              null,
-                              _react2.default.createElement(
-                                "a",
-                                { href: "#", onClick: function onClick() {
-                                    return _this2.destroyNetwork(network.id);
-                                  } },
-                                "Delete"
-                              )
-                            )
+                            "a",
+                            { href: "#", onClick: function onClick() {
+                                return _this2.destroyNetwork(network.id);
+                              } },
+                            "Delete"
                           )
                         )
                       )
-                    );
-                  })
+                    )
+                  )
+                );
+              })
+            )
+          )
+        ),
+        _react2.default.createElement(
+          "div",
+          { className: "modal fade in", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel", style: { display: inspect ? 'block' : 'none' } },
+          _react2.default.createElement(
+            "div",
+            { className: "modal-dialog", role: "document" },
+            _react2.default.createElement(
+              "div",
+              { className: "modal-content" },
+              _react2.default.createElement(
+                "div",
+                { className: "modal-header" },
+                _react2.default.createElement(
+                  "button",
+                  { type: "button", className: "close", "aria-label": "Close", onClick: this.closeInspector },
+                  _react2.default.createElement(
+                    "span",
+                    { "aria-hidden": "true" },
+                    "\xD7"
+                  )
+                ),
+                _react2.default.createElement(
+                  "h4",
+                  { className: "modal-title", id: "myModalLabel" },
+                  "Inspect Network"
+                )
+              ),
+              _react2.default.createElement(
+                "div",
+                { className: "modal-body" },
+                _react2.default.createElement(
+                  "pre",
+                  null,
+                  _react2.default.createElement(
+                    "code",
+                    null,
+                    JSON.stringify(inspect, undefined, 2)
+                  )
+                )
+              ),
+              _react2.default.createElement(
+                "div",
+                { className: "modal-footer" },
+                _react2.default.createElement(
+                  "button",
+                  { type: "button", className: "btn btn-default", onClick: this.closeInspector },
+                  "Close"
                 )
               )
-            )
-          ),
-          inspect && _react2.default.createElement(
-            "div",
-            { className: "detail" },
-            _react2.default.createElement(
-              "pre",
-              null,
-              JSON.stringify(inspect, undefined, 2)
             )
           )
         )

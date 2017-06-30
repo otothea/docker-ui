@@ -15,41 +15,51 @@ export default class Networks {
     this.error = (((err || {}).response || {}).data || {}).message || err
   }
 
-  @action createNetwork = network => {
-    this.setError()
-
-    axios.post('networks', network)
-    .then(() => {
-      this.loadNetworks()
-    })
-    .catch(this.setError)
+  @action closeInspector = () => {
+    this.inspect = null
   }
 
-  @action destroyNetwork = id => {
+  @action createNetwork = async network => {
     this.setError()
 
-    axios.delete(`networks/${id}`)
-    .then(() => {
+    try {
+      await axios.post('networks', network)
       this.loadNetworks()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action inspectNetwork = id => {
+  @action destroyNetwork = async id => {
     this.setError()
 
-    axios.get(`networks/${id}`)
-    .then(res => {
+    try {
+      await axios.delete(`networks/${id}`)
+      this.loadNetworks()
+    }
+    catch(e) {
+      this.setError(e)
+    }
+  }
+
+  @action inspectNetwork = async id => {
+    this.setError()
+
+    try {
+      const res = await axios.get(`networks/${id}`)
       this.inspect = res.data
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action loadNetworks = () => {
+  @action loadNetworks = async () => {
     this.setError()
 
-    axios.get('networks')
-    .then(res => {
+    try {
+      const res = await axios.get('networks')
       this.networks = sortBy(res.data, network => network.Name.toLowerCase()).map(network => ({
         id: network.Id.substr(0, 12),
         id_full: network.Id,
@@ -57,17 +67,21 @@ export default class Networks {
         driver: network.Driver,
         scope: network.Scope,
       }))
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action pruneNetworks = () => {
+  @action pruneNetworks = async () => {
     this.setError()
 
-    axios.post('networks/prune')
-    .then(() => {
+    try {
+      await axios.post('networks/prune')
       this.loadNetworks()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 }

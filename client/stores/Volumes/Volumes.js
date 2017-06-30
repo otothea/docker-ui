@@ -15,56 +15,70 @@ export default class Volumes {
     this.error = (((err || {}).response || {}).data || {}).message || err
   }
 
-  @action createVolume = volume => {
-    this.setError()
-
-    axios.post('volumes', volume)
-    .then(() => {
-      this.loadVolumes()
-    })
-    .catch(this.setError)
+  @action closeInspector = () => {
+    this.inspect = null
   }
 
-  @action destroyVolume = id => {
+  @action createVolume = async volume => {
     this.setError()
 
-    axios.delete(`volumes/${id}`)
-    .then(() => {
+    try {
+      await axios.post('volumes', volume)
       this.loadVolumes()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action inspectVolume = id => {
+  @action destroyVolume = async id => {
     this.setError()
 
-    axios.get(`volumes/${id}`)
-    .then(res => {
+    try {
+      await axios.delete(`volumes/${id}`)
+      this.loadVolumes()
+    }
+    catch(e) {
+      this.setError(e)
+    }
+  }
+
+  @action inspectVolume = async id => {
+    this.setError()
+
+    try {
+      const res = await axios.get(`volumes/${id}`)
       this.inspect = res.data
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action loadVolumes = () => {
+  @action loadVolumes = async () => {
     this.setError()
 
-    axios.get('volumes')
-    .then(res => {
+    try {
+      const res = await axios.get('volumes')
       this.volumes = sortBy(res.data, volume => volume.Name.toLowerCase()).map(volume => ({
         driver: volume.Driver,
         name: volume.Name,
       }))
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action pruneVolumes = () => {
+  @action pruneVolumes = async () => {
     this.setError()
 
-    axios.post('volumes/prune')
-    .then(() => {
+    try {
+      await axios.post('volumes/prune')
       this.loadVolumes()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 }

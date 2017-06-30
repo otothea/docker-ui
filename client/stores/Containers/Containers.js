@@ -20,31 +20,39 @@ export default class Containers {
     this.error = (((err || {}).response || {}).data || {}).message || err
   }
 
-  @action destroyContainer = id => {
+  @action closeInspector = () => {
+    this.inspect = null
+  }
+
+  @action destroyContainer = async id => {
     this.setError()
 
-    axios.delete(`containers/${id}`)
-    .then(() => {
+    try {
+      await axios.delete(`containers/${id}`)
       this.loadContainers()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action inspectContainer = id => {
+  @action inspectContainer = async id => {
     this.setError()
 
-    axios.get(`containers/${id}`)
-    .then(res => {
+    try {
+      const res = await axios.get(`containers/${id}`)
       this.inspect = res.data
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action loadContainers = () => {
+  @action loadContainers = async () => {
     this.setError()
 
-    axios.get('containers')
-    .then(res => {
+    try {
+      const res = await axios.get('containers')
       this.containers = sortBy(res.data, container => -container.Created).map(container => {
         const ports = sortBy(container.Ports, p => `${p.PrivatePort}/${p.Type}`).map(p => `${(p.IP || '') && `${p.IP || ''}:${p.PublicPort || ''}->`}${p.PrivatePort}/${p.Type}`).join(', ')
         const names = sortBy(container.Names, n => n.toLowerCase()).map(n => n.slice(1)).join(', ')
@@ -64,87 +72,105 @@ export default class Containers {
           state: container.State,
         }
       })
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action pruneContainers = () => {
+  @action pruneContainers = async () => {
     this.setError()
 
-    axios.post('containers/prune')
-    .then(() => {
+    try {
+      await axios.post('containers/prune')
       this.loadContainers()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action renameContainer = (id, name) => {
+  @action renameContainer = async (id, name) => {
     this.setError()
 
-    axios.put(`containers/${id}/rename`, {name: name})
-    .then(() => {
+    try {
+      await axios.put(`containers/${id}/rename`, {name: name})
       this.loadContainers()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action restartContainer = id => {
+  @action restartContainer = async id => {
     this.setError()
 
-    axios.put(`containers/${id}/restart`)
-    .then(() => {
+    try {
+      await axios.put(`containers/${id}/restart`)
       this.loadContainers()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action startContainer = id => {
+  @action startContainer = async id => {
     this.setError()
 
-    axios.put(`containers/${id}/start`)
-    .then(() => {
+    try {
+      await axios.put(`containers/${id}/start`)
       this.loadContainers()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action stopContainer = id => {
+  @action stopContainer = async id => {
     this.setError()
 
-    axios.put(`containers/${id}/stop`)
-    .then(() => {
+    try {
+      await axios.put(`containers/${id}/stop`)
       this.loadContainers()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action killContainer = id => {
+  @action killContainer = async id => {
     this.setError()
 
-    axios.put(`containers/${id}/kill`)
-    .then(() => {
+    try {
+      await axios.put(`containers/${id}/kill`)
       this.loadContainers()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action pauseContainer = id => {
+  @action pauseContainer = async id => {
     this.setError()
 
-    axios.put(`containers/${id}/pause`)
-    .then(() => {
+    try {
+      await axios.put(`containers/${id}/pause`)
       this.loadContainers()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 
-  @action unpauseContainer = id => {
+  @action unpauseContainer = async id => {
     this.setError()
 
-    axios.put(`containers/${id}/unpause`)
-    .then(() => {
+    try {
+      await axios.put(`containers/${id}/unpause`)
       this.loadContainers()
-    })
-    .catch(this.setError)
+    }
+    catch(e) {
+      this.setError(e)
+    }
   }
 }

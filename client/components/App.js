@@ -62,16 +62,16 @@ export default class App extends React.Component {
     let button
     switch(route) {
     case 'images':
-      button = <button className="btn btn-danger btn-sm" onClick={this.pruneImages}>Delete all unused images</button>
+      button = <button type="button" className="btn btn-danger btn-sm" onClick={this.pruneImages}>Delete all unused images</button>
       break
     case 'containers':
-      button = <button className="btn btn-danger btn-sm" onClick={this.pruneContainers}>Delete all stopped containers</button>
+      button = <button type="button" className="btn btn-danger btn-sm" onClick={this.pruneContainers}>Delete all stopped containers</button>
       break
     case 'volumes':
-      button = <button className="btn btn-danger btn-sm" onClick={this.pruneVolumes}>Delete all unused volumes</button>
+      button = <button type="button" className="btn btn-danger btn-sm" onClick={this.pruneVolumes}>Delete all unused volumes</button>
       break
     case 'networks':
-      button = <button className="btn btn-danger btn-sm" onClick={this.pruneNetworks}>Delete all unused networks</button>
+      button = <button type="button" className="btn btn-danger btn-sm" onClick={this.pruneNetworks}>Delete all unused networks</button>
       break
     }
 
