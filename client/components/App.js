@@ -59,7 +59,7 @@ export default class App extends React.Component {
   render() {
     const route = this.props.routes[this.props.routes.length - 1].path
 
-    let button
+    let button = null
     switch(route) {
     case 'images':
       button = <button type="button" className="btn btn-danger btn-sm" onClick={this.pruneImages}>Delete all unused images</button>

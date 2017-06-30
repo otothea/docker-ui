@@ -20,12 +20,12 @@ export default class Router extends React.Component {
         <ReactRouter history={browserHistory}>
           <Route path="/" component={App}>
             <IndexRedirect to="images" />
+            <Route path="login" component={Login} />
             <Route path="images" component={Images} />
             <Route path="containers" component={Containers} />
             <Route path="volumes" component={Volumes} />
             <Route path="networks" component={Networks} />
           </Route>
-          <Route path="/login" component={Login} />
         </ReactRouter>
       </Provider>
     )

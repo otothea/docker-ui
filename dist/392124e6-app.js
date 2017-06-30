@@ -103,12 +103,12 @@ var Router = function (_React$Component) {
             _reactRouter.Route,
             { path: "/", component: _App2.default },
             _react2.default.createElement(_reactRouter.IndexRedirect, { to: "images" }),
+            _react2.default.createElement(_reactRouter.Route, { path: "login", component: _Login2.default }),
             _react2.default.createElement(_reactRouter.Route, { path: "images", component: _Images2.default }),
             _react2.default.createElement(_reactRouter.Route, { path: "containers", component: _Containers2.default }),
             _react2.default.createElement(_reactRouter.Route, { path: "volumes", component: _Volumes2.default }),
             _react2.default.createElement(_reactRouter.Route, { path: "networks", component: _Networks2.default })
-          ),
-          _react2.default.createElement(_reactRouter.Route, { path: "/login", component: _Login2.default })
+          )
         )
       );
     }
@@ -281,7 +281,7 @@ var Login = (_class = function Login(appStore) {
               case 4:
                 redirect = _reactRouter.browserHistory.getCurrentLocation().query.redirect;
 
-                _reactRouter.browserHistory.push(redirect || '/');
+                window.location = redirect || '/';
                 _context.next = 11;
                 break;
 
@@ -321,7 +321,7 @@ var Login = (_class = function Login(appStore) {
               return _axios2.default.delete('auth');
 
             case 4:
-              _reactRouter.browserHistory.push('/login');
+              window.location = '/login';
               _context2.next = 10;
               break;
 
@@ -2192,7 +2192,7 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
     value: function render() {
       var route = this.props.routes[this.props.routes.length - 1].path;
 
-      var button = void 0;
+      var button = null;
       switch (route) {
         case 'images':
           button = _react2.default.createElement(

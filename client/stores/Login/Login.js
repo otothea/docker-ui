@@ -19,7 +19,7 @@ export default class Login {
     try {
       await axios.post('auth', credentials)
       const redirect = browserHistory.getCurrentLocation().query.redirect
-      browserHistory.push(redirect || '/')
+      window.location = redirect || '/'
     }
     catch(e) {
       this.setError(e)
@@ -31,7 +31,7 @@ export default class Login {
 
     try {
       await axios.delete('auth')
-      browserHistory.push('/login')
+      window.location = '/login'
     }
     catch(e) {
       this.setError(e)
