@@ -161,7 +161,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13;
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13, _descriptor14, _descriptor15;
 
 var _axios = require('axios');
 
@@ -222,6 +222,10 @@ function _initializerWarningHelper(descriptor, context) {
   throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
 }
 
+var ellipsify = function ellipsify(string) {
+  return string.length > 40 ? string.substr(0, 37) + '...' : string;
+};
+
 var Containers = (_class = function Containers(appStore) {
   _classCallCheck(this, Containers);
 
@@ -251,6 +255,10 @@ var Containers = (_class = function Containers(appStore) {
 
   _initDefineProp(this, 'killContainer', _descriptor13, this);
 
+  _initDefineProp(this, 'pauseContainer', _descriptor14, this);
+
+  _initDefineProp(this, 'unpauseContainer', _descriptor15, this);
+
   this.appStore = appStore;
 }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'error', [_mobx.observable], {
   enumerable: true,
@@ -275,7 +283,7 @@ var Containers = (_class = function Containers(appStore) {
     return function () {
       var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-      _this.error = (((err || {}).response || {}).data || {}).message || null;
+      _this.error = (((err || {}).response || {}).data || {}).message || err;
     };
   }
 }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'destroyContainer', [_mobx.action], {
@@ -316,18 +324,25 @@ var Containers = (_class = function Containers(appStore) {
         _this4.containers = (0, _lodash.sortBy)(res.data, function (container) {
           return -container.Created;
         }).map(function (container) {
+          var ports = container.Ports.map(function (p) {
+            return '' + ((p.IP || '') && (p.IP || '') + ':' + (p.PublicPort || '') + '->') + p.PrivatePort + '/' + p.Type;
+          }).join(', ');
+          var names = container.Names.map(function (name) {
+            return name.slice(1);
+          }).join(', ');
+
           return {
             id: container.Id.substr(0, 12),
+            id_full: container.Id,
             image: container.Image,
-            command: container.Command.length > 20 ? container.Command.substr(0, 17) + '...' : container.Command,
+            command: ellipsify(container.Command),
+            command_full: container.Command,
             created: _moment2.default.unix(container.Created).fromNow(),
             status: container.Status,
-            ports: container.Ports.map(function (p) {
-              return '' + ((p.IP || '') && (p.IP || '') + ':' + (p.PublicPort || '') + '->') + p.PrivatePort + '/' + p.Type;
-            }).join(', '),
-            names: container.Names.map(function (name) {
-              return name.slice(1);
-            }).join(', '),
+            ports: ellipsify(ports),
+            ports_full: ports,
+            names: ellipsify(names),
+            names_full: names,
             state: container.State
           };
         });
@@ -368,7 +383,7 @@ var Containers = (_class = function Containers(appStore) {
     return function (id) {
       _this7.setError();
 
-      _axios2.default.put('/api/v1/containers/' + id + '/restart', { name: name }).then(function () {
+      _axios2.default.put('/api/v1/containers/' + id + '/restart').then(function () {
         _this7.loadContainers();
       }).catch(_this7.setError);
     };
@@ -381,7 +396,7 @@ var Containers = (_class = function Containers(appStore) {
     return function (id) {
       _this8.setError();
 
-      _axios2.default.put('/api/v1/containers/' + id + '/start', { name: name }).then(function () {
+      _axios2.default.put('/api/v1/containers/' + id + '/start').then(function () {
         _this8.loadContainers();
       }).catch(_this8.setError);
     };
@@ -394,7 +409,7 @@ var Containers = (_class = function Containers(appStore) {
     return function (id) {
       _this9.setError();
 
-      _axios2.default.put('/api/v1/containers/' + id + '/stop', { name: name }).then(function () {
+      _axios2.default.put('/api/v1/containers/' + id + '/stop').then(function () {
         _this9.loadContainers();
       }).catch(_this9.setError);
     };
@@ -407,9 +422,35 @@ var Containers = (_class = function Containers(appStore) {
     return function (id) {
       _this10.setError();
 
-      _axios2.default.put('/api/v1/containers/' + id + '/kill', { name: name }).then(function () {
+      _axios2.default.put('/api/v1/containers/' + id + '/kill').then(function () {
         _this10.loadContainers();
       }).catch(_this10.setError);
+    };
+  }
+}), _descriptor14 = _applyDecoratedDescriptor(_class.prototype, 'pauseContainer', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this11 = this;
+
+    return function (id) {
+      _this11.setError();
+
+      _axios2.default.put('/api/v1/containers/' + id + '/pause').then(function () {
+        _this11.loadContainers();
+      }).catch(_this11.setError);
+    };
+  }
+}), _descriptor15 = _applyDecoratedDescriptor(_class.prototype, 'unpauseContainer', [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this12 = this;
+
+    return function (id) {
+      _this12.setError();
+
+      _axios2.default.put('/api/v1/containers/' + id + '/unpause').then(function () {
+        _this12.loadContainers();
+      }).catch(_this12.setError);
     };
   }
 })), _class);
@@ -536,7 +577,7 @@ var Images = (_class = function Images(appStore) {
     return function () {
       var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-      _this.error = (((err || {}).response || {}).data || {}).message || null;
+      _this.error = (((err || {}).response || {}).data || {}).message || err;
     };
   }
 }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'destroyImage', [_mobx.action], {
@@ -581,6 +622,7 @@ var Images = (_class = function Images(appStore) {
             repository: image.RepoTags ? image.RepoTags[0].split(':')[0] : image.RepoDigests ? image.RepoDigests[0].split('@')[0] : '<none>',
             tag: image.RepoTags ? image.RepoTags[0].split(':')[1] : '<none>',
             image: image.Id.split(':')[1].substr(0, 12),
+            image_full: image.Id.split(':')[1],
             created: _moment2.default.unix(image.Created).fromNow(),
             size: sizeOf(image.Size)
           };
@@ -715,7 +757,7 @@ var Volumes = (_class = function Volumes(appStore) {
     return function () {
       var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-      _this.error = (((err || {}).response || {}).data || {}).message || null;
+      _this.error = (((err || {}).response || {}).data || {}).message || err;
     };
   }
 }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'createVolume', [_mobx.action], {
@@ -904,7 +946,7 @@ var Networks = (_class = function Networks(appStore) {
     return function () {
       var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-      _this.error = (((err || {}).response || {}).data || {}).message || null;
+      _this.error = (((err || {}).response || {}).data || {}).message || err;
     };
   }
 }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'createNetwork', [_mobx.action], {
@@ -960,6 +1002,7 @@ var Networks = (_class = function Networks(appStore) {
         }).map(function (network) {
           return {
             id: network.Id.substr(0, 12),
+            id_full: network.Id,
             name: network.Name,
             driver: network.Driver,
             scope: network.Scope
@@ -1333,7 +1376,7 @@ var Images = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxRea
                       ),
                       _react2.default.createElement(
                         "td",
-                        { title: image.image },
+                        { title: image.image_full },
                         _react2.default.createElement(
                           "a",
                           { href: "#", onClick: function onClick(e) {
@@ -1463,6 +1506,18 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
       _this.containersStore.loadContainers();
     };
 
+    _this.pauseContainer = function (id) {
+      if (confirm("Are you sure you want to pause container " + id + "?")) {
+        _this.containersStore.pauseContainer(id);
+      }
+    };
+
+    _this.unpauseContainer = function (id) {
+      if (confirm("Are you sure you want to unpause container " + id + "?")) {
+        _this.containersStore.unpauseContainer(id);
+      }
+    };
+
     _this.renameContainer = function (container) {
       var name = prompt('What would you like the new name to be?', container.names);
 
@@ -1589,7 +1644,7 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                       { key: i },
                       _react2.default.createElement(
                         "td",
-                        { title: container.id },
+                        { title: container.id_full },
                         _react2.default.createElement(
                           "a",
                           { href: "#", onClick: function onClick(e) {
@@ -1605,7 +1660,7 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                       ),
                       _react2.default.createElement(
                         "td",
-                        { title: container.command },
+                        { title: container.command_full },
                         container.command
                       ),
                       _react2.default.createElement(
@@ -1620,12 +1675,12 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                       ),
                       _react2.default.createElement(
                         "td",
-                        { title: container.ports },
+                        { title: container.ports_full },
                         container.ports
                       ),
                       _react2.default.createElement(
                         "td",
-                        { title: container.names },
+                        { title: container.names_full },
                         container.names
                       ),
                       _react2.default.createElement(
@@ -1642,7 +1697,7 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                           _react2.default.createElement(
                             "ul",
                             { className: "dropdown-menu dropdown-menu-right" },
-                            container.state !== 'running' && _react2.default.createElement(
+                            container.state === 'exited' && _react2.default.createElement(
                               "li",
                               null,
                               _react2.default.createElement(
@@ -1651,6 +1706,17 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                                     return _this2.startContainer(container.id);
                                   } },
                                 "Start"
+                              )
+                            ),
+                            container.state === 'exited' && _react2.default.createElement(
+                              "li",
+                              null,
+                              _react2.default.createElement(
+                                "a",
+                                { href: "#", onClick: function onClick() {
+                                    return _this2.destroyContainer(container.id);
+                                  } },
+                                "Delete"
                               )
                             ),
                             container.state === 'running' && _react2.default.createElement(
@@ -1686,15 +1752,26 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                                 "Kill"
                               )
                             ),
-                            container.state !== 'running' && _react2.default.createElement(
+                            container.state === 'running' && _react2.default.createElement(
                               "li",
                               null,
                               _react2.default.createElement(
                                 "a",
                                 { href: "#", onClick: function onClick() {
-                                    return _this2.destroyContainer(container.id);
+                                    return _this2.pauseContainer(container.id);
                                   } },
-                                "Delete"
+                                "Pause"
+                              )
+                            ),
+                            container.state === 'paused' && _react2.default.createElement(
+                              "li",
+                              null,
+                              _react2.default.createElement(
+                                "a",
+                                { href: "#", onClick: function onClick() {
+                                    return _this2.unpauseContainer(container.id);
+                                  } },
+                                "Unpause"
                               )
                             ),
                             _react2.default.createElement(
@@ -2131,7 +2208,7 @@ var Networks = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxR
                       { key: i },
                       _react2.default.createElement(
                         "td",
-                        { title: network.id },
+                        { title: network.id_full },
                         network.id
                       ),
                       _react2.default.createElement(

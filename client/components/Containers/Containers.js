@@ -36,6 +36,18 @@ export default class Containers extends React.Component {
     this.containersStore.loadContainers()
   }
 
+  pauseContainer = id => {
+    if (confirm(`Are you sure you want to pause container ${id}?`)) {
+      this.containersStore.pauseContainer(id)
+    }
+  }
+
+  unpauseContainer = id => {
+    if (confirm(`Are you sure you want to unpause container ${id}?`)) {
+      this.containersStore.unpauseContainer(id)
+    }
+  }
+
   renameContainer = container => {
     const name = prompt('What would you like the new name to be?', container.names)
 
@@ -93,24 +105,26 @@ export default class Containers extends React.Component {
                 <tbody>
                 {containers.map((container, i) => (
                   <tr key={i}>
-                    <td title={container.id}><a href="#" onClick={e => this.inspectContainer(e, container.id)}>{container.id}</a></td>
+                    <td title={container.id_full}><a href="#" onClick={e => this.inspectContainer(e, container.id)}>{container.id}</a></td>
                     <td title={container.image}>{container.image}</td>
-                    <td title={container.command}>{container.command}</td>
+                    <td title={container.command_full}>{container.command}</td>
                     <td title={container.created}>{container.created}</td>
                     <td title={container.status}>{container.status}</td>
-                    <td title={container.ports}>{container.ports}</td>
-                    <td title={container.names}>{container.names}</td>
+                    <td title={container.ports_full}>{container.ports}</td>
+                    <td title={container.names_full}>{container.names}</td>
                     <td>
                       <div className="dropdown pull-right">
                         <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                           <span className="glyphicon glyphicon-cog" />
                         </button>
                         <ul className="dropdown-menu dropdown-menu-right">
-                          {container.state !== 'running' && <li><a href="#" onClick={() => this.startContainer(container.id)}>Start</a></li>}
+                          {container.state === 'exited' && <li><a href="#" onClick={() => this.startContainer(container.id)}>Start</a></li>}
+                          {container.state === 'exited' && <li><a href="#" onClick={() => this.destroyContainer(container.id)}>Delete</a></li>}
                           {container.state === 'running' && <li><a href="#" onClick={() => this.restartContainer(container.id)}>Restart</a></li>}
                           {container.state === 'running' && <li><a href="#" onClick={() => this.stopContainer(container.id)}>Stop</a></li>}
                           {container.state === 'running' && <li><a href="#" onClick={() => this.killContainer(container.id)}>Kill</a></li>}
-                          {container.state !== 'running' && <li><a href="#" onClick={() => this.destroyContainer(container.id)}>Delete</a></li>}
+                          {container.state === 'running' && <li><a href="#" onClick={() => this.pauseContainer(container.id)}>Pause</a></li>}
+                          {container.state === 'paused' && <li><a href="#" onClick={() => this.unpauseContainer(container.id)}>Unpause</a></li>}
                           <li><a href="#" onClick={() => this.renameContainer(container)}>Rename</a></li>
                         </ul>
                       </div>

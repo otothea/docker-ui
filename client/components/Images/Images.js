@@ -61,7 +61,7 @@ export default class Images extends React.Component {
                   <tr key={i}>
                     <td title={image.repository}>{image.repository}</td>
                     <td title={image.tag}>{image.tag}</td>
-                    <td title={image.image}><a href="#" onClick={e => this.inspectImage(e, image.image)}>{image.image}</a></td>
+                    <td title={image.image_full}><a href="#" onClick={e => this.inspectImage(e, image.image)}>{image.image}</a></td>
                     <td title={image.created}>{image.created}</td>
                     <td title={image.size}>{image.size}</td>
                     <td>

@@ -86,7 +86,7 @@ export default class Networks extends React.Component {
                 <tbody>
                 {networks.map((network, i) => (
                   <tr key={i}>
-                    <td title={network.id}>{network.id}</td>
+                    <td title={network.id_full}>{network.id}</td>
                     <td title={network.name}><a href="#" onClick={e => this.inspectNetwork(e, network.id)}>{network.name}</a></td>
                     <td title={network.driver}>{network.driver}</td>
                     <td title={network.scope}>{network.scope}</td>

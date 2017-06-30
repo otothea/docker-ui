@@ -19,7 +19,7 @@ export default class Images {
   }
 
   @action setError = (err = null) => {
-    this.error = (((err || {}).response || {}).data || {}).message || null
+    this.error = (((err || {}).response || {}).data || {}).message || err
   }
 
   @action destroyImage = id => {
@@ -51,6 +51,7 @@ export default class Images {
         repository: image.RepoTags ? image.RepoTags[0].split(':')[0] : image.RepoDigests ? image.RepoDigests[0].split('@')[0] : '<none>',
         tag: image.RepoTags ? image.RepoTags[0].split(':')[1] : '<none>',
         image: image.Id.split(':')[1].substr(0, 12),
+        image_full: image.Id.split(':')[1],
         created: moment.unix(image.Created).fromNow(),
         size: sizeOf(image.Size),
       }))

@@ -12,7 +12,7 @@ export default class Networks {
   }
 
   @action setError = (err = null) => {
-    this.error = (((err || {}).response || {}).data || {}).message || null
+    this.error = (((err || {}).response || {}).data || {}).message || err
   }
 
   @action createNetwork = network => {
@@ -52,6 +52,7 @@ export default class Networks {
     .then(res => {
       this.networks = sortBy(res.data, network => -network.Created).map(network => ({
         id: network.Id.substr(0, 12),
+        id_full: network.Id,
         name: network.Name,
         driver: network.Driver,
         scope: network.Scope,

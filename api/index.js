@@ -18,6 +18,8 @@ router.put('/containers/:id/restart', containers.restart)
 router.put('/containers/:id/start', containers.start)
 router.put('/containers/:id/stop', containers.stop)
 router.put('/containers/:id/kill', containers.kill)
+router.put('/containers/:id/pause', containers.pause)
+router.put('/containers/:id/unpause', containers.unpause)
 router.delete('/containers/:id', containers.destroy)
 router.post('/containers/prune', containers.prune)
 

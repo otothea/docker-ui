@@ -12,7 +12,7 @@ export default class Volumes {
   }
 
   @action setError = (err = null) => {
-    this.error = (((err || {}).response || {}).data || {}).message || null
+    this.error = (((err || {}).response || {}).data || {}).message || err
   }
 
   @action createVolume = volume => {

@@ -10,6 +10,8 @@ module.exports = {
   start,
   stop,
   kill,
+  pause,
+  unpause,
 }
 
 async function list(req, res) {
@@ -87,6 +89,24 @@ async function stop(req, res) {
 async function kill(req, res) {
   try {
     res.send(await request('post', `containers/${req.params.id}/kill`))
+  }
+  catch(e) {
+    res.status(500).send(e)
+  }
+}
+
+async function pause(req, res) {
+  try {
+    res.send(await request('post', `containers/${req.params.id}/pause`))
+  }
+  catch(e) {
+    res.status(500).send(e)
+  }
+}
+
+async function unpause(req, res) {
+  try {
+    res.send(await request('post', `containers/${req.params.id}/unpause`))
   }
   catch(e) {
     res.status(500).send(e)

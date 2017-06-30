@@ -3,6 +3,10 @@ import {sortBy} from 'lodash'
 import {action, observable} from 'mobx'
 import moment from 'moment'
 
+const ellipsify = string => {
+  return string.length > 40 ? `${string.substr(0, 37)}...` : string
+}
+
 export default class Containers {
   @observable error = null
   @observable containers = []
@@ -13,7 +17,7 @@ export default class Containers {
   }
 
   @action setError = (err = null) => {
-    this.error = (((err || {}).response || {}).data || {}).message || null
+    this.error = (((err || {}).response || {}).data || {}).message || err
   }
 
   @action destroyContainer = id => {
@@ -41,16 +45,25 @@ export default class Containers {
 
     axios.get('/api/v1/containers')
     .then(res => {
-      this.containers = sortBy(res.data, container => -container.Created).map(container => ({
-        id: container.Id.substr(0, 12),
-        image: container.Image,
-        command: container.Command.length > 20 ? `${container.Command.substr(0, 17)}...` : container.Command,
-        created: moment.unix(container.Created).fromNow(),
-        status: container.Status,
-        ports: container.Ports.map(p => `${(p.IP || '') && `${p.IP || ''}:${p.PublicPort || ''}->`}${p.PrivatePort}/${p.Type}`).join(', '),
-        names: container.Names.map(name => name.slice(1)).join(', '),
-        state: container.State,
-      }))
+      this.containers = sortBy(res.data, container => -container.Created).map(container => {
+        const ports = container.Ports.map(p => `${(p.IP || '') && `${p.IP || ''}:${p.PublicPort || ''}->`}${p.PrivatePort}/${p.Type}`).join(', ')
+        const names = container.Names.map(name => name.slice(1)).join(', ')
+
+        return {
+          id: container.Id.substr(0, 12),
+          id_full: container.Id,
+          image: container.Image,
+          command: ellipsify(container.Command),
+          command_full: container.Command,
+          created: moment.unix(container.Created).fromNow(),
+          status: container.Status,
+          ports: ellipsify(ports),
+          ports_full: ports,
+          names: ellipsify(names),
+          names_full: names,
+          state: container.State,
+        }
+      })
     })
     .catch(this.setError)
   }
@@ -78,7 +91,7 @@ export default class Containers {
   @action restartContainer = id => {
     this.setError()
 
-    axios.put(`/api/v1/containers/${id}/restart`, {name: name})
+    axios.put(`/api/v1/containers/${id}/restart`)
     .then(() => {
       this.loadContainers()
     })
@@ -88,7 +101,7 @@ export default class Containers {
   @action startContainer = id => {
     this.setError()
 
-    axios.put(`/api/v1/containers/${id}/start`, {name: name})
+    axios.put(`/api/v1/containers/${id}/start`)
     .then(() => {
       this.loadContainers()
     })
@@ -98,7 +111,7 @@ export default class Containers {
   @action stopContainer = id => {
     this.setError()
 
-    axios.put(`/api/v1/containers/${id}/stop`, {name: name})
+    axios.put(`/api/v1/containers/${id}/stop`)
     .then(() => {
       this.loadContainers()
     })
@@ -108,7 +121,27 @@ export default class Containers {
   @action killContainer = id => {
     this.setError()
 
-    axios.put(`/api/v1/containers/${id}/kill`, {name: name})
+    axios.put(`/api/v1/containers/${id}/kill`)
+    .then(() => {
+      this.loadContainers()
+    })
+    .catch(this.setError)
+  }
+
+  @action pauseContainer = id => {
+    this.setError()
+
+    axios.put(`/api/v1/containers/${id}/pause`)
+    .then(() => {
+      this.loadContainers()
+    })
+    .catch(this.setError)
+  }
+
+  @action unpauseContainer = id => {
+    this.setError()
+
+    axios.put(`/api/v1/containers/${id}/unpause`)
     .then(() => {
       this.loadContainers()
     })
