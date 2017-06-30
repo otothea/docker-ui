@@ -459,7 +459,6 @@ var BaseStore = (_class = function BaseStore() {
     return function () {
       var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-      console.log(((err || {}).response || {}).data);
       _this.error = (((err || {}).response || {}).data || {}).message || (err || {}).message || err;
     };
   }

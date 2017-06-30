@@ -5,7 +5,6 @@ export default class BaseStore {
   @observable inspect = null
 
   @action setError = (err = null) => {
-    console.log(((err || {}).response || {}).data)
     this.error = (((err || {}).response || {}).data || {}).message || (err || {}).message || err
   }
 
