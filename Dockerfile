@@ -7,6 +7,10 @@ MAINTAINER oscar@otothea.com
 RUN mkdir -p /srv/www
 WORKDIR /srv/www
 
+# Environment
+
+ENV DOCKER_UI_HOST=0.0.0.0
+
 # DEPENDENCIES
 
 COPY package.json package.json

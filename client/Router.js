@@ -2,6 +2,7 @@ import {Provider} from 'mobx-react'
 import React from 'react'
 import {Router as ReactRouter, Route, browserHistory, IndexRedirect} from 'react-router'
 import AppStore from 'stores/AppStore'
+import Login from './components/Login/Login'
 import App from './components/App'
 import Images from './components/Images/Images'
 import Containers from './components/Containers/Containers'
@@ -24,6 +25,7 @@ export default class Router extends React.Component {
             <Route path="volumes" component={Volumes} />
             <Route path="networks" component={Networks} />
           </Route>
+          <Route path="/login" component={Login} />
         </ReactRouter>
       </Provider>
     )

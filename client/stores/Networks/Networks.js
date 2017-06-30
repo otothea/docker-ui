@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'lib/axios'
 import {sortBy} from 'lodash'
 import {action, observable} from 'mobx'
 
@@ -18,7 +18,7 @@ export default class Networks {
   @action createNetwork = network => {
     this.setError()
 
-    axios.post('/api/v1/networks', network)
+    axios.post('networks', network)
     .then(() => {
       this.loadNetworks()
     })
@@ -28,7 +28,7 @@ export default class Networks {
   @action destroyNetwork = id => {
     this.setError()
 
-    axios.delete(`/api/v1/networks/${id}`)
+    axios.delete(`networks/${id}`)
     .then(() => {
       this.loadNetworks()
     })
@@ -38,7 +38,7 @@ export default class Networks {
   @action inspectNetwork = id => {
     this.setError()
 
-    axios.get(`/api/v1/networks/${id}`)
+    axios.get(`networks/${id}`)
     .then(res => {
       this.inspect = res.data
     })
@@ -48,7 +48,7 @@ export default class Networks {
   @action loadNetworks = () => {
     this.setError()
 
-    axios.get('/api/v1/networks')
+    axios.get('networks')
     .then(res => {
       this.networks = sortBy(res.data, network => network.Name.toLowerCase()).map(network => ({
         id: network.Id.substr(0, 12),
@@ -64,7 +64,7 @@ export default class Networks {
   @action pruneNetworks = () => {
     this.setError()
 
-    axios.post('/api/v1/networks/prune')
+    axios.post('networks/prune')
     .then(() => {
       this.loadNetworks()
     })

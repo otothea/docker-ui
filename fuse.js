@@ -26,6 +26,7 @@ module.exports = production => {
     ],
     alias: {
       stores: '~/stores',
+      lib: '~/lib',
     },
   })
 

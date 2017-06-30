@@ -19,10 +19,17 @@ export default class App extends React.Component {
     super(props)
 
     this.appStore = props.store
+    this.loginStore = this.appStore.login
     this.containersStore = this.appStore.containers
     this.imagesStore = this.appStore.images
     this.volumesStore = this.appStore.volumes
     this.networksStore = this.appStore.networks
+  }
+
+  logout = () => {
+    if (confirm('Are you sure you want to log out?')) {
+      this.loginStore.logout()
+    }
   }
 
   pruneContainers = () => {
@@ -55,16 +62,16 @@ export default class App extends React.Component {
     let button
     switch(route) {
     case 'images':
-      button = <button type="button" className="btn btn-danger btn-sm" onClick={() => this.pruneImages()}>Delete all unused images</button>
+      button = <button className="btn btn-danger btn-sm" onClick={this.pruneImages}>Delete all unused images</button>
       break
     case 'containers':
-      button = <button type="button" className="btn btn-danger btn-sm" onClick={() => this.pruneContainers()}>Delete all stopped containers</button>
+      button = <button className="btn btn-danger btn-sm" onClick={this.pruneContainers}>Delete all stopped containers</button>
       break
     case 'volumes':
-      button = <button type="button" className="btn btn-danger btn-sm" onClick={() => this.pruneVolumes()}>Delete all unused volumes</button>
+      button = <button className="btn btn-danger btn-sm" onClick={this.pruneVolumes}>Delete all unused volumes</button>
       break
     case 'networks':
-      button = <button type="button" className="btn btn-danger btn-sm" onClick={() => this.pruneNetworks()}>Delete all unused networks</button>
+      button = <button className="btn btn-danger btn-sm" onClick={this.pruneNetworks}>Delete all unused networks</button>
       break
     }
 
@@ -80,7 +87,6 @@ export default class App extends React.Component {
               </button>
               <span className="navbar-brand">Docker UI</span>
             </div>
-
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul className="nav navbar-nav">
                 <Li to="/images">Images</Li>
@@ -88,9 +94,17 @@ export default class App extends React.Component {
                 <Li to="/volumes">Volumes</Li>
                 <Li to="/networks">Networks</Li>
               </ul>
-              <form className="navbar-form navbar-right">
+              <form className="navbar-form navbar-left">
                 {button}
               </form>
+              <ul className="nav navbar-nav navbar-right">
+                <li className="dropdown">
+                  <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span className="glyphicon glyphicon-user" /></a>
+                  <ul className="dropdown-menu">
+                    <li><a href="#" onClick={this.logout}>Logout</a></li>
+                  </ul>
+                </li>
+              </ul>
             </div>
           </div>
         </nav>

@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'lib/axios'
 import {sortBy} from 'lodash'
 import {action, observable} from 'mobx'
 import moment from 'moment'
@@ -23,7 +23,7 @@ export default class Containers {
   @action destroyContainer = id => {
     this.setError()
 
-    axios.delete(`/api/v1/containers/${id}`)
+    axios.delete(`containers/${id}`)
     .then(() => {
       this.loadContainers()
     })
@@ -33,7 +33,7 @@ export default class Containers {
   @action inspectContainer = id => {
     this.setError()
 
-    axios.get(`/api/v1/containers/${id}`)
+    axios.get(`containers/${id}`)
     .then(res => {
       this.inspect = res.data
     })
@@ -43,7 +43,7 @@ export default class Containers {
   @action loadContainers = () => {
     this.setError()
 
-    axios.get('/api/v1/containers')
+    axios.get('containers')
     .then(res => {
       this.containers = sortBy(res.data, container => -container.Created).map(container => {
         const ports = sortBy(container.Ports, p => `${p.PrivatePort}/${p.Type}`).map(p => `${(p.IP || '') && `${p.IP || ''}:${p.PublicPort || ''}->`}${p.PrivatePort}/${p.Type}`).join(', ')
@@ -71,7 +71,7 @@ export default class Containers {
   @action pruneContainers = () => {
     this.setError()
 
-    axios.post('/api/v1/containers/prune')
+    axios.post('containers/prune')
     .then(() => {
       this.loadContainers()
     })
@@ -81,7 +81,7 @@ export default class Containers {
   @action renameContainer = (id, name) => {
     this.setError()
 
-    axios.put(`/api/v1/containers/${id}/rename`, {name: name})
+    axios.put(`containers/${id}/rename`, {name: name})
     .then(() => {
       this.loadContainers()
     })
@@ -91,7 +91,7 @@ export default class Containers {
   @action restartContainer = id => {
     this.setError()
 
-    axios.put(`/api/v1/containers/${id}/restart`)
+    axios.put(`containers/${id}/restart`)
     .then(() => {
       this.loadContainers()
     })
@@ -101,7 +101,7 @@ export default class Containers {
   @action startContainer = id => {
     this.setError()
 
-    axios.put(`/api/v1/containers/${id}/start`)
+    axios.put(`containers/${id}/start`)
     .then(() => {
       this.loadContainers()
     })
@@ -111,7 +111,7 @@ export default class Containers {
   @action stopContainer = id => {
     this.setError()
 
-    axios.put(`/api/v1/containers/${id}/stop`)
+    axios.put(`containers/${id}/stop`)
     .then(() => {
       this.loadContainers()
     })
@@ -121,7 +121,7 @@ export default class Containers {
   @action killContainer = id => {
     this.setError()
 
-    axios.put(`/api/v1/containers/${id}/kill`)
+    axios.put(`containers/${id}/kill`)
     .then(() => {
       this.loadContainers()
     })
@@ -131,7 +131,7 @@ export default class Containers {
   @action pauseContainer = id => {
     this.setError()
 
-    axios.put(`/api/v1/containers/${id}/pause`)
+    axios.put(`containers/${id}/pause`)
     .then(() => {
       this.loadContainers()
     })
@@ -141,7 +141,7 @@ export default class Containers {
   @action unpauseContainer = id => {
     this.setError()
 
-    axios.put(`/api/v1/containers/${id}/unpause`)
+    axios.put(`containers/${id}/unpause`)
     .then(() => {
       this.loadContainers()
     })

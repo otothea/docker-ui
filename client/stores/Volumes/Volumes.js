@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'lib/axios'
 import {sortBy} from 'lodash'
 import {action, observable} from 'mobx'
 
@@ -18,7 +18,7 @@ export default class Volumes {
   @action createVolume = volume => {
     this.setError()
 
-    axios.post('/api/v1/volumes', volume)
+    axios.post('volumes', volume)
     .then(() => {
       this.loadVolumes()
     })
@@ -28,7 +28,7 @@ export default class Volumes {
   @action destroyVolume = id => {
     this.setError()
 
-    axios.delete(`/api/v1/volumes/${id}`)
+    axios.delete(`volumes/${id}`)
     .then(() => {
       this.loadVolumes()
     })
@@ -38,7 +38,7 @@ export default class Volumes {
   @action inspectVolume = id => {
     this.setError()
 
-    axios.get(`/api/v1/volumes/${id}`)
+    axios.get(`volumes/${id}`)
     .then(res => {
       this.inspect = res.data
     })
@@ -48,7 +48,7 @@ export default class Volumes {
   @action loadVolumes = () => {
     this.setError()
 
-    axios.get('/api/v1/volumes')
+    axios.get('volumes')
     .then(res => {
       this.volumes = sortBy(res.data, volume => volume.Name.toLowerCase()).map(volume => ({
         driver: volume.Driver,
@@ -61,7 +61,7 @@ export default class Volumes {
   @action pruneVolumes = () => {
     this.setError()
 
-    axios.post('/api/v1/volumes/prune')
+    axios.post('volumes/prune')
     .then(() => {
       this.loadVolumes()
     })

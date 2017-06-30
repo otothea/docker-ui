@@ -47,6 +47,10 @@ var _AppStore = require("~/stores/AppStore");
 
 var _AppStore2 = _interopRequireDefault(_AppStore);
 
+var _Login = require("./components/Login/Login");
+
+var _Login2 = _interopRequireDefault(_Login);
+
 var _App = require("./components/App");
 
 var _App2 = _interopRequireDefault(_App);
@@ -101,7 +105,8 @@ var Router = function (_React$Component) {
             _react2.default.createElement(_reactRouter.Route, { path: "containers", component: _Containers2.default }),
             _react2.default.createElement(_reactRouter.Route, { path: "volumes", component: _Volumes2.default }),
             _react2.default.createElement(_reactRouter.Route, { path: "networks", component: _Networks2.default })
-          )
+          ),
+          _react2.default.createElement(_reactRouter.Route, { path: "/login", component: _Login2.default })
         )
       );
     }
@@ -120,6 +125,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = undefined;
+
+var _Login = require('./Login/Login');
+
+var _Login2 = _interopRequireDefault(_Login);
 
 var _Containers = require('./Containers/Containers');
 
@@ -144,6 +153,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var AppStore = function AppStore() {
   _classCallCheck(this, AppStore);
 
+  this.login = new _Login2.default(this);
   this.containers = new _Containers2.default(this);
   this.images = new _Images2.default(this);
   this.volumes = new _Volumes2.default(this);
@@ -152,9 +162,167 @@ var AppStore = function AppStore() {
 
 exports.default = AppStore;
 });
-___scope___.file("stores/Containers/Containers.js", function(exports, require, module, __filename, __dirname){
+___scope___.file("stores/Login/Login.js", function(exports, require, module, __filename, __dirname){
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4;
+
+var _axios = require("~/lib/axios");
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _mobx = require("mobx");
+
+var _reactRouter = require("react-router");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _initDefineProp(target, property, descriptor, context) {
+  if (!descriptor) return;
+  Object.defineProperty(target, property, {
+    enumerable: descriptor.enumerable,
+    configurable: descriptor.configurable,
+    writable: descriptor.writable,
+    value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+  });
+}
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+  var desc = {};
+  Object['ke' + 'ys'](descriptor).forEach(function (key) {
+    desc[key] = descriptor[key];
+  });
+  desc.enumerable = !!desc.enumerable;
+  desc.configurable = !!desc.configurable;
+
+  if ('value' in desc || desc.initializer) {
+    desc.writable = true;
+  }
+
+  desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+    return decorator(target, property, desc) || desc;
+  }, desc);
+
+  if (context && desc.initializer !== void 0) {
+    desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+    desc.initializer = undefined;
+  }
+
+  if (desc.initializer === void 0) {
+    Object['define' + 'Property'](target, property, desc);
+    desc = null;
+  }
+
+  return desc;
+}
+
+function _initializerWarningHelper(descriptor, context) {
+  throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+}
+
+var Login = (_class = function Login(appStore) {
+  _classCallCheck(this, Login);
+
+  _initDefineProp(this, "error", _descriptor, this);
+
+  _initDefineProp(this, "setError", _descriptor2, this);
+
+  _initDefineProp(this, "login", _descriptor3, this);
+
+  _initDefineProp(this, "logout", _descriptor4, this);
+
+  this.appStore = appStore;
+}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "error", [_mobx.observable], {
+  enumerable: true,
+  initializer: function initializer() {
+    return null;
+  }
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "setError", [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this = this;
+
+    return function () {
+      var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      _this.error = (((err || {}).response || {}).data || {}).message || err;
+    };
+  }
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "login", [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this2 = this;
+
+    return function (credentials) {
+      _this2.setError();
+
+      _axios2.default.post('auth', credentials).then(function () {
+        var redirect = _reactRouter.browserHistory.getCurrentLocation().query.redirect;
+        _reactRouter.browserHistory.push(redirect || '/');
+      }).catch(_this2.setError);
+    };
+  }
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "logout", [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this3 = this;
+
+    return function () {
+      _this3.setError();
+
+      _axios2.default.delete('auth').then(function () {
+        _reactRouter.browserHistory.push('/login');
+      }).catch(_this3.setError);
+    };
+  }
+})), _class);
+exports.default = Login;
+});
+___scope___.file("lib/axios.js", function(exports, require, module, __filename, __dirname){
 
 'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _axios = require('axios');
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _reactRouter = require('react-router');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var http = _axios2.default.create({
+  baseURL: '/api/v1/'
+});
+
+// Intercept http to redirect to login on unauthorized response
+http.interceptors.response.use(function (res) {
+  return res;
+}, function (err) {
+  var location = _reactRouter.browserHistory.getCurrentLocation();
+  if (err.response && err.response.status === 403) {
+    return _reactRouter.browserHistory.push('/login?redirect=' + location.pathname + location.search + location.hash);
+  }
+
+  return Promise.reject(err);
+});
+
+exports.default = http;
+});
+___scope___.file("stores/Containers/Containers.js", function(exports, require, module, __filename, __dirname){
+
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -163,15 +331,15 @@ exports.default = undefined;
 
 var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13, _descriptor14, _descriptor15;
 
-var _axios = require('axios');
+var _axios = require("~/lib/axios");
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _lodash = require('lodash');
+var _lodash = require("lodash");
 
-var _mobx = require('mobx');
+var _mobx = require("mobx");
 
-var _moment = require('moment');
+var _moment = require("moment");
 
 var _moment2 = _interopRequireDefault(_moment);
 
@@ -223,59 +391,59 @@ function _initializerWarningHelper(descriptor, context) {
 }
 
 var ellipsify = function ellipsify(string) {
-  return string.length > 40 ? string.substr(0, 37) + '...' : string;
+  return string.length > 40 ? string.substr(0, 37) + "..." : string;
 };
 
 var Containers = (_class = function Containers(appStore) {
   _classCallCheck(this, Containers);
 
-  _initDefineProp(this, 'error', _descriptor, this);
+  _initDefineProp(this, "error", _descriptor, this);
 
-  _initDefineProp(this, 'containers', _descriptor2, this);
+  _initDefineProp(this, "containers", _descriptor2, this);
 
-  _initDefineProp(this, 'inspect', _descriptor3, this);
+  _initDefineProp(this, "inspect", _descriptor3, this);
 
-  _initDefineProp(this, 'setError', _descriptor4, this);
+  _initDefineProp(this, "setError", _descriptor4, this);
 
-  _initDefineProp(this, 'destroyContainer', _descriptor5, this);
+  _initDefineProp(this, "destroyContainer", _descriptor5, this);
 
-  _initDefineProp(this, 'inspectContainer', _descriptor6, this);
+  _initDefineProp(this, "inspectContainer", _descriptor6, this);
 
-  _initDefineProp(this, 'loadContainers', _descriptor7, this);
+  _initDefineProp(this, "loadContainers", _descriptor7, this);
 
-  _initDefineProp(this, 'pruneContainers', _descriptor8, this);
+  _initDefineProp(this, "pruneContainers", _descriptor8, this);
 
-  _initDefineProp(this, 'renameContainer', _descriptor9, this);
+  _initDefineProp(this, "renameContainer", _descriptor9, this);
 
-  _initDefineProp(this, 'restartContainer', _descriptor10, this);
+  _initDefineProp(this, "restartContainer", _descriptor10, this);
 
-  _initDefineProp(this, 'startContainer', _descriptor11, this);
+  _initDefineProp(this, "startContainer", _descriptor11, this);
 
-  _initDefineProp(this, 'stopContainer', _descriptor12, this);
+  _initDefineProp(this, "stopContainer", _descriptor12, this);
 
-  _initDefineProp(this, 'killContainer', _descriptor13, this);
+  _initDefineProp(this, "killContainer", _descriptor13, this);
 
-  _initDefineProp(this, 'pauseContainer', _descriptor14, this);
+  _initDefineProp(this, "pauseContainer", _descriptor14, this);
 
-  _initDefineProp(this, 'unpauseContainer', _descriptor15, this);
+  _initDefineProp(this, "unpauseContainer", _descriptor15, this);
 
   this.appStore = appStore;
-}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'error', [_mobx.observable], {
+}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "error", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return null;
   }
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'containers', [_mobx.observable], {
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "containers", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return [];
   }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, 'inspect', [_mobx.observable], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "inspect", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return null;
   }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, 'setError', [_mobx.action], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "setError", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this = this;
@@ -286,7 +454,7 @@ var Containers = (_class = function Containers(appStore) {
       _this.error = (((err || {}).response || {}).data || {}).message || err;
     };
   }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'destroyContainer', [_mobx.action], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "destroyContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this2 = this;
@@ -294,12 +462,12 @@ var Containers = (_class = function Containers(appStore) {
     return function (id) {
       _this2.setError();
 
-      _axios2.default.delete('/api/v1/containers/' + id).then(function () {
+      _axios2.default.delete("containers/" + id).then(function () {
         _this2.loadContainers();
       }).catch(_this2.setError);
     };
   }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'inspectContainer', [_mobx.action], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "inspectContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this3 = this;
@@ -307,12 +475,12 @@ var Containers = (_class = function Containers(appStore) {
     return function (id) {
       _this3.setError();
 
-      _axios2.default.get('/api/v1/containers/' + id).then(function (res) {
+      _axios2.default.get("containers/" + id).then(function (res) {
         _this3.inspect = res.data;
       }).catch(_this3.setError);
     };
   }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, 'loadContainers', [_mobx.action], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "loadContainers", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this4 = this;
@@ -320,14 +488,14 @@ var Containers = (_class = function Containers(appStore) {
     return function () {
       _this4.setError();
 
-      _axios2.default.get('/api/v1/containers').then(function (res) {
+      _axios2.default.get('containers').then(function (res) {
         _this4.containers = (0, _lodash.sortBy)(res.data, function (container) {
           return -container.Created;
         }).map(function (container) {
           var ports = (0, _lodash.sortBy)(container.Ports, function (p) {
-            return p.PrivatePort + '/' + p.Type;
+            return p.PrivatePort + "/" + p.Type;
           }).map(function (p) {
-            return '' + ((p.IP || '') && (p.IP || '') + ':' + (p.PublicPort || '') + '->') + p.PrivatePort + '/' + p.Type;
+            return "" + ((p.IP || '') && (p.IP || '') + ":" + (p.PublicPort || '') + "->") + p.PrivatePort + "/" + p.Type;
           }).join(', ');
           var names = (0, _lodash.sortBy)(container.Names, function (n) {
             return n.toLowerCase();
@@ -353,7 +521,7 @@ var Containers = (_class = function Containers(appStore) {
       }).catch(_this4.setError);
     };
   }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, 'pruneContainers', [_mobx.action], {
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "pruneContainers", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this5 = this;
@@ -361,12 +529,12 @@ var Containers = (_class = function Containers(appStore) {
     return function () {
       _this5.setError();
 
-      _axios2.default.post('/api/v1/containers/prune').then(function () {
+      _axios2.default.post('containers/prune').then(function () {
         _this5.loadContainers();
       }).catch(_this5.setError);
     };
   }
-}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, 'renameContainer', [_mobx.action], {
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "renameContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this6 = this;
@@ -374,12 +542,12 @@ var Containers = (_class = function Containers(appStore) {
     return function (id, name) {
       _this6.setError();
 
-      _axios2.default.put('/api/v1/containers/' + id + '/rename', { name: name }).then(function () {
+      _axios2.default.put("containers/" + id + "/rename", { name: name }).then(function () {
         _this6.loadContainers();
       }).catch(_this6.setError);
     };
   }
-}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, 'restartContainer', [_mobx.action], {
+}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, "restartContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this7 = this;
@@ -387,12 +555,12 @@ var Containers = (_class = function Containers(appStore) {
     return function (id) {
       _this7.setError();
 
-      _axios2.default.put('/api/v1/containers/' + id + '/restart').then(function () {
+      _axios2.default.put("containers/" + id + "/restart").then(function () {
         _this7.loadContainers();
       }).catch(_this7.setError);
     };
   }
-}), _descriptor11 = _applyDecoratedDescriptor(_class.prototype, 'startContainer', [_mobx.action], {
+}), _descriptor11 = _applyDecoratedDescriptor(_class.prototype, "startContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this8 = this;
@@ -400,12 +568,12 @@ var Containers = (_class = function Containers(appStore) {
     return function (id) {
       _this8.setError();
 
-      _axios2.default.put('/api/v1/containers/' + id + '/start').then(function () {
+      _axios2.default.put("containers/" + id + "/start").then(function () {
         _this8.loadContainers();
       }).catch(_this8.setError);
     };
   }
-}), _descriptor12 = _applyDecoratedDescriptor(_class.prototype, 'stopContainer', [_mobx.action], {
+}), _descriptor12 = _applyDecoratedDescriptor(_class.prototype, "stopContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this9 = this;
@@ -413,12 +581,12 @@ var Containers = (_class = function Containers(appStore) {
     return function (id) {
       _this9.setError();
 
-      _axios2.default.put('/api/v1/containers/' + id + '/stop').then(function () {
+      _axios2.default.put("containers/" + id + "/stop").then(function () {
         _this9.loadContainers();
       }).catch(_this9.setError);
     };
   }
-}), _descriptor13 = _applyDecoratedDescriptor(_class.prototype, 'killContainer', [_mobx.action], {
+}), _descriptor13 = _applyDecoratedDescriptor(_class.prototype, "killContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this10 = this;
@@ -426,12 +594,12 @@ var Containers = (_class = function Containers(appStore) {
     return function (id) {
       _this10.setError();
 
-      _axios2.default.put('/api/v1/containers/' + id + '/kill').then(function () {
+      _axios2.default.put("containers/" + id + "/kill").then(function () {
         _this10.loadContainers();
       }).catch(_this10.setError);
     };
   }
-}), _descriptor14 = _applyDecoratedDescriptor(_class.prototype, 'pauseContainer', [_mobx.action], {
+}), _descriptor14 = _applyDecoratedDescriptor(_class.prototype, "pauseContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this11 = this;
@@ -439,12 +607,12 @@ var Containers = (_class = function Containers(appStore) {
     return function (id) {
       _this11.setError();
 
-      _axios2.default.put('/api/v1/containers/' + id + '/pause').then(function () {
+      _axios2.default.put("containers/" + id + "/pause").then(function () {
         _this11.loadContainers();
       }).catch(_this11.setError);
     };
   }
-}), _descriptor15 = _applyDecoratedDescriptor(_class.prototype, 'unpauseContainer', [_mobx.action], {
+}), _descriptor15 = _applyDecoratedDescriptor(_class.prototype, "unpauseContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this12 = this;
@@ -452,7 +620,7 @@ var Containers = (_class = function Containers(appStore) {
     return function (id) {
       _this12.setError();
 
-      _axios2.default.put('/api/v1/containers/' + id + '/unpause').then(function () {
+      _axios2.default.put("containers/" + id + "/unpause").then(function () {
         _this12.loadContainers();
       }).catch(_this12.setError);
     };
@@ -462,7 +630,7 @@ exports.default = Containers;
 });
 ___scope___.file("stores/Images/Images.js", function(exports, require, module, __filename, __dirname){
 
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -471,15 +639,15 @@ exports.default = undefined;
 
 var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8;
 
-var _axios = require('axios');
+var _axios = require("~/lib/axios");
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _lodash = require('lodash');
+var _lodash = require("lodash");
 
-var _mobx = require('mobx');
+var _mobx = require("mobx");
 
-var _moment = require('moment');
+var _moment = require("moment");
 
 var _moment2 = _interopRequireDefault(_moment);
 
@@ -541,39 +709,39 @@ var sizeOf = function sizeOf(bytes) {
 var Images = (_class = function Images(appStore) {
   _classCallCheck(this, Images);
 
-  _initDefineProp(this, 'error', _descriptor, this);
+  _initDefineProp(this, "error", _descriptor, this);
 
-  _initDefineProp(this, 'images', _descriptor2, this);
+  _initDefineProp(this, "images", _descriptor2, this);
 
-  _initDefineProp(this, 'inspect', _descriptor3, this);
+  _initDefineProp(this, "inspect", _descriptor3, this);
 
-  _initDefineProp(this, 'setError', _descriptor4, this);
+  _initDefineProp(this, "setError", _descriptor4, this);
 
-  _initDefineProp(this, 'destroyImage', _descriptor5, this);
+  _initDefineProp(this, "destroyImage", _descriptor5, this);
 
-  _initDefineProp(this, 'inspectImage', _descriptor6, this);
+  _initDefineProp(this, "inspectImage", _descriptor6, this);
 
-  _initDefineProp(this, 'loadImages', _descriptor7, this);
+  _initDefineProp(this, "loadImages", _descriptor7, this);
 
-  _initDefineProp(this, 'pruneImages', _descriptor8, this);
+  _initDefineProp(this, "pruneImages", _descriptor8, this);
 
   this.appStore = appStore;
-}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'error', [_mobx.observable], {
+}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "error", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return null;
   }
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'images', [_mobx.observable], {
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "images", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return [];
   }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, 'inspect', [_mobx.observable], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "inspect", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return null;
   }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, 'setError', [_mobx.action], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "setError", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this = this;
@@ -584,7 +752,7 @@ var Images = (_class = function Images(appStore) {
       _this.error = (((err || {}).response || {}).data || {}).message || err;
     };
   }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'destroyImage', [_mobx.action], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "destroyImage", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this2 = this;
@@ -592,12 +760,12 @@ var Images = (_class = function Images(appStore) {
     return function (id) {
       _this2.setError();
 
-      _axios2.default.delete('/api/v1/images/' + id).then(function () {
+      _axios2.default.delete("images/" + id).then(function () {
         _this2.loadImages();
       }).catch(_this2.setError);
     };
   }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'inspectImage', [_mobx.action], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "inspectImage", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this3 = this;
@@ -605,12 +773,12 @@ var Images = (_class = function Images(appStore) {
     return function (id) {
       _this3.setError();
 
-      _axios2.default.get('/api/v1/images/' + id).then(function (res) {
+      _axios2.default.get("images/" + id).then(function (res) {
         _this3.inspect = res.data;
       }).catch(_this3.setError);
     };
   }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, 'loadImages', [_mobx.action], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "loadImages", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this4 = this;
@@ -618,7 +786,7 @@ var Images = (_class = function Images(appStore) {
     return function () {
       _this4.setError();
 
-      _axios2.default.get('/api/v1/images').then(function (res) {
+      _axios2.default.get('images').then(function (res) {
         _this4.images = (0, _lodash.sortBy)(res.data, function (image) {
           return -image.Created;
         }).map(function (image) {
@@ -634,7 +802,7 @@ var Images = (_class = function Images(appStore) {
       }).catch(_this4.setError);
     };
   }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, 'pruneImages', [_mobx.action], {
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "pruneImages", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this5 = this;
@@ -642,7 +810,7 @@ var Images = (_class = function Images(appStore) {
     return function () {
       _this5.setError();
 
-      _axios2.default.post('/api/v1/images/prune').then(function () {
+      _axios2.default.post('images/prune').then(function () {
         _this5.loadImages();
       }).catch(_this5.setError);
     };
@@ -652,7 +820,7 @@ exports.default = Images;
 });
 ___scope___.file("stores/Volumes/Volumes.js", function(exports, require, module, __filename, __dirname){
 
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -661,13 +829,13 @@ exports.default = undefined;
 
 var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9;
 
-var _axios = require('axios');
+var _axios = require("~/lib/axios");
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _lodash = require('lodash');
+var _lodash = require("lodash");
 
-var _mobx = require('mobx');
+var _mobx = require("mobx");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -719,41 +887,41 @@ function _initializerWarningHelper(descriptor, context) {
 var Volumes = (_class = function Volumes(appStore) {
   _classCallCheck(this, Volumes);
 
-  _initDefineProp(this, 'error', _descriptor, this);
+  _initDefineProp(this, "error", _descriptor, this);
 
-  _initDefineProp(this, 'volumes', _descriptor2, this);
+  _initDefineProp(this, "volumes", _descriptor2, this);
 
-  _initDefineProp(this, 'inspect', _descriptor3, this);
+  _initDefineProp(this, "inspect", _descriptor3, this);
 
-  _initDefineProp(this, 'setError', _descriptor4, this);
+  _initDefineProp(this, "setError", _descriptor4, this);
 
-  _initDefineProp(this, 'createVolume', _descriptor5, this);
+  _initDefineProp(this, "createVolume", _descriptor5, this);
 
-  _initDefineProp(this, 'destroyVolume', _descriptor6, this);
+  _initDefineProp(this, "destroyVolume", _descriptor6, this);
 
-  _initDefineProp(this, 'inspectVolume', _descriptor7, this);
+  _initDefineProp(this, "inspectVolume", _descriptor7, this);
 
-  _initDefineProp(this, 'loadVolumes', _descriptor8, this);
+  _initDefineProp(this, "loadVolumes", _descriptor8, this);
 
-  _initDefineProp(this, 'pruneVolumes', _descriptor9, this);
+  _initDefineProp(this, "pruneVolumes", _descriptor9, this);
 
   this.appStore = appStore;
-}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'error', [_mobx.observable], {
+}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "error", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return null;
   }
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'volumes', [_mobx.observable], {
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "volumes", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return [];
   }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, 'inspect', [_mobx.observable], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "inspect", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return null;
   }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, 'setError', [_mobx.action], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "setError", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this = this;
@@ -764,7 +932,7 @@ var Volumes = (_class = function Volumes(appStore) {
       _this.error = (((err || {}).response || {}).data || {}).message || err;
     };
   }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'createVolume', [_mobx.action], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "createVolume", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this2 = this;
@@ -772,12 +940,12 @@ var Volumes = (_class = function Volumes(appStore) {
     return function (volume) {
       _this2.setError();
 
-      _axios2.default.post('/api/v1/volumes', volume).then(function () {
+      _axios2.default.post('volumes', volume).then(function () {
         _this2.loadVolumes();
       }).catch(_this2.setError);
     };
   }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'destroyVolume', [_mobx.action], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "destroyVolume", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this3 = this;
@@ -785,12 +953,12 @@ var Volumes = (_class = function Volumes(appStore) {
     return function (id) {
       _this3.setError();
 
-      _axios2.default.delete('/api/v1/volumes/' + id).then(function () {
+      _axios2.default.delete("volumes/" + id).then(function () {
         _this3.loadVolumes();
       }).catch(_this3.setError);
     };
   }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, 'inspectVolume', [_mobx.action], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "inspectVolume", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this4 = this;
@@ -798,12 +966,12 @@ var Volumes = (_class = function Volumes(appStore) {
     return function (id) {
       _this4.setError();
 
-      _axios2.default.get('/api/v1/volumes/' + id).then(function (res) {
+      _axios2.default.get("volumes/" + id).then(function (res) {
         _this4.inspect = res.data;
       }).catch(_this4.setError);
     };
   }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, 'loadVolumes', [_mobx.action], {
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "loadVolumes", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this5 = this;
@@ -811,7 +979,7 @@ var Volumes = (_class = function Volumes(appStore) {
     return function () {
       _this5.setError();
 
-      _axios2.default.get('/api/v1/volumes').then(function (res) {
+      _axios2.default.get('volumes').then(function (res) {
         _this5.volumes = (0, _lodash.sortBy)(res.data, function (volume) {
           return volume.Name.toLowerCase();
         }).map(function (volume) {
@@ -823,7 +991,7 @@ var Volumes = (_class = function Volumes(appStore) {
       }).catch(_this5.setError);
     };
   }
-}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, 'pruneVolumes', [_mobx.action], {
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "pruneVolumes", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this6 = this;
@@ -831,7 +999,7 @@ var Volumes = (_class = function Volumes(appStore) {
     return function () {
       _this6.setError();
 
-      _axios2.default.post('/api/v1/volumes/prune').then(function () {
+      _axios2.default.post('volumes/prune').then(function () {
         _this6.loadVolumes();
       }).catch(_this6.setError);
     };
@@ -841,7 +1009,7 @@ exports.default = Volumes;
 });
 ___scope___.file("stores/Networks/Networks.js", function(exports, require, module, __filename, __dirname){
 
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -850,13 +1018,13 @@ exports.default = undefined;
 
 var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9;
 
-var _axios = require('axios');
+var _axios = require("~/lib/axios");
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _lodash = require('lodash');
+var _lodash = require("lodash");
 
-var _mobx = require('mobx');
+var _mobx = require("mobx");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -908,41 +1076,41 @@ function _initializerWarningHelper(descriptor, context) {
 var Networks = (_class = function Networks(appStore) {
   _classCallCheck(this, Networks);
 
-  _initDefineProp(this, 'error', _descriptor, this);
+  _initDefineProp(this, "error", _descriptor, this);
 
-  _initDefineProp(this, 'networks', _descriptor2, this);
+  _initDefineProp(this, "networks", _descriptor2, this);
 
-  _initDefineProp(this, 'inspect', _descriptor3, this);
+  _initDefineProp(this, "inspect", _descriptor3, this);
 
-  _initDefineProp(this, 'setError', _descriptor4, this);
+  _initDefineProp(this, "setError", _descriptor4, this);
 
-  _initDefineProp(this, 'createNetwork', _descriptor5, this);
+  _initDefineProp(this, "createNetwork", _descriptor5, this);
 
-  _initDefineProp(this, 'destroyNetwork', _descriptor6, this);
+  _initDefineProp(this, "destroyNetwork", _descriptor6, this);
 
-  _initDefineProp(this, 'inspectNetwork', _descriptor7, this);
+  _initDefineProp(this, "inspectNetwork", _descriptor7, this);
 
-  _initDefineProp(this, 'loadNetworks', _descriptor8, this);
+  _initDefineProp(this, "loadNetworks", _descriptor8, this);
 
-  _initDefineProp(this, 'pruneNetworks', _descriptor9, this);
+  _initDefineProp(this, "pruneNetworks", _descriptor9, this);
 
   this.appStore = appStore;
-}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'error', [_mobx.observable], {
+}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "error", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return null;
   }
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'networks', [_mobx.observable], {
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "networks", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return [];
   }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, 'inspect', [_mobx.observable], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "inspect", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return null;
   }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, 'setError', [_mobx.action], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "setError", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this = this;
@@ -953,7 +1121,7 @@ var Networks = (_class = function Networks(appStore) {
       _this.error = (((err || {}).response || {}).data || {}).message || err;
     };
   }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'createNetwork', [_mobx.action], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "createNetwork", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this2 = this;
@@ -961,12 +1129,12 @@ var Networks = (_class = function Networks(appStore) {
     return function (network) {
       _this2.setError();
 
-      _axios2.default.post('/api/v1/networks', network).then(function () {
+      _axios2.default.post('networks', network).then(function () {
         _this2.loadNetworks();
       }).catch(_this2.setError);
     };
   }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'destroyNetwork', [_mobx.action], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "destroyNetwork", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this3 = this;
@@ -974,12 +1142,12 @@ var Networks = (_class = function Networks(appStore) {
     return function (id) {
       _this3.setError();
 
-      _axios2.default.delete('/api/v1/networks/' + id).then(function () {
+      _axios2.default.delete("networks/" + id).then(function () {
         _this3.loadNetworks();
       }).catch(_this3.setError);
     };
   }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, 'inspectNetwork', [_mobx.action], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "inspectNetwork", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this4 = this;
@@ -987,12 +1155,12 @@ var Networks = (_class = function Networks(appStore) {
     return function (id) {
       _this4.setError();
 
-      _axios2.default.get('/api/v1/networks/' + id).then(function (res) {
+      _axios2.default.get("networks/" + id).then(function (res) {
         _this4.inspect = res.data;
       }).catch(_this4.setError);
     };
   }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, 'loadNetworks', [_mobx.action], {
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "loadNetworks", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this5 = this;
@@ -1000,7 +1168,7 @@ var Networks = (_class = function Networks(appStore) {
     return function () {
       _this5.setError();
 
-      _axios2.default.get('/api/v1/networks').then(function (res) {
+      _axios2.default.get('networks').then(function (res) {
         _this5.networks = (0, _lodash.sortBy)(res.data, function (network) {
           return network.Name.toLowerCase();
         }).map(function (network) {
@@ -1015,7 +1183,7 @@ var Networks = (_class = function Networks(appStore) {
       }).catch(_this5.setError);
     };
   }
-}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, 'pruneNetworks', [_mobx.action], {
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "pruneNetworks", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this6 = this;
@@ -1023,13 +1191,139 @@ var Networks = (_class = function Networks(appStore) {
     return function () {
       _this6.setError();
 
-      _axios2.default.post('/api/v1/networks/prune').then(function () {
+      _axios2.default.post('networks/prune').then(function () {
         _this6.loadNetworks();
       }).catch(_this6.setError);
     };
   }
 })), _class);
 exports.default = Networks;
+});
+___scope___.file("components/Login/Login.js", function(exports, require, module, __filename, __dirname){
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _class;
+
+var _mobxReact = require("mobx-react");
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _AppStore = require("~/stores/AppStore");
+
+var _AppStore2 = _interopRequireDefault(_AppStore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Login = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxReact.observer)(_class = function (_React$Component) {
+  _inherits(Login, _React$Component);
+
+  function Login(props) {
+    _classCallCheck(this, Login);
+
+    var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
+
+    _this.login = function (e) {
+      e.preventDefault();
+
+      _this.loginStore.login(_this.state.credentials);
+    };
+
+    _this.onChange = function (e) {
+      var name = e.currentTarget.name;
+      var value = e.currentTarget.value;
+      _this.setState({
+        credentials: Object.assign({}, _this.state.credentials, _defineProperty({}, name, value))
+      });
+    };
+
+    _this.state = {
+      credentials: {
+        user: '',
+        pass: ''
+      }
+    };
+
+    _this.appStore = props.store;
+    _this.loginStore = _this.appStore.login;
+    return _this;
+  }
+
+  _createClass(Login, [{
+    key: "render",
+    value: function render() {
+      var error = this.loginStore.error;
+      var _state$credentials = this.state.credentials,
+          pass = _state$credentials.pass,
+          user = _state$credentials.user;
+
+
+      return _react2.default.createElement(
+        "div",
+        { className: "container" },
+        _react2.default.createElement(
+          "h1",
+          null,
+          "Log in"
+        ),
+        error && _react2.default.createElement(
+          "div",
+          { className: "alert alert-danger", role: "alert" },
+          error
+        ),
+        _react2.default.createElement(
+          "form",
+          { onSubmit: this.login },
+          _react2.default.createElement(
+            "div",
+            { className: "form-group" },
+            _react2.default.createElement(
+              "label",
+              { htmlFor: "user" },
+              "Username"
+            ),
+            _react2.default.createElement("input", { id: "user", type: "text", className: "form-control", name: "user", value: user, onChange: this.onChange })
+          ),
+          _react2.default.createElement(
+            "div",
+            { className: "form-group" },
+            _react2.default.createElement(
+              "label",
+              { htmlFor: "pass" },
+              "Password"
+            ),
+            _react2.default.createElement("input", { id: "pass", type: "password", className: "form-control", name: "pass", value: pass, onChange: this.onChange })
+          ),
+          _react2.default.createElement(
+            "button",
+            { type: "submit", className: "btn btn-primary btn-block" },
+            "Login"
+          )
+        )
+      );
+    }
+  }]);
+
+  return Login;
+}(_react2.default.Component)) || _class) || _class);
+exports.default = Login;
 });
 ___scope___.file("components/App.js", function(exports, require, module, __filename, __dirname){
 
@@ -1078,6 +1372,12 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
 
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
+    _this.logout = function () {
+      if (confirm('Are you sure you want to log out?')) {
+        _this.loginStore.logout();
+      }
+    };
+
     _this.pruneContainers = function () {
       if (confirm('Are you sure you want to delete stopped containers?')) {
         _this.containersStore.pruneContainers();
@@ -1103,6 +1403,7 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
     };
 
     _this.appStore = props.store;
+    _this.loginStore = _this.appStore.login;
     _this.containersStore = _this.appStore.containers;
     _this.imagesStore = _this.appStore.images;
     _this.volumesStore = _this.appStore.volumes;
@@ -1113,8 +1414,6 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
   _createClass(App, [{
     key: "render",
     value: function render() {
-      var _this2 = this;
-
       var route = this.props.routes[this.props.routes.length - 1].path;
 
       var button = void 0;
@@ -1122,36 +1421,28 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
         case 'images':
           button = _react2.default.createElement(
             "button",
-            { type: "button", className: "btn btn-danger btn-sm", onClick: function onClick() {
-                return _this2.pruneImages();
-              } },
+            { className: "btn btn-danger btn-sm", onClick: this.pruneImages },
             "Delete all unused images"
           );
           break;
         case 'containers':
           button = _react2.default.createElement(
             "button",
-            { type: "button", className: "btn btn-danger btn-sm", onClick: function onClick() {
-                return _this2.pruneContainers();
-              } },
+            { className: "btn btn-danger btn-sm", onClick: this.pruneContainers },
             "Delete all stopped containers"
           );
           break;
         case 'volumes':
           button = _react2.default.createElement(
             "button",
-            { type: "button", className: "btn btn-danger btn-sm", onClick: function onClick() {
-                return _this2.pruneVolumes();
-              } },
+            { className: "btn btn-danger btn-sm", onClick: this.pruneVolumes },
             "Delete all unused volumes"
           );
           break;
         case 'networks':
           button = _react2.default.createElement(
             "button",
-            { type: "button", className: "btn btn-danger btn-sm", onClick: function onClick() {
-                return _this2.pruneNetworks();
-              } },
+            { className: "btn btn-danger btn-sm", onClick: this.pruneNetworks },
             "Delete all unused networks"
           );
           break;
@@ -1211,8 +1502,34 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
               ),
               _react2.default.createElement(
                 "form",
-                { className: "navbar-form navbar-right" },
+                { className: "navbar-form navbar-left" },
                 button
+              ),
+              _react2.default.createElement(
+                "ul",
+                { className: "nav navbar-nav navbar-right" },
+                _react2.default.createElement(
+                  "li",
+                  { className: "dropdown" },
+                  _react2.default.createElement(
+                    "a",
+                    { href: "#", className: "dropdown-toggle", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false" },
+                    _react2.default.createElement("span", { className: "glyphicon glyphicon-user" })
+                  ),
+                  _react2.default.createElement(
+                    "ul",
+                    { className: "dropdown-menu" },
+                    _react2.default.createElement(
+                      "li",
+                      null,
+                      _react2.default.createElement(
+                        "a",
+                        { href: "#", onClick: this.logout },
+                        "Logout"
+                      )
+                    )
+                  )
+                )
               )
             )
           )

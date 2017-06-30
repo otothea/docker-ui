@@ -28,7 +28,22 @@ docker pull otothea/docker-ui
 Run it
 
 ```bash
-docker run -d -p 9898:9898 -v /var/run/docker.sock:/var/run/docker.sock --name docker-ui otothea/docker-ui
+docker run -d -p 9898:9898 \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --name docker-ui \
+  otothea/docker-ui
+```
+
+Run it with authentication
+
+```bash
+docker run -d -p 9898:9898 \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --name docker-ui \
+  -e DOCKER_UI_USER=username \
+  -e DOCKER_UI_PASS=password \
+  -e DOCKER_UI_SECRET=supersecretsessionkey \
+  otothea/docker-ui
 ```
 
 ### Production (Node)
@@ -101,11 +116,14 @@ Start the server
 npm start
 ```
 
-## Environment Variables
+## Environment Overrides
 
-- DOCKER_UI_HOST     - override config.host (the hostname that the API listens on)
-- DOCKER_UI_PORT     - override config.port (the port the API listens on)
-- DOCKER_UI_DEBUGGER - override config.debugger (the port the debugger runs on)
+- **DOCKER_UI_HOST** - override config.host (the hostname that the API listens on)
+- **DOCKER_UI_PORT** - override config.port (the port the API listens on)
+- **DOCKER_UI_DEBUGGER** - override config.debugger (the port the debugger listens on)
+- **DOCKER_UI_USER** - override config.user (the username to access the UI)
+- **DOCKER_UI_PASS** - override config.pass (the password to access the UI)
+- **DOCKER_UI_SECRET** - override config.secret (the session key)
 
 ## Testing
 

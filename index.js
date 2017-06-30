@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser')
 const express    = require('express')
+const session    = require('express-session')
 const http       = require('http')
 const path       = require('path')
 const api        = require('./api')
@@ -17,6 +18,14 @@ app.use(express.static(path.join(__dirname, assets)))
 // Add body parse middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
+
+// Add session middleware
+app.use(session({
+  key: 'docker-ui.sid',
+  secret: process.env.DOCKER_UI_SECRET || config.secret || 'secret',
+  resave: false,
+  saveUninitialized: true
+}))
 
 // Route to the api
 app.use('/api/v1', api)
