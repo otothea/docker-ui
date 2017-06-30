@@ -1,20 +1,4 @@
 .App {
-  .master-detail {
-    display: flex;
-    flex-direction: row;
-
-    .master {
-      flex: 1;
-      overflow: auto;
-    }
-
-    .detail {
-      flex: 1;
-      max-width: 50%;
-      overflow: auto;
-    }
-  }
-
   .modal {
     max-height: 100%;
     overflow: auto;

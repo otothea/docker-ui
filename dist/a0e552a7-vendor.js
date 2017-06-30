@@ -1,5 +1,9 @@
 (function(FuseBox){FuseBox.$fuse$=FuseBox;
 FuseBox.pkg("default", {}, function(___scope___){
+___scope___.file("app.css", function(exports, require, module, __filename, __dirname){
+
+require("fuse-box-css")("app.css");
+});
 });
 FuseBox.pkg("react", {}, function(___scope___){
 ___scope___.file("react.js", function(exports, require, module, __filename, __dirname){

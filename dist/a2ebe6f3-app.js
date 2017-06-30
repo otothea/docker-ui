@@ -2357,7 +2357,7 @@ exports.default = App;
 ___scope___.file("components/App.scss", function(exports, require, module, __filename, __dirname){
 
 
-require("fuse-box-css")("components/App.scss", ".App .master-detail {\n  display: flex;\n  flex-direction: row; }\n  .App .master-detail .master {\n    flex: 1;\n    overflow: auto; }\n  .App .master-detail .detail {\n    flex: 1;\n    max-width: 50%;\n    overflow: auto; }\n\n.App .modal {\n  max-height: 100%;\n  overflow: auto; }\n\n/*# sourceMappingURL=App.scss.map */")
+require("~/app.css")
 });
 ___scope___.file("components/Images/Images.js", function(exports, require, module, __filename, __dirname){
 
@@ -3583,6 +3583,10 @@ var Networks = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mobxR
   return Networks;
 }(_react2.default.Component)) || _class) || _class);
 exports.default = Networks;
+});
+___scope___.file("app.css", function(exports, require, module, __filename, __dirname){
+
+require("fuse-box-css")("app.css");
 });
 });
 
