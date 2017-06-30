@@ -21,10 +21,10 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 // Add session middleware
 app.use(session({
-  key: 'docker-ui.sid',
-  secret: process.env.DOCKER_UI_SECRET || config.secret || 'secret',
-  resave: false,
-  saveUninitialized: true
+  key:               'docker-ui.sid',
+  secret:            process.env.DOCKER_UI_SECRET || config.secret || 'secret',
+  resave:            false,
+  saveUninitialized: true,
 }))
 
 // Route to the api

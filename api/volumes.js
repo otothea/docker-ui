@@ -20,10 +20,10 @@ async function list(req, res) {
 async function create(req, res) {
   try {
     const body = {
-      Name: req.body.name,
-      Driver: req.body.driver,
+      Name:       req.body.name,
+      Driver:     req.body.driver,
       DriverOpts: req.body.driver_opts,
-      Labels: req.body.labels,
+      Labels:     req.body.labels,
     }
 
     res.send(await request('post', 'volumes/create', body))

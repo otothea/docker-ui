@@ -20,7 +20,7 @@ async function list(req, res) {
 async function create(req, res) {
   try {
     const body = {
-      Name: req.body.name,
+      Name:   req.body.name,
       Driver: req.body.driver,
       Labels: req.body.labels,
     }
