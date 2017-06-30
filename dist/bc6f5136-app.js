@@ -481,7 +481,7 @@ ___scope___.file("stores/Containers/Containers.js", function(exports, require, m
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = undefined;
+exports.default = exports.STATE = undefined;
 
 var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12;
 
@@ -556,6 +556,16 @@ function _initializerWarningHelper(descriptor, context) {
 
 var ellipsify = function ellipsify(string) {
   return string.length > 40 ? string.substr(0, 37) + "..." : string;
+};
+
+var STATE = exports.STATE = {
+  CREATED: 'created',
+  RUNNING: 'running',
+  PAUSED: 'paused',
+  RESTARTING: 'restarting',
+  REMOVING: 'removing',
+  EXITED: 'exited',
+  DEAD: 'dead'
 };
 
 var Containers = (_class = function (_BaseStore) {
@@ -2641,6 +2651,8 @@ var _AppStore = require("~/stores/AppStore");
 
 var _AppStore2 = _interopRequireDefault(_AppStore);
 
+var _Containers = require("~/stores/Containers/Containers");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2836,20 +2848,40 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                   _react2.default.createElement(
                     "td",
                     { title: container.status },
-                    container.state === 'exited' && _react2.default.createElement(
+                    container.state === _Containers.STATE.CREATED && _react2.default.createElement(
                       "span",
-                      { className: "label label-danger" },
-                      "exited"
+                      { className: "label label-info" },
+                      "created"
                     ),
-                    container.state === 'running' && _react2.default.createElement(
+                    container.state === _Containers.STATE.RUNNING && _react2.default.createElement(
                       "span",
                       { className: "label label-success" },
                       "running"
                     ),
-                    container.state === 'paused' && _react2.default.createElement(
+                    container.state === _Containers.STATE.PAUSED && _react2.default.createElement(
                       "span",
                       { className: "label label-warning" },
                       "paused"
+                    ),
+                    container.state === _Containers.STATE.RESTARTING && _react2.default.createElement(
+                      "span",
+                      { className: "label label-warning" },
+                      "restarting"
+                    ),
+                    container.state === _Containers.STATE.REMOVING && _react2.default.createElement(
+                      "span",
+                      { className: "label label-danger" },
+                      "removing"
+                    ),
+                    container.state === _Containers.STATE.EXITED && _react2.default.createElement(
+                      "span",
+                      { className: "label label-danger" },
+                      "exited"
+                    ),
+                    container.state === _Containers.STATE.DEAD && _react2.default.createElement(
+                      "span",
+                      { className: "label label-danger" },
+                      "dead"
                     ),
                     "\xA0",
                     container.status
@@ -2878,7 +2910,7 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                       _react2.default.createElement(
                         "ul",
                         { className: "dropdown-menu dropdown-menu-right" },
-                        container.state === 'exited' && _react2.default.createElement(
+                        (container.state === _Containers.STATE.EXITED || container.state === _Containers.STATE.DEAD) && _react2.default.createElement(
                           "li",
                           null,
                           _react2.default.createElement(
@@ -2889,7 +2921,7 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                             "Start"
                           )
                         ),
-                        container.state === 'exited' && _react2.default.createElement(
+                        (container.state === _Containers.STATE.EXITED || container.state === _Containers.STATE.DEAD) && _react2.default.createElement(
                           "li",
                           null,
                           _react2.default.createElement(
@@ -2900,7 +2932,7 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                             "Delete"
                           )
                         ),
-                        container.state === 'running' && _react2.default.createElement(
+                        container.state === _Containers.STATE.RUNNING && _react2.default.createElement(
                           "li",
                           null,
                           _react2.default.createElement(
@@ -2911,7 +2943,7 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                             "Restart"
                           )
                         ),
-                        container.state === 'running' && _react2.default.createElement(
+                        container.state === _Containers.STATE.RUNNING && _react2.default.createElement(
                           "li",
                           null,
                           _react2.default.createElement(
@@ -2922,7 +2954,7 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                             "Stop"
                           )
                         ),
-                        container.state === 'running' && _react2.default.createElement(
+                        container.state === _Containers.STATE.RUNNING && _react2.default.createElement(
                           "li",
                           null,
                           _react2.default.createElement(
@@ -2933,7 +2965,7 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                             "Kill"
                           )
                         ),
-                        container.state === 'running' && _react2.default.createElement(
+                        container.state === _Containers.STATE.RUNNING && _react2.default.createElement(
                           "li",
                           null,
                           _react2.default.createElement(
@@ -2944,7 +2976,7 @@ var Containers = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = (0, _mob
                             "Pause"
                           )
                         ),
-                        container.state === 'paused' && _react2.default.createElement(
+                        container.state === _Containers.STATE.PAUSED && _react2.default.createElement(
                           "li",
                           null,
                           _react2.default.createElement(

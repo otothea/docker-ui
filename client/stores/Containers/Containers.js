@@ -8,6 +8,16 @@ const ellipsify = string => {
   return string.length > 40 ? `${string.substr(0, 37)}...` : string
 }
 
+export const STATE = {
+  CREATED: 'created',
+  RUNNING: 'running',
+  PAUSED: 'paused',
+  RESTARTING: 'restarting',
+  REMOVING: 'removing',
+  EXITED: 'exited',
+  DEAD: 'dead',
+}
+
 export default class Containers extends BaseStore {
   @observable containers = []
 

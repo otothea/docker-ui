@@ -1,6 +1,7 @@
 import {inject, observer} from 'mobx-react'
 import React from 'react'
 import AppStore from 'stores/AppStore'
+import {STATE} from 'stores/Containers/Containers'
 
 @inject('store')
 @observer
@@ -112,9 +113,13 @@ export default class Containers extends React.Component {
                 <td title={container.command_full}>{container.command}</td>
                 <td title={container.created}>{container.created}</td>
                 <td title={container.status}>
-                  {container.state === 'exited' && <span className="label label-danger">exited</span>}
-                  {container.state === 'running' && <span className="label label-success">running</span>}
-                  {container.state === 'paused' && <span className="label label-warning">paused</span>}
+                  {container.state === STATE.CREATED && <span className="label label-info">created</span>}
+                  {container.state === STATE.RUNNING && <span className="label label-success">running</span>}
+                  {container.state === STATE.PAUSED && <span className="label label-warning">paused</span>}
+                  {container.state === STATE.RESTARTING && <span className="label label-warning">restarting</span>}
+                  {container.state === STATE.REMOVING && <span className="label label-danger">removing</span>}
+                  {container.state === STATE.EXITED && <span className="label label-danger">exited</span>}
+                  {container.state === STATE.DEAD && <span className="label label-danger">dead</span>}
                   &nbsp;
                   {container.status}
                 </td>
@@ -126,13 +131,13 @@ export default class Containers extends React.Component {
                       <span className="glyphicon glyphicon-cog" />
                     </button>
                     <ul className="dropdown-menu dropdown-menu-right">
-                      {container.state === 'exited' && <li><a href="#" onClick={() => this.startContainer(container.id)}>Start</a></li>}
-                      {container.state === 'exited' && <li><a href="#" onClick={() => this.destroyContainer(container.id)}>Delete</a></li>}
-                      {container.state === 'running' && <li><a href="#" onClick={() => this.restartContainer(container.id)}>Restart</a></li>}
-                      {container.state === 'running' && <li><a href="#" onClick={() => this.stopContainer(container.id)}>Stop</a></li>}
-                      {container.state === 'running' && <li><a href="#" onClick={() => this.killContainer(container.id)}>Kill</a></li>}
-                      {container.state === 'running' && <li><a href="#" onClick={() => this.pauseContainer(container.id)}>Pause</a></li>}
-                      {container.state === 'paused' && <li><a href="#" onClick={() => this.unpauseContainer(container.id)}>Unpause</a></li>}
+                      {(container.state === STATE.EXITED || container.state === STATE.DEAD) && <li><a href="#" onClick={() => this.startContainer(container.id)}>Start</a></li>}
+                      {(container.state === STATE.EXITED || container.state === STATE.DEAD) && <li><a href="#" onClick={() => this.destroyContainer(container.id)}>Delete</a></li>}
+                      {container.state === STATE.RUNNING && <li><a href="#" onClick={() => this.restartContainer(container.id)}>Restart</a></li>}
+                      {container.state === STATE.RUNNING && <li><a href="#" onClick={() => this.stopContainer(container.id)}>Stop</a></li>}
+                      {container.state === STATE.RUNNING && <li><a href="#" onClick={() => this.killContainer(container.id)}>Kill</a></li>}
+                      {container.state === STATE.RUNNING && <li><a href="#" onClick={() => this.pauseContainer(container.id)}>Pause</a></li>}
+                      {container.state === STATE.PAUSED && <li><a href="#" onClick={() => this.unpauseContainer(container.id)}>Unpause</a></li>}
                       <li><a href="#" onClick={() => this.renameContainer(container)}>Rename</a></li>
                     </ul>
                   </div>
