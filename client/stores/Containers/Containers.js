@@ -2,26 +2,19 @@ import axios from 'lib/axios'
 import {sortBy} from 'lodash'
 import {action, observable} from 'mobx'
 import moment from 'moment'
+import BaseStore from 'stores/BaseStore'
 
 const ellipsify = string => {
   return string.length > 40 ? `${string.substr(0, 37)}...` : string
 }
 
-export default class Containers {
-  @observable error = null
+export default class Containers extends BaseStore {
   @observable containers = []
-  @observable inspect = null
 
   constructor(appStore) {
+    super()
+
     this.appStore = appStore
-  }
-
-  @action setError = (err = null) => {
-    this.error = (((err || {}).response || {}).data || {}).message || err
-  }
-
-  @action closeInspector = () => {
-    this.inspect = null
   }
 
   @action destroyContainer = async id => {

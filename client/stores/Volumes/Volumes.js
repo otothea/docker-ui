@@ -1,22 +1,15 @@
 import axios from 'lib/axios'
 import {sortBy} from 'lodash'
 import {action, observable} from 'mobx'
+import BaseStore from 'stores/BaseStore'
 
-export default class Volumes {
-  @observable error = null
+export default class Volumes extends BaseStore {
   @observable volumes = []
-  @observable inspect = null
 
   constructor(appStore) {
+    super()
+
     this.appStore = appStore
-  }
-
-  @action setError = (err = null) => {
-    this.error = (((err || {}).response || {}).data || {}).message || err
-  }
-
-  @action closeInspector = () => {
-    this.inspect = null
   }
 
   @action createVolume = async volume => {

@@ -1,16 +1,13 @@
 import axios from 'lib/axios'
-import {action, observable} from 'mobx'
+import {action} from 'mobx'
 import {browserHistory} from 'react-router'
+import BaseStore from 'stores/BaseStore'
 
-export default class Login {
-  @observable error = null
-
+export default class Login extends BaseStore {
   constructor(appStore) {
-    this.appStore = appStore
-  }
+    super()
 
-  @action setError = (err = null) => {
-    this.error = (((err || {}).response || {}).data || {}).message || err
+    this.appStore = appStore
   }
 
   @action login = async credentials => {

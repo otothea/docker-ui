@@ -173,7 +173,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4;
+var _desc, _value, _class, _descriptor, _descriptor2;
 
 var _axios = require("~/lib/axios");
 
@@ -182,6 +182,10 @@ var _axios2 = _interopRequireDefault(_axios);
 var _mobx = require("mobx");
 
 var _reactRouter = require("react-router");
+
+var _BaseStore2 = require("~/stores/BaseStore");
+
+var _BaseStore3 = _interopRequireDefault(_BaseStore2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -198,6 +202,10 @@ function _initDefineProp(target, property, descriptor, context) {
 }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
   var desc = {};
@@ -232,35 +240,24 @@ function _initializerWarningHelper(descriptor, context) {
   throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
 }
 
-var Login = (_class = function Login(appStore) {
-  _classCallCheck(this, Login);
+var Login = (_class = function (_BaseStore) {
+  _inherits(Login, _BaseStore);
 
-  _initDefineProp(this, "error", _descriptor, this);
+  function Login(appStore) {
+    _classCallCheck(this, Login);
 
-  _initDefineProp(this, "setError", _descriptor2, this);
+    var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this));
 
-  _initDefineProp(this, "login", _descriptor3, this);
+    _initDefineProp(_this, "login", _descriptor, _this);
 
-  _initDefineProp(this, "logout", _descriptor4, this);
+    _initDefineProp(_this, "logout", _descriptor2, _this);
 
-  this.appStore = appStore;
-}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "error", [_mobx.observable], {
-  enumerable: true,
-  initializer: function initializer() {
-    return null;
+    _this.appStore = appStore;
+    return _this;
   }
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "setError", [_mobx.action], {
-  enumerable: true,
-  initializer: function initializer() {
-    var _this = this;
 
-    return function () {
-      var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-      _this.error = (((err || {}).response || {}).data || {}).message || err;
-    };
-  }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "login", [_mobx.action], {
+  return Login;
+}(_BaseStore3.default), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "login", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this2 = this;
@@ -299,12 +296,12 @@ var Login = (_class = function Login(appStore) {
         }, _callee, _this2, [[1, 8]]);
       }));
 
-      return function (_x2) {
+      return function (_x) {
         return _ref.apply(this, arguments);
       };
     }();
   }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "logout", [_mobx.action], {
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "logout", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this3 = this;
@@ -376,32 +373,18 @@ http.interceptors.response.use(function (res) {
 
 exports.default = http;
 });
-___scope___.file("stores/Containers/Containers.js", function(exports, require, module, __filename, __dirname){
+___scope___.file("stores/BaseStore.js", function(exports, require, module, __filename, __dirname){
 
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = undefined;
 
-var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13, _descriptor14, _descriptor15, _descriptor16;
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4;
 
-var _axios = require("~/lib/axios");
-
-var _axios2 = _interopRequireDefault(_axios);
-
-var _lodash = require("lodash");
-
-var _mobx = require("mobx");
-
-var _moment = require("moment");
-
-var _moment2 = _interopRequireDefault(_moment);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+var _mobx = require('mobx');
 
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
@@ -448,62 +431,27 @@ function _initializerWarningHelper(descriptor, context) {
   throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
 }
 
-var ellipsify = function ellipsify(string) {
-  return string.length > 40 ? string.substr(0, 37) + "..." : string;
-};
+var BaseStore = (_class = function BaseStore() {
+  _classCallCheck(this, BaseStore);
 
-var Containers = (_class = function Containers(appStore) {
-  _classCallCheck(this, Containers);
+  _initDefineProp(this, 'error', _descriptor, this);
 
-  _initDefineProp(this, "error", _descriptor, this);
+  _initDefineProp(this, 'inspect', _descriptor2, this);
 
-  _initDefineProp(this, "containers", _descriptor2, this);
+  _initDefineProp(this, 'setError', _descriptor3, this);
 
-  _initDefineProp(this, "inspect", _descriptor3, this);
-
-  _initDefineProp(this, "setError", _descriptor4, this);
-
-  _initDefineProp(this, "closeInspector", _descriptor5, this);
-
-  _initDefineProp(this, "destroyContainer", _descriptor6, this);
-
-  _initDefineProp(this, "inspectContainer", _descriptor7, this);
-
-  _initDefineProp(this, "loadContainers", _descriptor8, this);
-
-  _initDefineProp(this, "pruneContainers", _descriptor9, this);
-
-  _initDefineProp(this, "renameContainer", _descriptor10, this);
-
-  _initDefineProp(this, "restartContainer", _descriptor11, this);
-
-  _initDefineProp(this, "startContainer", _descriptor12, this);
-
-  _initDefineProp(this, "stopContainer", _descriptor13, this);
-
-  _initDefineProp(this, "killContainer", _descriptor14, this);
-
-  _initDefineProp(this, "pauseContainer", _descriptor15, this);
-
-  _initDefineProp(this, "unpauseContainer", _descriptor16, this);
-
-  this.appStore = appStore;
-}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "error", [_mobx.observable], {
+  _initDefineProp(this, 'closeInspector', _descriptor4, this);
+}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'error', [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return null;
   }
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "containers", [_mobx.observable], {
-  enumerable: true,
-  initializer: function initializer() {
-    return [];
-  }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "inspect", [_mobx.observable], {
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'inspect', [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return null;
   }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "setError", [_mobx.action], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, 'setError', [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this = this;
@@ -511,10 +459,11 @@ var Containers = (_class = function Containers(appStore) {
     return function () {
       var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-      _this.error = (((err || {}).response || {}).data || {}).message || err;
+      console.log(((err || {}).response || {}).data);
+      _this.error = (((err || {}).response || {}).data || {}).message || (err || {}).message || err;
     };
   }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "closeInspector", [_mobx.action], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, 'closeInspector', [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this2 = this;
@@ -523,10 +472,139 @@ var Containers = (_class = function Containers(appStore) {
       _this2.inspect = null;
     };
   }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "destroyContainer", [_mobx.action], {
+})), _class);
+exports.default = BaseStore;
+});
+___scope___.file("stores/Containers/Containers.js", function(exports, require, module, __filename, __dirname){
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12;
+
+var _axios = require("~/lib/axios");
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _lodash = require("lodash");
+
+var _mobx = require("mobx");
+
+var _moment = require("moment");
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _BaseStore2 = require("~/stores/BaseStore");
+
+var _BaseStore3 = _interopRequireDefault(_BaseStore2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+function _initDefineProp(target, property, descriptor, context) {
+  if (!descriptor) return;
+  Object.defineProperty(target, property, {
+    enumerable: descriptor.enumerable,
+    configurable: descriptor.configurable,
+    writable: descriptor.writable,
+    value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+  });
+}
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+  var desc = {};
+  Object['ke' + 'ys'](descriptor).forEach(function (key) {
+    desc[key] = descriptor[key];
+  });
+  desc.enumerable = !!desc.enumerable;
+  desc.configurable = !!desc.configurable;
+
+  if ('value' in desc || desc.initializer) {
+    desc.writable = true;
+  }
+
+  desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+    return decorator(target, property, desc) || desc;
+  }, desc);
+
+  if (context && desc.initializer !== void 0) {
+    desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+    desc.initializer = undefined;
+  }
+
+  if (desc.initializer === void 0) {
+    Object['define' + 'Property'](target, property, desc);
+    desc = null;
+  }
+
+  return desc;
+}
+
+function _initializerWarningHelper(descriptor, context) {
+  throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+}
+
+var ellipsify = function ellipsify(string) {
+  return string.length > 40 ? string.substr(0, 37) + "..." : string;
+};
+
+var Containers = (_class = function (_BaseStore) {
+  _inherits(Containers, _BaseStore);
+
+  function Containers(appStore) {
+    _classCallCheck(this, Containers);
+
+    var _this = _possibleConstructorReturn(this, (Containers.__proto__ || Object.getPrototypeOf(Containers)).call(this));
+
+    _initDefineProp(_this, "containers", _descriptor, _this);
+
+    _initDefineProp(_this, "destroyContainer", _descriptor2, _this);
+
+    _initDefineProp(_this, "inspectContainer", _descriptor3, _this);
+
+    _initDefineProp(_this, "loadContainers", _descriptor4, _this);
+
+    _initDefineProp(_this, "pruneContainers", _descriptor5, _this);
+
+    _initDefineProp(_this, "renameContainer", _descriptor6, _this);
+
+    _initDefineProp(_this, "restartContainer", _descriptor7, _this);
+
+    _initDefineProp(_this, "startContainer", _descriptor8, _this);
+
+    _initDefineProp(_this, "stopContainer", _descriptor9, _this);
+
+    _initDefineProp(_this, "killContainer", _descriptor10, _this);
+
+    _initDefineProp(_this, "pauseContainer", _descriptor11, _this);
+
+    _initDefineProp(_this, "unpauseContainer", _descriptor12, _this);
+
+    _this.appStore = appStore;
+    return _this;
+  }
+
+  return Containers;
+}(_BaseStore3.default), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "containers", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
-    var _this3 = this;
+    return [];
+  }
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "destroyContainer", [_mobx.action], {
+  enumerable: true,
+  initializer: function initializer() {
+    var _this2 = this;
 
     return function () {
       var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(id) {
@@ -534,14 +612,14 @@ var Containers = (_class = function Containers(appStore) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _this3.setError();
+                _this2.setError();
 
                 _context.prev = 1;
                 _context.next = 4;
                 return _axios2.default.delete("containers/" + id);
 
               case 4:
-                _this3.loadContainers();
+                _this2.loadContainers();
                 _context.next = 10;
                 break;
 
@@ -549,25 +627,25 @@ var Containers = (_class = function Containers(appStore) {
                 _context.prev = 7;
                 _context.t0 = _context["catch"](1);
 
-                _this3.setError(_context.t0);
+                _this2.setError(_context.t0);
 
               case 10:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, _this3, [[1, 7]]);
+        }, _callee, _this2, [[1, 7]]);
       }));
 
-      return function (_x2) {
+      return function (_x) {
         return _ref.apply(this, arguments);
       };
     }();
   }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "inspectContainer", [_mobx.action], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "inspectContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this4 = this;
+    var _this3 = this;
 
     return function () {
       var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(id) {
@@ -576,7 +654,7 @@ var Containers = (_class = function Containers(appStore) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this4.setError();
+                _this3.setError();
 
                 _context2.prev = 1;
                 _context2.next = 4;
@@ -585,7 +663,7 @@ var Containers = (_class = function Containers(appStore) {
               case 4:
                 res = _context2.sent;
 
-                _this4.inspect = res.data;
+                _this3.inspect = res.data;
                 _context2.next = 11;
                 break;
 
@@ -593,25 +671,25 @@ var Containers = (_class = function Containers(appStore) {
                 _context2.prev = 8;
                 _context2.t0 = _context2["catch"](1);
 
-                _this4.setError(_context2.t0);
+                _this3.setError(_context2.t0);
 
               case 11:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, _this4, [[1, 8]]);
+        }, _callee2, _this3, [[1, 8]]);
       }));
 
-      return function (_x3) {
+      return function (_x2) {
         return _ref2.apply(this, arguments);
       };
     }();
   }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "loadContainers", [_mobx.action], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "loadContainers", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this5 = this;
+    var _this4 = this;
 
     return _asyncToGenerator(regeneratorRuntime.mark(function _callee3() {
       var res;
@@ -619,7 +697,7 @@ var Containers = (_class = function Containers(appStore) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              _this5.setError();
+              _this4.setError();
 
               _context3.prev = 1;
               _context3.next = 4;
@@ -628,7 +706,7 @@ var Containers = (_class = function Containers(appStore) {
             case 4:
               res = _context3.sent;
 
-              _this5.containers = (0, _lodash.sortBy)(res.data, function (container) {
+              _this4.containers = (0, _lodash.sortBy)(res.data, function (container) {
                 return -container.Created;
               }).map(function (container) {
                 var ports = (0, _lodash.sortBy)(container.Ports, function (p) {
@@ -664,34 +742,34 @@ var Containers = (_class = function Containers(appStore) {
               _context3.prev = 8;
               _context3.t0 = _context3["catch"](1);
 
-              _this5.setError(_context3.t0);
+              _this4.setError(_context3.t0);
 
             case 11:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, _this5, [[1, 8]]);
+      }, _callee3, _this4, [[1, 8]]);
     }));
   }
-}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "pruneContainers", [_mobx.action], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "pruneContainers", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this6 = this;
+    var _this5 = this;
 
     return _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
       return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              _this6.setError();
+              _this5.setError();
 
               _context4.prev = 1;
               _context4.next = 4;
               return _axios2.default.post('containers/prune');
 
             case 4:
-              _this6.loadContainers();
+              _this5.loadContainers();
               _context4.next = 10;
               break;
 
@@ -699,20 +777,20 @@ var Containers = (_class = function Containers(appStore) {
               _context4.prev = 7;
               _context4.t0 = _context4["catch"](1);
 
-              _this6.setError(_context4.t0);
+              _this5.setError(_context4.t0);
 
             case 10:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, _this6, [[1, 7]]);
+      }, _callee4, _this5, [[1, 7]]);
     }));
   }
-}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, "renameContainer", [_mobx.action], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "renameContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this7 = this;
+    var _this6 = this;
 
     return function () {
       var _ref5 = _asyncToGenerator(regeneratorRuntime.mark(function _callee5(id, name) {
@@ -720,14 +798,14 @@ var Containers = (_class = function Containers(appStore) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                _this7.setError();
+                _this6.setError();
 
                 _context5.prev = 1;
                 _context5.next = 4;
                 return _axios2.default.put("containers/" + id + "/rename", { name: name });
 
               case 4:
-                _this7.loadContainers();
+                _this6.loadContainers();
                 _context5.next = 10;
                 break;
 
@@ -735,25 +813,25 @@ var Containers = (_class = function Containers(appStore) {
                 _context5.prev = 7;
                 _context5.t0 = _context5["catch"](1);
 
-                _this7.setError(_context5.t0);
+                _this6.setError(_context5.t0);
 
               case 10:
               case "end":
                 return _context5.stop();
             }
           }
-        }, _callee5, _this7, [[1, 7]]);
+        }, _callee5, _this6, [[1, 7]]);
       }));
 
-      return function (_x4, _x5) {
+      return function (_x3, _x4) {
         return _ref5.apply(this, arguments);
       };
     }();
   }
-}), _descriptor11 = _applyDecoratedDescriptor(_class.prototype, "restartContainer", [_mobx.action], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "restartContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this8 = this;
+    var _this7 = this;
 
     return function () {
       var _ref6 = _asyncToGenerator(regeneratorRuntime.mark(function _callee6(id) {
@@ -761,14 +839,14 @@ var Containers = (_class = function Containers(appStore) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
-                _this8.setError();
+                _this7.setError();
 
                 _context6.prev = 1;
                 _context6.next = 4;
                 return _axios2.default.put("containers/" + id + "/restart");
 
               case 4:
-                _this8.loadContainers();
+                _this7.loadContainers();
                 _context6.next = 10;
                 break;
 
@@ -776,25 +854,25 @@ var Containers = (_class = function Containers(appStore) {
                 _context6.prev = 7;
                 _context6.t0 = _context6["catch"](1);
 
-                _this8.setError(_context6.t0);
+                _this7.setError(_context6.t0);
 
               case 10:
               case "end":
                 return _context6.stop();
             }
           }
-        }, _callee6, _this8, [[1, 7]]);
+        }, _callee6, _this7, [[1, 7]]);
       }));
 
-      return function (_x6) {
+      return function (_x5) {
         return _ref6.apply(this, arguments);
       };
     }();
   }
-}), _descriptor12 = _applyDecoratedDescriptor(_class.prototype, "startContainer", [_mobx.action], {
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "startContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this9 = this;
+    var _this8 = this;
 
     return function () {
       var _ref7 = _asyncToGenerator(regeneratorRuntime.mark(function _callee7(id) {
@@ -802,14 +880,14 @@ var Containers = (_class = function Containers(appStore) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
-                _this9.setError();
+                _this8.setError();
 
                 _context7.prev = 1;
                 _context7.next = 4;
                 return _axios2.default.put("containers/" + id + "/start");
 
               case 4:
-                _this9.loadContainers();
+                _this8.loadContainers();
                 _context7.next = 10;
                 break;
 
@@ -817,25 +895,25 @@ var Containers = (_class = function Containers(appStore) {
                 _context7.prev = 7;
                 _context7.t0 = _context7["catch"](1);
 
-                _this9.setError(_context7.t0);
+                _this8.setError(_context7.t0);
 
               case 10:
               case "end":
                 return _context7.stop();
             }
           }
-        }, _callee7, _this9, [[1, 7]]);
+        }, _callee7, _this8, [[1, 7]]);
       }));
 
-      return function (_x7) {
+      return function (_x6) {
         return _ref7.apply(this, arguments);
       };
     }();
   }
-}), _descriptor13 = _applyDecoratedDescriptor(_class.prototype, "stopContainer", [_mobx.action], {
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "stopContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this10 = this;
+    var _this9 = this;
 
     return function () {
       var _ref8 = _asyncToGenerator(regeneratorRuntime.mark(function _callee8(id) {
@@ -843,14 +921,14 @@ var Containers = (_class = function Containers(appStore) {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
-                _this10.setError();
+                _this9.setError();
 
                 _context8.prev = 1;
                 _context8.next = 4;
                 return _axios2.default.put("containers/" + id + "/stop");
 
               case 4:
-                _this10.loadContainers();
+                _this9.loadContainers();
                 _context8.next = 10;
                 break;
 
@@ -858,25 +936,25 @@ var Containers = (_class = function Containers(appStore) {
                 _context8.prev = 7;
                 _context8.t0 = _context8["catch"](1);
 
-                _this10.setError(_context8.t0);
+                _this9.setError(_context8.t0);
 
               case 10:
               case "end":
                 return _context8.stop();
             }
           }
-        }, _callee8, _this10, [[1, 7]]);
+        }, _callee8, _this9, [[1, 7]]);
       }));
 
-      return function (_x8) {
+      return function (_x7) {
         return _ref8.apply(this, arguments);
       };
     }();
   }
-}), _descriptor14 = _applyDecoratedDescriptor(_class.prototype, "killContainer", [_mobx.action], {
+}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, "killContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this11 = this;
+    var _this10 = this;
 
     return function () {
       var _ref9 = _asyncToGenerator(regeneratorRuntime.mark(function _callee9(id) {
@@ -884,14 +962,14 @@ var Containers = (_class = function Containers(appStore) {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
-                _this11.setError();
+                _this10.setError();
 
                 _context9.prev = 1;
                 _context9.next = 4;
                 return _axios2.default.put("containers/" + id + "/kill");
 
               case 4:
-                _this11.loadContainers();
+                _this10.loadContainers();
                 _context9.next = 10;
                 break;
 
@@ -899,25 +977,25 @@ var Containers = (_class = function Containers(appStore) {
                 _context9.prev = 7;
                 _context9.t0 = _context9["catch"](1);
 
-                _this11.setError(_context9.t0);
+                _this10.setError(_context9.t0);
 
               case 10:
               case "end":
                 return _context9.stop();
             }
           }
-        }, _callee9, _this11, [[1, 7]]);
+        }, _callee9, _this10, [[1, 7]]);
       }));
 
-      return function (_x9) {
+      return function (_x8) {
         return _ref9.apply(this, arguments);
       };
     }();
   }
-}), _descriptor15 = _applyDecoratedDescriptor(_class.prototype, "pauseContainer", [_mobx.action], {
+}), _descriptor11 = _applyDecoratedDescriptor(_class.prototype, "pauseContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this12 = this;
+    var _this11 = this;
 
     return function () {
       var _ref10 = _asyncToGenerator(regeneratorRuntime.mark(function _callee10(id) {
@@ -925,14 +1003,14 @@ var Containers = (_class = function Containers(appStore) {
           while (1) {
             switch (_context10.prev = _context10.next) {
               case 0:
-                _this12.setError();
+                _this11.setError();
 
                 _context10.prev = 1;
                 _context10.next = 4;
                 return _axios2.default.put("containers/" + id + "/pause");
 
               case 4:
-                _this12.loadContainers();
+                _this11.loadContainers();
                 _context10.next = 10;
                 break;
 
@@ -940,25 +1018,25 @@ var Containers = (_class = function Containers(appStore) {
                 _context10.prev = 7;
                 _context10.t0 = _context10["catch"](1);
 
-                _this12.setError(_context10.t0);
+                _this11.setError(_context10.t0);
 
               case 10:
               case "end":
                 return _context10.stop();
             }
           }
-        }, _callee10, _this12, [[1, 7]]);
+        }, _callee10, _this11, [[1, 7]]);
       }));
 
-      return function (_x10) {
+      return function (_x9) {
         return _ref10.apply(this, arguments);
       };
     }();
   }
-}), _descriptor16 = _applyDecoratedDescriptor(_class.prototype, "unpauseContainer", [_mobx.action], {
+}), _descriptor12 = _applyDecoratedDescriptor(_class.prototype, "unpauseContainer", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this13 = this;
+    var _this12 = this;
 
     return function () {
       var _ref11 = _asyncToGenerator(regeneratorRuntime.mark(function _callee11(id) {
@@ -966,14 +1044,14 @@ var Containers = (_class = function Containers(appStore) {
           while (1) {
             switch (_context11.prev = _context11.next) {
               case 0:
-                _this13.setError();
+                _this12.setError();
 
                 _context11.prev = 1;
                 _context11.next = 4;
                 return _axios2.default.put("containers/" + id + "/unpause");
 
               case 4:
-                _this13.loadContainers();
+                _this12.loadContainers();
                 _context11.next = 10;
                 break;
 
@@ -981,17 +1059,17 @@ var Containers = (_class = function Containers(appStore) {
                 _context11.prev = 7;
                 _context11.t0 = _context11["catch"](1);
 
-                _this13.setError(_context11.t0);
+                _this12.setError(_context11.t0);
 
               case 10:
               case "end":
                 return _context11.stop();
             }
           }
-        }, _callee11, _this13, [[1, 7]]);
+        }, _callee11, _this12, [[1, 7]]);
       }));
 
-      return function (_x11) {
+      return function (_x10) {
         return _ref11.apply(this, arguments);
       };
     }();
@@ -1008,7 +1086,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9;
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5;
 
 var _axios = require("~/lib/axios");
 
@@ -1021,6 +1099,10 @@ var _mobx = require("mobx");
 var _moment = require("moment");
 
 var _moment2 = _interopRequireDefault(_moment);
+
+var _BaseStore2 = require("~/stores/BaseStore");
+
+var _BaseStore3 = _interopRequireDefault(_BaseStore2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1037,6 +1119,10 @@ function _initDefineProp(target, property, descriptor, context) {
 }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
   var desc = {};
@@ -1079,67 +1165,38 @@ var sizeOf = function sizeOf(bytes) {
   return (bytes / Math.pow(1024, e)).toFixed(2) + ' ' + ' KMGTP'.charAt(e) + 'B';
 };
 
-var Images = (_class = function Images(appStore) {
-  _classCallCheck(this, Images);
+var Images = (_class = function (_BaseStore) {
+  _inherits(Images, _BaseStore);
 
-  _initDefineProp(this, "error", _descriptor, this);
+  function Images(appStore) {
+    _classCallCheck(this, Images);
 
-  _initDefineProp(this, "images", _descriptor2, this);
+    var _this = _possibleConstructorReturn(this, (Images.__proto__ || Object.getPrototypeOf(Images)).call(this));
 
-  _initDefineProp(this, "inspect", _descriptor3, this);
+    _initDefineProp(_this, "images", _descriptor, _this);
 
-  _initDefineProp(this, "setError", _descriptor4, this);
+    _initDefineProp(_this, "destroyImage", _descriptor2, _this);
 
-  _initDefineProp(this, "closeInspector", _descriptor5, this);
+    _initDefineProp(_this, "inspectImage", _descriptor3, _this);
 
-  _initDefineProp(this, "destroyImage", _descriptor6, this);
+    _initDefineProp(_this, "loadImages", _descriptor4, _this);
 
-  _initDefineProp(this, "inspectImage", _descriptor7, this);
+    _initDefineProp(_this, "pruneImages", _descriptor5, _this);
 
-  _initDefineProp(this, "loadImages", _descriptor8, this);
-
-  _initDefineProp(this, "pruneImages", _descriptor9, this);
-
-  this.appStore = appStore;
-}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "error", [_mobx.observable], {
-  enumerable: true,
-  initializer: function initializer() {
-    return null;
+    _this.appStore = appStore;
+    return _this;
   }
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "images", [_mobx.observable], {
+
+  return Images;
+}(_BaseStore3.default), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "images", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return [];
   }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "inspect", [_mobx.observable], {
-  enumerable: true,
-  initializer: function initializer() {
-    return null;
-  }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "setError", [_mobx.action], {
-  enumerable: true,
-  initializer: function initializer() {
-    var _this = this;
-
-    return function () {
-      var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-      _this.error = (((err || {}).response || {}).data || {}).message || err;
-    };
-  }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "closeInspector", [_mobx.action], {
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "destroyImage", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this2 = this;
-
-    return function () {
-      _this2.inspect = null;
-    };
-  }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "destroyImage", [_mobx.action], {
-  enumerable: true,
-  initializer: function initializer() {
-    var _this3 = this;
 
     return function () {
       var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(id) {
@@ -1147,14 +1204,14 @@ var Images = (_class = function Images(appStore) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _this3.setError();
+                _this2.setError();
 
                 _context.prev = 1;
                 _context.next = 4;
                 return _axios2.default.delete("images/" + id);
 
               case 4:
-                _this3.loadImages();
+                _this2.loadImages();
                 _context.next = 10;
                 break;
 
@@ -1162,25 +1219,25 @@ var Images = (_class = function Images(appStore) {
                 _context.prev = 7;
                 _context.t0 = _context["catch"](1);
 
-                _this3.setError(_context.t0);
+                _this2.setError(_context.t0);
 
               case 10:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, _this3, [[1, 7]]);
+        }, _callee, _this2, [[1, 7]]);
       }));
 
-      return function (_x2) {
+      return function (_x) {
         return _ref.apply(this, arguments);
       };
     }();
   }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "inspectImage", [_mobx.action], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "inspectImage", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this4 = this;
+    var _this3 = this;
 
     return function () {
       var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(id) {
@@ -1189,7 +1246,7 @@ var Images = (_class = function Images(appStore) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this4.setError();
+                _this3.setError();
 
                 _context2.prev = 1;
                 _context2.next = 4;
@@ -1198,7 +1255,7 @@ var Images = (_class = function Images(appStore) {
               case 4:
                 res = _context2.sent;
 
-                _this4.inspect = res.data;
+                _this3.inspect = res.data;
                 _context2.next = 11;
                 break;
 
@@ -1206,25 +1263,25 @@ var Images = (_class = function Images(appStore) {
                 _context2.prev = 8;
                 _context2.t0 = _context2["catch"](1);
 
-                _this4.setError(_context2.t0);
+                _this3.setError(_context2.t0);
 
               case 11:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, _this4, [[1, 8]]);
+        }, _callee2, _this3, [[1, 8]]);
       }));
 
-      return function (_x3) {
+      return function (_x2) {
         return _ref2.apply(this, arguments);
       };
     }();
   }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "loadImages", [_mobx.action], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "loadImages", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this5 = this;
+    var _this4 = this;
 
     return _asyncToGenerator(regeneratorRuntime.mark(function _callee3() {
       var res;
@@ -1232,7 +1289,7 @@ var Images = (_class = function Images(appStore) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              _this5.setError();
+              _this4.setError();
 
               _context3.prev = 1;
               _context3.next = 4;
@@ -1241,7 +1298,7 @@ var Images = (_class = function Images(appStore) {
             case 4:
               res = _context3.sent;
 
-              _this5.images = (0, _lodash.sortBy)(res.data, function (image) {
+              _this4.images = (0, _lodash.sortBy)(res.data, function (image) {
                 return -image.Created;
               }).map(function (image) {
                 return {
@@ -1260,33 +1317,33 @@ var Images = (_class = function Images(appStore) {
               _context3.prev = 8;
               _context3.t0 = _context3["catch"](1);
 
-              _this5.setError(_context3.t0);
+              _this4.setError(_context3.t0);
 
             case 11:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, _this5, [[1, 8]]);
+      }, _callee3, _this4, [[1, 8]]);
     }));
   }
-}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "pruneImages", [_mobx.action], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "pruneImages", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this6 = this;
+    var _this5 = this;
 
     return _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
       return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              _this6.setError();
+              _this5.setError();
 
               try {
                 _axios2.default.post('images/prune');
-                _this6.loadImages();
+                _this5.loadImages();
               } catch (e) {
-                _this6.setError(e);
+                _this5.setError(e);
               }
 
             case 2:
@@ -1294,7 +1351,7 @@ var Images = (_class = function Images(appStore) {
               return _context4.stop();
           }
         }
-      }, _callee4, _this6);
+      }, _callee4, _this5);
     }));
   }
 })), _class);
@@ -1309,7 +1366,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10;
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6;
 
 var _axios = require("~/lib/axios");
 
@@ -1318,6 +1375,10 @@ var _axios2 = _interopRequireDefault(_axios);
 var _lodash = require("lodash");
 
 var _mobx = require("mobx");
+
+var _BaseStore2 = require("~/stores/BaseStore");
+
+var _BaseStore3 = _interopRequireDefault(_BaseStore2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1334,6 +1395,10 @@ function _initDefineProp(target, property, descriptor, context) {
 }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
   var desc = {};
@@ -1368,69 +1433,40 @@ function _initializerWarningHelper(descriptor, context) {
   throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
 }
 
-var Volumes = (_class = function Volumes(appStore) {
-  _classCallCheck(this, Volumes);
+var Volumes = (_class = function (_BaseStore) {
+  _inherits(Volumes, _BaseStore);
 
-  _initDefineProp(this, "error", _descriptor, this);
+  function Volumes(appStore) {
+    _classCallCheck(this, Volumes);
 
-  _initDefineProp(this, "volumes", _descriptor2, this);
+    var _this = _possibleConstructorReturn(this, (Volumes.__proto__ || Object.getPrototypeOf(Volumes)).call(this));
 
-  _initDefineProp(this, "inspect", _descriptor3, this);
+    _initDefineProp(_this, "volumes", _descriptor, _this);
 
-  _initDefineProp(this, "setError", _descriptor4, this);
+    _initDefineProp(_this, "createVolume", _descriptor2, _this);
 
-  _initDefineProp(this, "closeInspector", _descriptor5, this);
+    _initDefineProp(_this, "destroyVolume", _descriptor3, _this);
 
-  _initDefineProp(this, "createVolume", _descriptor6, this);
+    _initDefineProp(_this, "inspectVolume", _descriptor4, _this);
 
-  _initDefineProp(this, "destroyVolume", _descriptor7, this);
+    _initDefineProp(_this, "loadVolumes", _descriptor5, _this);
 
-  _initDefineProp(this, "inspectVolume", _descriptor8, this);
+    _initDefineProp(_this, "pruneVolumes", _descriptor6, _this);
 
-  _initDefineProp(this, "loadVolumes", _descriptor9, this);
-
-  _initDefineProp(this, "pruneVolumes", _descriptor10, this);
-
-  this.appStore = appStore;
-}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "error", [_mobx.observable], {
-  enumerable: true,
-  initializer: function initializer() {
-    return null;
+    _this.appStore = appStore;
+    return _this;
   }
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "volumes", [_mobx.observable], {
+
+  return Volumes;
+}(_BaseStore3.default), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "volumes", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return [];
   }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "inspect", [_mobx.observable], {
-  enumerable: true,
-  initializer: function initializer() {
-    return null;
-  }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "setError", [_mobx.action], {
-  enumerable: true,
-  initializer: function initializer() {
-    var _this = this;
-
-    return function () {
-      var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-      _this.error = (((err || {}).response || {}).data || {}).message || err;
-    };
-  }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "closeInspector", [_mobx.action], {
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "createVolume", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this2 = this;
-
-    return function () {
-      _this2.inspect = null;
-    };
-  }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "createVolume", [_mobx.action], {
-  enumerable: true,
-  initializer: function initializer() {
-    var _this3 = this;
 
     return function () {
       var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(volume) {
@@ -1438,14 +1474,14 @@ var Volumes = (_class = function Volumes(appStore) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _this3.setError();
+                _this2.setError();
 
                 _context.prev = 1;
                 _context.next = 4;
                 return _axios2.default.post('volumes', volume);
 
               case 4:
-                _this3.loadVolumes();
+                _this2.loadVolumes();
                 _context.next = 10;
                 break;
 
@@ -1453,25 +1489,25 @@ var Volumes = (_class = function Volumes(appStore) {
                 _context.prev = 7;
                 _context.t0 = _context["catch"](1);
 
-                _this3.setError(_context.t0);
+                _this2.setError(_context.t0);
 
               case 10:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, _this3, [[1, 7]]);
+        }, _callee, _this2, [[1, 7]]);
       }));
 
-      return function (_x2) {
+      return function (_x) {
         return _ref.apply(this, arguments);
       };
     }();
   }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "destroyVolume", [_mobx.action], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "destroyVolume", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this4 = this;
+    var _this3 = this;
 
     return function () {
       var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(id) {
@@ -1479,14 +1515,14 @@ var Volumes = (_class = function Volumes(appStore) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this4.setError();
+                _this3.setError();
 
                 _context2.prev = 1;
                 _context2.next = 4;
                 return _axios2.default.delete("volumes/" + id);
 
               case 4:
-                _this4.loadVolumes();
+                _this3.loadVolumes();
                 _context2.next = 10;
                 break;
 
@@ -1494,25 +1530,25 @@ var Volumes = (_class = function Volumes(appStore) {
                 _context2.prev = 7;
                 _context2.t0 = _context2["catch"](1);
 
-                _this4.setError(_context2.t0);
+                _this3.setError(_context2.t0);
 
               case 10:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, _this4, [[1, 7]]);
+        }, _callee2, _this3, [[1, 7]]);
       }));
 
-      return function (_x3) {
+      return function (_x2) {
         return _ref2.apply(this, arguments);
       };
     }();
   }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "inspectVolume", [_mobx.action], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "inspectVolume", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this5 = this;
+    var _this4 = this;
 
     return function () {
       var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(id) {
@@ -1521,7 +1557,7 @@ var Volumes = (_class = function Volumes(appStore) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _this5.setError();
+                _this4.setError();
 
                 _context3.prev = 1;
                 _context3.next = 4;
@@ -1530,7 +1566,7 @@ var Volumes = (_class = function Volumes(appStore) {
               case 4:
                 res = _context3.sent;
 
-                _this5.inspect = res.data;
+                _this4.inspect = res.data;
                 _context3.next = 11;
                 break;
 
@@ -1538,25 +1574,25 @@ var Volumes = (_class = function Volumes(appStore) {
                 _context3.prev = 8;
                 _context3.t0 = _context3["catch"](1);
 
-                _this5.setError(_context3.t0);
+                _this4.setError(_context3.t0);
 
               case 11:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, _this5, [[1, 8]]);
+        }, _callee3, _this4, [[1, 8]]);
       }));
 
-      return function (_x4) {
+      return function (_x3) {
         return _ref3.apply(this, arguments);
       };
     }();
   }
-}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "loadVolumes", [_mobx.action], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "loadVolumes", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this6 = this;
+    var _this5 = this;
 
     return _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
       var res;
@@ -1564,7 +1600,7 @@ var Volumes = (_class = function Volumes(appStore) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              _this6.setError();
+              _this5.setError();
 
               _context4.prev = 1;
               _context4.next = 4;
@@ -1573,7 +1609,7 @@ var Volumes = (_class = function Volumes(appStore) {
             case 4:
               res = _context4.sent;
 
-              _this6.volumes = (0, _lodash.sortBy)(res.data, function (volume) {
+              _this5.volumes = (0, _lodash.sortBy)(res.data, function (volume) {
                 return volume.Name.toLowerCase();
               }).map(function (volume) {
                 return {
@@ -1588,34 +1624,34 @@ var Volumes = (_class = function Volumes(appStore) {
               _context4.prev = 8;
               _context4.t0 = _context4["catch"](1);
 
-              _this6.setError(_context4.t0);
+              _this5.setError(_context4.t0);
 
             case 11:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, _this6, [[1, 8]]);
+      }, _callee4, _this5, [[1, 8]]);
     }));
   }
-}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, "pruneVolumes", [_mobx.action], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "pruneVolumes", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this7 = this;
+    var _this6 = this;
 
     return _asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
       return regeneratorRuntime.wrap(function _callee5$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
-              _this7.setError();
+              _this6.setError();
 
               _context5.prev = 1;
               _context5.next = 4;
               return _axios2.default.post('volumes/prune');
 
             case 4:
-              _this7.loadVolumes();
+              _this6.loadVolumes();
               _context5.next = 10;
               break;
 
@@ -1623,14 +1659,14 @@ var Volumes = (_class = function Volumes(appStore) {
               _context5.prev = 7;
               _context5.t0 = _context5["catch"](1);
 
-              _this7.setError(_context5.t0);
+              _this6.setError(_context5.t0);
 
             case 10:
             case "end":
               return _context5.stop();
           }
         }
-      }, _callee5, _this7, [[1, 7]]);
+      }, _callee5, _this6, [[1, 7]]);
     }));
   }
 })), _class);
@@ -1645,7 +1681,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10;
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6;
 
 var _axios = require("~/lib/axios");
 
@@ -1654,6 +1690,10 @@ var _axios2 = _interopRequireDefault(_axios);
 var _lodash = require("lodash");
 
 var _mobx = require("mobx");
+
+var _BaseStore2 = require("~/stores/BaseStore");
+
+var _BaseStore3 = _interopRequireDefault(_BaseStore2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1670,6 +1710,10 @@ function _initDefineProp(target, property, descriptor, context) {
 }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
   var desc = {};
@@ -1704,69 +1748,40 @@ function _initializerWarningHelper(descriptor, context) {
   throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
 }
 
-var Networks = (_class = function Networks(appStore) {
-  _classCallCheck(this, Networks);
+var Networks = (_class = function (_BaseStore) {
+  _inherits(Networks, _BaseStore);
 
-  _initDefineProp(this, "error", _descriptor, this);
+  function Networks(appStore) {
+    _classCallCheck(this, Networks);
 
-  _initDefineProp(this, "networks", _descriptor2, this);
+    var _this = _possibleConstructorReturn(this, (Networks.__proto__ || Object.getPrototypeOf(Networks)).call(this));
 
-  _initDefineProp(this, "inspect", _descriptor3, this);
+    _initDefineProp(_this, "networks", _descriptor, _this);
 
-  _initDefineProp(this, "setError", _descriptor4, this);
+    _initDefineProp(_this, "createNetwork", _descriptor2, _this);
 
-  _initDefineProp(this, "closeInspector", _descriptor5, this);
+    _initDefineProp(_this, "destroyNetwork", _descriptor3, _this);
 
-  _initDefineProp(this, "createNetwork", _descriptor6, this);
+    _initDefineProp(_this, "inspectNetwork", _descriptor4, _this);
 
-  _initDefineProp(this, "destroyNetwork", _descriptor7, this);
+    _initDefineProp(_this, "loadNetworks", _descriptor5, _this);
 
-  _initDefineProp(this, "inspectNetwork", _descriptor8, this);
+    _initDefineProp(_this, "pruneNetworks", _descriptor6, _this);
 
-  _initDefineProp(this, "loadNetworks", _descriptor9, this);
-
-  _initDefineProp(this, "pruneNetworks", _descriptor10, this);
-
-  this.appStore = appStore;
-}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "error", [_mobx.observable], {
-  enumerable: true,
-  initializer: function initializer() {
-    return null;
+    _this.appStore = appStore;
+    return _this;
   }
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "networks", [_mobx.observable], {
+
+  return Networks;
+}(_BaseStore3.default), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "networks", [_mobx.observable], {
   enumerable: true,
   initializer: function initializer() {
     return [];
   }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "inspect", [_mobx.observable], {
-  enumerable: true,
-  initializer: function initializer() {
-    return null;
-  }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "setError", [_mobx.action], {
-  enumerable: true,
-  initializer: function initializer() {
-    var _this = this;
-
-    return function () {
-      var err = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-      _this.error = (((err || {}).response || {}).data || {}).message || err;
-    };
-  }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "closeInspector", [_mobx.action], {
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "createNetwork", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
     var _this2 = this;
-
-    return function () {
-      _this2.inspect = null;
-    };
-  }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "createNetwork", [_mobx.action], {
-  enumerable: true,
-  initializer: function initializer() {
-    var _this3 = this;
 
     return function () {
       var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(network) {
@@ -1774,14 +1789,14 @@ var Networks = (_class = function Networks(appStore) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _this3.setError();
+                _this2.setError();
 
                 _context.prev = 1;
                 _context.next = 4;
                 return _axios2.default.post('networks', network);
 
               case 4:
-                _this3.loadNetworks();
+                _this2.loadNetworks();
                 _context.next = 10;
                 break;
 
@@ -1789,25 +1804,25 @@ var Networks = (_class = function Networks(appStore) {
                 _context.prev = 7;
                 _context.t0 = _context["catch"](1);
 
-                _this3.setError(_context.t0);
+                _this2.setError(_context.t0);
 
               case 10:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, _this3, [[1, 7]]);
+        }, _callee, _this2, [[1, 7]]);
       }));
 
-      return function (_x2) {
+      return function (_x) {
         return _ref.apply(this, arguments);
       };
     }();
   }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "destroyNetwork", [_mobx.action], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "destroyNetwork", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this4 = this;
+    var _this3 = this;
 
     return function () {
       var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(id) {
@@ -1815,14 +1830,14 @@ var Networks = (_class = function Networks(appStore) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this4.setError();
+                _this3.setError();
 
                 _context2.prev = 1;
                 _context2.next = 4;
                 return _axios2.default.delete("networks/" + id);
 
               case 4:
-                _this4.loadNetworks();
+                _this3.loadNetworks();
                 _context2.next = 10;
                 break;
 
@@ -1830,25 +1845,25 @@ var Networks = (_class = function Networks(appStore) {
                 _context2.prev = 7;
                 _context2.t0 = _context2["catch"](1);
 
-                _this4.setError(_context2.t0);
+                _this3.setError(_context2.t0);
 
               case 10:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, _this4, [[1, 7]]);
+        }, _callee2, _this3, [[1, 7]]);
       }));
 
-      return function (_x3) {
+      return function (_x2) {
         return _ref2.apply(this, arguments);
       };
     }();
   }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "inspectNetwork", [_mobx.action], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "inspectNetwork", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this5 = this;
+    var _this4 = this;
 
     return function () {
       var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(id) {
@@ -1857,7 +1872,7 @@ var Networks = (_class = function Networks(appStore) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _this5.setError();
+                _this4.setError();
 
                 _context3.prev = 1;
                 _context3.next = 4;
@@ -1866,7 +1881,7 @@ var Networks = (_class = function Networks(appStore) {
               case 4:
                 res = _context3.sent;
 
-                _this5.inspect = res.data;
+                _this4.inspect = res.data;
                 _context3.next = 11;
                 break;
 
@@ -1874,25 +1889,25 @@ var Networks = (_class = function Networks(appStore) {
                 _context3.prev = 8;
                 _context3.t0 = _context3["catch"](1);
 
-                _this5.setError(_context3.t0);
+                _this4.setError(_context3.t0);
 
               case 11:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, _this5, [[1, 8]]);
+        }, _callee3, _this4, [[1, 8]]);
       }));
 
-      return function (_x4) {
+      return function (_x3) {
         return _ref3.apply(this, arguments);
       };
     }();
   }
-}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "loadNetworks", [_mobx.action], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "loadNetworks", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this6 = this;
+    var _this5 = this;
 
     return _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
       var res;
@@ -1900,7 +1915,7 @@ var Networks = (_class = function Networks(appStore) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              _this6.setError();
+              _this5.setError();
 
               _context4.prev = 1;
               _context4.next = 4;
@@ -1909,7 +1924,7 @@ var Networks = (_class = function Networks(appStore) {
             case 4:
               res = _context4.sent;
 
-              _this6.networks = (0, _lodash.sortBy)(res.data, function (network) {
+              _this5.networks = (0, _lodash.sortBy)(res.data, function (network) {
                 return network.Name.toLowerCase();
               }).map(function (network) {
                 return {
@@ -1927,34 +1942,34 @@ var Networks = (_class = function Networks(appStore) {
               _context4.prev = 8;
               _context4.t0 = _context4["catch"](1);
 
-              _this6.setError(_context4.t0);
+              _this5.setError(_context4.t0);
 
             case 11:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, _this6, [[1, 8]]);
+      }, _callee4, _this5, [[1, 8]]);
     }));
   }
-}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, "pruneNetworks", [_mobx.action], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "pruneNetworks", [_mobx.action], {
   enumerable: true,
   initializer: function initializer() {
-    var _this7 = this;
+    var _this6 = this;
 
     return _asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
       return regeneratorRuntime.wrap(function _callee5$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
-              _this7.setError();
+              _this6.setError();
 
               _context5.prev = 1;
               _context5.next = 4;
               return _axios2.default.post('networks/prune');
 
             case 4:
-              _this7.loadNetworks();
+              _this6.loadNetworks();
               _context5.next = 10;
               break;
 
@@ -1962,14 +1977,14 @@ var Networks = (_class = function Networks(appStore) {
               _context5.prev = 7;
               _context5.t0 = _context5["catch"](1);
 
-              _this7.setError(_context5.t0);
+              _this6.setError(_context5.t0);
 
             case 10:
             case "end":
               return _context5.stop();
           }
         }
-      }, _callee5, _this7, [[1, 7]]);
+      }, _callee5, _this6, [[1, 7]]);
     }));
   }
 })), _class);

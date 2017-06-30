@@ -2,6 +2,7 @@ import axios from 'lib/axios'
 import {sortBy} from 'lodash'
 import {action, observable} from 'mobx'
 import moment from 'moment'
+import BaseStore from 'stores/BaseStore'
 
 const sizeOf = bytes => {
   if (Number(bytes) === 0) { return '0.00 B' }
@@ -9,21 +10,13 @@ const sizeOf = bytes => {
   return (bytes/Math.pow(1024, e)).toFixed(2)+' '+' KMGTP'.charAt(e)+'B'
 }
 
-export default class Images {
-  @observable error = null
+export default class Images extends BaseStore {
   @observable images = []
-  @observable inspect = null
 
   constructor(appStore) {
+    super()
+
     this.appStore = appStore
-  }
-
-  @action setError = (err = null) => {
-    this.error = (((err || {}).response || {}).data || {}).message || err
-  }
-
-  @action closeInspector = () => {
-    this.inspect = null
   }
 
   @action destroyImage = async id => {

@@ -1,22 +1,15 @@
 import axios from 'lib/axios'
 import {sortBy} from 'lodash'
 import {action, observable} from 'mobx'
+import BaseStore from 'stores/BaseStore'
 
-export default class Networks {
-  @observable error = null
+export default class Networks extends BaseStore {
   @observable networks = []
-  @observable inspect = null
 
   constructor(appStore) {
+    super()
+
     this.appStore = appStore
-  }
-
-  @action setError = (err = null) => {
-    this.error = (((err || {}).response || {}).data || {}).message || err
-  }
-
-  @action closeInspector = () => {
-    this.inspect = null
   }
 
   @action createNetwork = async network => {
