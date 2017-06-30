@@ -46,8 +46,8 @@ export default class Containers {
     axios.get('/api/v1/containers')
     .then(res => {
       this.containers = sortBy(res.data, container => -container.Created).map(container => {
-        const ports = container.Ports.map(p => `${(p.IP || '') && `${p.IP || ''}:${p.PublicPort || ''}->`}${p.PrivatePort}/${p.Type}`).join(', ')
-        const names = container.Names.map(name => name.slice(1)).join(', ')
+        const ports = sortBy(container.Ports, p => `${p.PrivatePort}/${p.Type}`).map(p => `${(p.IP || '') && `${p.IP || ''}:${p.PublicPort || ''}->`}${p.PrivatePort}/${p.Type}`).join(', ')
+        const names = sortBy(container.Names, n => n.toLowerCase()).map(n => n.slice(1)).join(', ')
 
         return {
           id: container.Id.substr(0, 12),

@@ -50,7 +50,7 @@ export default class Networks {
 
     axios.get('/api/v1/networks')
     .then(res => {
-      this.networks = sortBy(res.data, network => -network.Created).map(network => ({
+      this.networks = sortBy(res.data, network => network.Name.toLowerCase()).map(network => ({
         id: network.Id.substr(0, 12),
         id_full: network.Id,
         name: network.Name,

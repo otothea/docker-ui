@@ -324,11 +324,15 @@ var Containers = (_class = function Containers(appStore) {
         _this4.containers = (0, _lodash.sortBy)(res.data, function (container) {
           return -container.Created;
         }).map(function (container) {
-          var ports = container.Ports.map(function (p) {
+          var ports = (0, _lodash.sortBy)(container.Ports, function (p) {
+            return p.PrivatePort + '/' + p.Type;
+          }).map(function (p) {
             return '' + ((p.IP || '') && (p.IP || '') + ':' + (p.PublicPort || '') + '->') + p.PrivatePort + '/' + p.Type;
           }).join(', ');
-          var names = container.Names.map(function (name) {
-            return name.slice(1);
+          var names = (0, _lodash.sortBy)(container.Names, function (n) {
+            return n.toLowerCase();
+          }).map(function (n) {
+            return n.slice(1);
           }).join(', ');
 
           return {
@@ -998,7 +1002,7 @@ var Networks = (_class = function Networks(appStore) {
 
       _axios2.default.get('/api/v1/networks').then(function (res) {
         _this5.networks = (0, _lodash.sortBy)(res.data, function (network) {
-          return -network.Created;
+          return network.Name.toLowerCase();
         }).map(function (network) {
           return {
             id: network.Id.substr(0, 12),
@@ -1118,7 +1122,7 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
         case 'images':
           button = _react2.default.createElement(
             "button",
-            { type: "button", className: "btn btn-danger", onClick: function onClick() {
+            { type: "button", className: "btn btn-danger btn-sm", onClick: function onClick() {
                 return _this2.pruneImages();
               } },
             "Delete all unused images"
@@ -1127,7 +1131,7 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
         case 'containers':
           button = _react2.default.createElement(
             "button",
-            { type: "button", className: "btn btn-danger", onClick: function onClick() {
+            { type: "button", className: "btn btn-danger btn-sm", onClick: function onClick() {
                 return _this2.pruneContainers();
               } },
             "Delete all stopped containers"
@@ -1136,7 +1140,7 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
         case 'volumes':
           button = _react2.default.createElement(
             "button",
-            { type: "button", className: "btn btn-danger", onClick: function onClick() {
+            { type: "button", className: "btn btn-danger btn-sm", onClick: function onClick() {
                 return _this2.pruneVolumes();
               } },
             "Delete all unused volumes"
@@ -1145,7 +1149,7 @@ var App = (_dec = (0, _mobxReact.inject)('store'), _dec(_class = function (_Reac
         case 'networks':
           button = _react2.default.createElement(
             "button",
-            { type: "button", className: "btn btn-danger", onClick: function onClick() {
+            { type: "button", className: "btn btn-danger btn-sm", onClick: function onClick() {
                 return _this2.pruneNetworks();
               } },
             "Delete all unused networks"
