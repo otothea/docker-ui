@@ -13,7 +13,7 @@ This project is also meant to serve as a working example of how to build a full-
 - ExpressJS
 - ReactJS
 - MobX
-- FuseBox
+- FuseBoxv
 
 ## Usage
 
@@ -34,7 +34,7 @@ docker run -d -p 9898:9898 \
   otothea/docker-ui
 ```
 
-Run it with authentication
+Run it with authentication (see [environment variables](#environment-variables))
 
 ```bash
 docker run -d -p 9898:9898 \
@@ -66,7 +66,7 @@ Install the production dependencies
 npm install --prod
 ```
 
-Copy the config (and adjust as needed in a text editor)
+Copy the config and adjust as needed (see [config options](#config-options))
 
 ```bash
 cp config.example.js config.js
@@ -98,7 +98,7 @@ Install the dependencies
 npm install
 ```
 
-Copy the config (and adjust as needed in a text editor)
+Copy the config and adjust as needed (see [config options](#config-options))
 
 ```bash
 cp config.example.js config.js
@@ -116,14 +116,23 @@ Start the server
 npm start
 ```
 
-## Environment Overrides
+## Config Options
 
-- **DOCKER_UI_HOST** - override config.host (the hostname that the API listens on)
-- **DOCKER_UI_PORT** - override config.port (the port the API listens on)
-- **DOCKER_UI_DEBUGGER** - override config.debugger (the port the debugger listens on)
-- **DOCKER_UI_USER** - override config.user (the username to access the UI)
-- **DOCKER_UI_PASS** - override config.pass (the password to access the UI)
-- **DOCKER_UI_SECRET** - override config.secret (the session key)
+- **host** - the hostname the API listens on
+- **port** - the port the API listens on
+- **[debugger]** - the port the debugger listens on (required if dev)
+- **[user]** - the username to access the UI
+- **[pass]** - the password to access the UI (required if `user` is set)
+- **[secret]** - the express session key (required if `user` is set)
+
+## Environment Variables
+
+- **DOCKER_UI_HOST** - override config.host
+- **DOCKER_UI_PORT** - override config.port
+- **DOCKER_UI_DEBUGGER** - override config.debugger
+- **DOCKER_UI_USER** - override config.user
+- **DOCKER_UI_PASS** - override config.pass
+- **DOCKER_UI_SECRET** - override config.secret
 
 ## Testing
 
