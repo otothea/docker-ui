@@ -48,14 +48,39 @@ export default class Images extends BaseStore {
 
     try {
       const res = await axios.get('images')
-      this.images = sortBy(res.data, image => -image.Created).map(image => ({
-        repository: image.RepoTags ? image.RepoTags[0].split(':')[0] : image.RepoDigests ? image.RepoDigests[0].split('@')[0] : '<none>',
-        tag: image.RepoTags ? image.RepoTags[0].split(':')[1] : '<none>',
-        image: image.Id.split(':')[1].substr(0, 12),
-        image_full: image.Id.split(':')[1],
-        created: moment.unix(image.Created).fromNow(),
-        size: sizeOf(image.Size),
-      }))
+      this.images = sortBy(res.data, image => -image.Created).reduce((a, image) => {
+        const id_full = image.Id.split(':')[1]
+        const id = id_full.substr(0, 12)
+        const created = moment.unix(image.Created).fromNow()
+        const size = sizeOf(image.Size)
+
+        if (image.RepoTags && image.RepoTags.length) {
+          image.RepoTags.forEach(repo => {
+            const name = repo.split(':')[0] || '<none>'
+            const tag  = repo.split(':')[1] || '<none>'
+
+            a.push({
+              repository: name,
+              tag: tag,
+              image: id,
+              image_full: id_full,
+              created: created,
+              size: size,
+            })
+          })
+        }
+        else {
+          a.push({
+            repository: '<none>',
+            tag: '<none>',
+            image: id,
+            image_full: id_full,
+            created: created,
+            size: size,
+          })
+        }
+        return a
+      }, [])
     }
     catch(e) {
       this.setError(e)

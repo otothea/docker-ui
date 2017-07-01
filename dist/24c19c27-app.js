@@ -1309,16 +1309,38 @@ var Images = (_class = function (_BaseStore) {
 
               _this4.images = (0, _lodash.sortBy)(res.data, function (image) {
                 return -image.Created;
-              }).map(function (image) {
-                return {
-                  repository: image.RepoTags ? image.RepoTags[0].split(':')[0] : image.RepoDigests ? image.RepoDigests[0].split('@')[0] : '<none>',
-                  tag: image.RepoTags ? image.RepoTags[0].split(':')[1] : '<none>',
-                  image: image.Id.split(':')[1].substr(0, 12),
-                  image_full: image.Id.split(':')[1],
-                  created: _moment2.default.unix(image.Created).fromNow(),
-                  size: sizeOf(image.Size)
-                };
-              });
+              }).reduce(function (a, image) {
+                var id_full = image.Id.split(':')[1];
+                var id = id_full.substr(0, 12);
+                var created = _moment2.default.unix(image.Created).fromNow();
+                var size = sizeOf(image.Size);
+
+                if (image.RepoTags && image.RepoTags.length) {
+                  image.RepoTags.forEach(function (repo) {
+                    var name = repo.split(':')[0] || '<none>';
+                    var tag = repo.split(':')[1] || '<none>';
+
+                    a.push({
+                      repository: name,
+                      tag: tag,
+                      image: id,
+                      image_full: id_full,
+                      created: created,
+                      size: size
+                    });
+                  });
+                } else {
+                  a.push({
+                    repository: '<none>',
+                    tag: '<none>',
+                    image: id,
+                    image_full: id_full,
+                    created: created,
+                    size: size
+                  });
+                }
+                return a;
+              }, []);
               _context3.next = 11;
               break;
 
