@@ -15,6 +15,8 @@ This project is also meant to serve as a working example of how to build a full-
 - MobX
 - FuseBoxv
 
+[![Docker UI Screenshot](https://raw.githubusercontent.com/otothea/docker-ui/master/screenshot.png)]()
+
 ## Usage
 
 ### Production (Docker)
