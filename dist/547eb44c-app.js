@@ -1329,6 +1329,19 @@ var Images = (_class = function (_BaseStore) {
                       size: size
                     });
                   });
+                } else if (image.RepoDigests && image.RepoDigests.length) {
+                  image.RepoDigests.forEach(function (repo) {
+                    var name = repo.split('@')[0] || '<none>';
+
+                    a.push({
+                      repository: name,
+                      tag: '<none>',
+                      image: id,
+                      image_full: id_full,
+                      created: created,
+                      size: size
+                    });
+                  });
                 } else {
                   a.push({
                     repository: '<none>',

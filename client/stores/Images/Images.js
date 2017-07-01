@@ -69,6 +69,20 @@ export default class Images extends BaseStore {
             })
           })
         }
+        else if (image.RepoDigests && image.RepoDigests.length) {
+          image.RepoDigests.forEach(repo => {
+            const name = repo.split('@')[0] || '<none>'
+
+            a.push({
+              repository: name,
+              tag: '<none>',
+              image: id,
+              image_full: id_full,
+              created: created,
+              size: size,
+            })
+          })
+        }
         else {
           a.push({
             repository: '<none>',
