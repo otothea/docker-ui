@@ -121,13 +121,14 @@ npm start
 
 ## Config Options
 
-- **host** - the hostname the API listens on
-- **port** - the port the API listens on
-- **[debugger]** - the port the debugger listens on (required if dev)
-- **[https]** - force https
-- **[user]** - the username to access the UI
-- **[pass]** - the password to access the UI (required if `user` is set)
-- **[secret]** - the express session key (required if `user` is set)
+- **host** `string` - the hostname the API listens on
+- **port** `number` - the port the API listens on
+- **[debugger]** `number` - the port the debugger listens on (required if dev)
+- **[https]** `boolean` - force https
+- **[httpsProto]** `boolean` - trust `x-forwarded-proto` header (only set to `true` if you know you need this)
+- **[user]** `string` - the username to access the UI
+- **[pass]** `string` - the password to access the UI (required if `user` is set)
+- **[secret]** `string` - the express session key (required if `user` is set)
 
 ## Environment Variables
 
@@ -135,6 +136,7 @@ npm start
 - **DOCKER_UI_PORT** - override config.port
 - **DOCKER_UI_DEBUGGER** - override config.debugger
 - **DOCKER_UI_HTTPS** - override config.https
+- **DOCKER_UI_HTTPS_PROTO** - override config.httpsProto
 - **DOCKER_UI_USER** - override config.user
 - **DOCKER_UI_PASS** - override config.pass
 - **DOCKER_UI_SECRET** - override config.secret

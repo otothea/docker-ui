@@ -15,7 +15,7 @@ const assets = process.env.NODE_ENV === 'production' ? 'dist' : 'build'
 
 // Force https if needed
 if (process.env.DOCKER_UI_HTTPS || config.https) {
-  app.use(sslify.HTTPS({trustProtoHeader: true}))
+  app.use(sslify.HTTPS({trustProtoHeader: process.env.DOCKER_UI_HTTPS_PROTO || config.httpsProto}))
 }
 
 // Add static files
