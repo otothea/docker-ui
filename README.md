@@ -1,5 +1,5 @@
 [![GitHub version](https://badge.fury.io/gh/otothea%2Fdocker-ui.svg)](https://badge.fury.io/gh/otothea%2Fdocker-ui)
-[![GitHub downloads](https://img.shields.io/github/downloads/otothea/docker-ui/total.svg)]()
+[![GitHub downloads](https://img.shields.io/github/downloads/otothea/docker-ui/total.svg)](https://github.com/otothea/docker-ui)
 [![Dependencies](https://david-dm.org/otothea/docker-ui.svg)](https://david-dm.org/otothea/docker-ui)
 [![Dev dependencies](https://david-dm.org/otothea/docker-ui/dev-status.svg)](https://david-dm.org/otothea/docker-ui?type=dev)
 
@@ -13,9 +13,9 @@ This project is also meant to serve as a working example of how to build a full-
 - ExpressJS
 - ReactJS
 - MobX
-- FuseBoxv
+- FuseBox
 
-[![Docker UI Screenshot](https://raw.githubusercontent.com/otothea/docker-ui/master/screenshot.png)]()
+[![Docker UI Screenshot](https://raw.githubusercontent.com/otothea/docker-ui/master/screenshot.png)](https://raw.githubusercontent.com/otothea/docker-ui/master/screenshot.png)
 
 ## Usage
 
