@@ -28,7 +28,8 @@
   "dependencies": {
     "body-parser": "1.17.2",
     "express": "4.15.3",
-    "express-session": "1.15.3"
+    "express-session": "1.15.3",
+    "express-sslify": "1.2.0"
   },
   "devDependencies": {
     "axios": "0.16.2",

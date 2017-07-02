@@ -42,6 +42,7 @@ Run it with authentication (see [environment variables](#environment-variables))
 docker run -d -p 9898:9898 \
   -v /var/run/docker.sock:/var/run/docker.sock \
   --name docker-ui \
+  -e DOCKER_UI_HTTPS=1 \
   -e DOCKER_UI_USER=username \
   -e DOCKER_UI_PASS=password \
   -e DOCKER_UI_SECRET=supersecretsessionkey \
@@ -123,6 +124,7 @@ npm start
 - **host** - the hostname the API listens on
 - **port** - the port the API listens on
 - **[debugger]** - the port the debugger listens on (required if dev)
+- **[https]** - force https
 - **[user]** - the username to access the UI
 - **[pass]** - the password to access the UI (required if `user` is set)
 - **[secret]** - the express session key (required if `user` is set)
@@ -132,6 +134,7 @@ npm start
 - **DOCKER_UI_HOST** - override config.host
 - **DOCKER_UI_PORT** - override config.port
 - **DOCKER_UI_DEBUGGER** - override config.debugger
+- **DOCKER_UI_HTTPS** - override config.https
 - **DOCKER_UI_USER** - override config.user
 - **DOCKER_UI_PASS** - override config.pass
 - **DOCKER_UI_SECRET** - override config.secret
